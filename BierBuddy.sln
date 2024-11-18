@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BierBuddy.Core", "BierBuddy.Core\BierBuddy.Core.csproj", "{453842DB-7F13-4875-825C-BC1D2AFE8A45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BierBuddy.Tests", "BierBuddy.Tests\BierBuddy.Tests.csproj", "{A4F99B71-3AD1-452F-BDFF-117F7AF06D0B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{453842DB-7F13-4875-825C-BC1D2AFE8A45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{453842DB-7F13-4875-825C-BC1D2AFE8A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{453842DB-7F13-4875-825C-BC1D2AFE8A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{453842DB-7F13-4875-825C-BC1D2AFE8A45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4F99B71-3AD1-452F-BDFF-117F7AF06D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4F99B71-3AD1-452F-BDFF-117F7AF06D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4F99B71-3AD1-452F-BDFF-117F7AF06D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4F99B71-3AD1-452F-BDFF-117F7AF06D0B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

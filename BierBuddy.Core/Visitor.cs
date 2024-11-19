@@ -12,18 +12,14 @@ namespace BierBuddy.Core
         public int ID { get; private set; }
         public string Name { get; set; }
         public string Bio { get; set; }
-        public int age { get; private set; }
+        public int Age { get; private set; }
 
         // Voorkeuren interesses enz.
         public List<string> DrinkPreference = new List<string>();
         public List<string> Interests = new List<string>();
         public List<string> ActivityPreference = new List<string>();
 
-        // De like, dislike en match atributen.
-        public List<int> Likes = new List<int>();
-        public List<int> Dislikes = new List<int>();
-        public List<int> Matches = new List<int>();
-
+        // Fotos
         public List<string> Images = new List<string>();
 
 
@@ -32,7 +28,7 @@ namespace BierBuddy.Core
             ID = id;
             Name = name;
             Bio = bio;
-            this.age = age;
+            Age = age;
         }
 
         // Methodes voor het toevoegen van voorkeuren en interesses.

@@ -13,36 +13,36 @@ namespace BierBuddy.Core
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public Bezoeker GetAccount(int ID);
+        public Visitor GetAccount(int ID);
         /// <summary>
         /// voegt een account toe aan de database
         /// </summary>
-        /// <param name="bezoeker"></param>
-        public void AddAccount(Bezoeker bezoeker);
+        /// <param name="visitor"></param>
+        public void AddAccount(Visitor visitor);
         /// <summary>
         /// zet een like op een bezoeker
         /// </summary>
         /// <param name="likerID">de id van degene die iemand anders liked</param>
-        /// <param name="gelikedeID">de id van degene die geliked is</param>
-        public void SetLike(int likerID, int gelikedeID);
+        /// <param name="gelikedID">de id van degene die geliked is</param>
+        public void SetLike(int likerID, int gelikedID);
         /// <summary>
         /// zet een dislike op een bezoeker
         /// </summary>
         /// <param name="dislikerID">de id van degene die iemand anders disliked</param>
-        /// <param name="gedislikedeID">de id van degene die gedisliked is</param>
-        public void SetDislike(int dislikerID, int gedislikedeID);
+        /// <param name="gedislikedID">de id van degene die gedisliked is</param>
+        public void SetDislike(int dislikerID, int gedislikedID);
         /// <summary>
         /// haal alle IDs op van mensen die de bezoeker hebben gedisliked
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public List<int> GetGegevenLikes(int ID);
+        public List<int> GetGivenLikes(int ID);
         /// <summary>
         /// haal alle IDs op van mensen die de bezoeker hebben geliked
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public List<int> GetOntvangenLikes(int ID);
+        public List<int> GetReceivedLikes(int ID);
         /// <summary>
         /// haal alle IDs op van de bezoekers die een match hebben met de bezoeker
         /// </summary>

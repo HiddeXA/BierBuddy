@@ -23,14 +23,14 @@ namespace BierBuddy.Core
         /// zet een like op een bezoeker
         /// </summary>
         /// <param name="likerID">de id van degene die iemand anders liked</param>
-        /// <param name="gelikedID">de id van degene die geliked is</param>
-        public void SetLike(int likerID, int gelikedID);
+        /// <param name="likedID">de id van degene die geliked is</param>
+        public void SetLike(int likerID, int likedID);
         /// <summary>
         /// zet een dislike op een bezoeker
         /// </summary>
         /// <param name="dislikerID">de id van degene die iemand anders disliked</param>
-        /// <param name="gedislikedID">de id van degene die gedisliked is</param>
-        public void SetDislike(int dislikerID, int gedislikedID);
+        /// <param name="dislikedID">de id van degene die gedisliked is</param>
+        public void SetDislike(int dislikerID, int dislikedID);
         /// <summary>
         /// haal alle IDs op van mensen die de bezoeker hebben gedisliked
         /// </summary>

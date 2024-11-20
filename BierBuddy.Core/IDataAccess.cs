@@ -19,8 +19,9 @@ namespace BierBuddy.Core
         /// <param name="drinks">de drankjes van de bezoeker, minimaal 1, maximaal 4</param>
         /// <param name="interests">de interesses van de bezoeker, minimaal 1, maximaal 4</param>
         /// <param name="photos">de foto's van de bezoeker, minimaal 1, maximaal 4</param>
+        /// <returns>het aangemaakte account</returns>
         /// <exception cref="ArgumentException">als er minder dan 1 of meer dan 4 activiteiten, drankjes, interesses of foto's worden meegegeven</exception>"
-        public void AddAccount(Visitor visitor, List<long> activities, List<long> drinks, List<long> interests, List<string> photos);
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos);
         /// <summary>
         /// zet een like op een bezoeker
         /// </summary>

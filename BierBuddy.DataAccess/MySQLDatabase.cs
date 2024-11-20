@@ -5,17 +5,14 @@ namespace BierBuddy.DataAccess
 {
     public class MySQLDatabase : IDataAccess
     {
-        private MySqlConnection _conn;
-        public MySQLDatabase()
+        private IDbConnection _conn;
+        public MySQLDatabase(IDbConnection connection)
         {
-            // Connectie met de database
-            string connStr = "server=localhost;user=root;database=BierBuddy;port=3306;password=;";
-
-            _conn = new MySqlConnection(connStr);
+            _conn = connection;
             _conn.Open();
         }
 
-        public void AddAccount(Visitor visitor, List<long> activities, List<long> drinks, List<long> interests, List<string> photos)
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos)
         {
             if (activities.Count < 1 || activities.Count > 4 || drinks.Count < 1 || drinks.Count > 4 || interests.Count < 1 || interests.Count > 4 || photos.Count < 1 || photos.Count > 4)
             {
@@ -24,9 +21,9 @@ namespace BierBuddy.DataAccess
             MySqlTransaction transaction = _conn.BeginTransaction();
             MySqlCommand cmd = _conn.CreateCommand();
             cmd.CommandText = "INSERT INTO visitor (Name, Bio, Age) VALUES (@Name, @Bio, @Age)";
-            cmd.Parameters.AddWithValue("@Name", visitor.Name);
-            cmd.Parameters.AddWithValue("@Bio", visitor.Bio);
-            cmd.Parameters.AddWithValue("@Age", visitor.Age);
+            cmd.Parameters.AddWithValue("@Name", name);
+            cmd.Parameters.AddWithValue("@Bio", bio);
+            cmd.Parameters.AddWithValue("@Age", age);
             cmd.ExecuteNonQuery();
             long ID = cmd.LastInsertedId;
             MySqlCommand cmd2 = _conn.CreateCommand();
@@ -54,6 +51,7 @@ namespace BierBuddy.DataAccess
             cmd4.Parameters.AddWithValue("@InterestID4", interests[3]);
             cmd4.ExecuteNonQuery();
             transaction.Commit();
+            return GetAccount(ID);
         }
 
         public Visitor? GetAccount(long ID)

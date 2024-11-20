@@ -95,21 +95,14 @@ namespace BierBuddy.UI
             int fontSize = (int)(NavBar.Width / _FontSizeIncrement + FontSizeModifier);
             return fontSize;
         }
-
+        private bool _First = true;
         private void MoveBeerFoam(SizeChangedEventArgs e)
         {
-
-            foreach (UIElement foam in BeerFoam.Children)
-            {
-                
-                if (foam is Ellipse ellipse)
-                {
-                    double currentLeft = Canvas.GetLeft(ellipse);
-                    double windowDeltaX =  e.NewSize.Width - e.PreviousSize.Width;
-                    
-                    Canvas.SetLeft(ellipse, currentLeft + (windowDeltaX * _SizeModifierNavBar) );
-                }
-            }
+            Canvas.SetLeft(EllipseFoam0, NavBar.Width - 130);
+            Canvas.SetLeft(EllipseFoam1, NavBar.Width - 218);
+            Canvas.SetLeft(EllipseFoam2, NavBar.Width - 300);
+            Canvas.SetLeft(EllipseFoam3, NavBar.Width - 365);
+            Canvas.SetLeft(EllipseFoam4, NavBar.Width - 412);
         }
     }
 }

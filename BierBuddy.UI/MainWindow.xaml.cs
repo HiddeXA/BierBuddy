@@ -62,32 +62,7 @@ namespace BierBuddy.UI
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            Popup popup = new Popup
-            {
-                Placement = System.Windows.Controls.Primitives.PlacementMode.Center,
-                StaysOpen = false
-            };
-
-            // Inhoud van de popup
-            Border border = new Border
-            {
-                Background = System.Windows.Media.Brushes.LightGray,
-                BorderBrush = System.Windows.Media.Brushes.Black,
-                BorderThickness = new Thickness(1),
-                Padding = new Thickness(10)
-            };
-
-            StackPanel panel = new StackPanel();
-            panel.Children.Add(new TextBlock { Text = "Dit is een dynamische popup!", FontWeight = FontWeights.Bold, FontSize = 14 });
-            Button closeButton = new Button { Content = "Sluiten", Margin = new Thickness(5) };
-            closeButton.Click += (s, e) => popup.IsOpen = false;
-            panel.Children.Add(closeButton);
-
-            border.Child = panel;
-            popup.Child = border;
-
-            // Popup openen
-            popup.IsOpen = true;
+            
         }
 
         private int CalculateNavBarFontSize()

@@ -17,6 +17,7 @@ namespace BierBuddy.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        //deel dat dat de navBar opneemt
         private readonly double _SizeModifierNavBar = 0.25;
         private readonly int _NavBarMinSize = 290;
 
@@ -32,11 +33,14 @@ namespace BierBuddy.UI
         }
         private void BierBuddyMainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            //pas alleen de navBar size aan als deze niet kleiner zal zijn dan de minimum size
             if (BBMainWindow.ActualWidth * _SizeModifierNavBar > _NavBarMinSize)
             {
+                //verander de NavBar size
                 NavBar.Width = BBMainWindow.ActualWidth * _SizeModifierNavBar;
 
                 MoveBeerFoam(e);
+                //pas fontsize van de buttons aan zodat ze niet onder het icoontje komen te staan
                 int fontSize = CalculateNavBarFontSize();
                 FindBuddiesLabel.FontSize = fontSize;
                 MyBuddiesLabel.FontSize = fontSize;
@@ -44,25 +48,23 @@ namespace BierBuddy.UI
             else
             {
                 NavBar.Width = _NavBarMinSize;
-                //FindBuddiesLabel.FontSize = _MinFontSize;
-                //MyBuddiesLabel.FontSize = _MinFontSize;
             }
             
         }
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
         {
-
+            //todo voor de toon buddies userstories
         }
 
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
-
+            //todo voor mijn buddies userstory
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            //todo wanneer er settings komen
         }
 
         private int CalculateNavBarFontSize()
@@ -70,9 +72,9 @@ namespace BierBuddy.UI
             int fontSize = (int)(NavBar.Width / _FontSizeIncrement + FontSizeModifier);
             return fontSize;
         }
-        private bool _First = true;
         private void MoveBeerFoam(SizeChangedEventArgs e)
         {
+            //zet het bierschuim vast relatief aan de rechtekant van de NavBar
             Canvas.SetLeft(EllipseFoam0, NavBar.Width - 130);
             Canvas.SetLeft(EllipseFoam1, NavBar.Width - 218);
             Canvas.SetLeft(EllipseFoam2, NavBar.Width - 300);

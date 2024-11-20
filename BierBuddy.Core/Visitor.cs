@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BierBuddy.Core
 {
-    internal class Visitor
+    public class Visitor
     {
         // Basis atributen van de gebruiker.
         public int ID { get; private set; }

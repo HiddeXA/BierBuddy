@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using BierBuddy.UILib;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Material.Icons.WPF;
 
 namespace BierBuddy.UI
 {
@@ -26,9 +28,16 @@ namespace BierBuddy.UI
         private readonly int _FontSizeIncrement = 30;
         private int FontSizeModifier { get; }
 
+        //definitie pageRenderers
+        private FindBuddiesPageRenderer FindBuddiesPageRenderer { get; }
+
         public MainWindow()
         {
             InitializeComponent();
+            //initialize page renderers
+            FindBuddiesPageRenderer = new FindBuddiesPageRenderer();
+
+
             FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
         private void BierBuddyMainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -54,17 +63,26 @@ namespace BierBuddy.UI
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
         {
-            //todo voor de toon buddies userstories
+            PagePanel.Children.Clear();
+            PagePanel.Children.Add(FindBuddiesPageRenderer.GetFindBuddiesPage(NavBar.Width, BBMainWindow.Width));
+            
         }
 
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
+            PagePanel.Children.Clear();
             //todo voor mijn buddies userstory
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
+            PagePanel.Children.Clear();
             //todo wanneer er settings komen
+        }
+        private void AccountButton_Click(object sender, RoutedEventArgs e)
+        {
+            PagePanel.Children.Clear();
+            //todo voor account userstories
         }
 
         private int CalculateNavBarFontSize()

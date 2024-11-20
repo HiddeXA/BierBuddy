@@ -13,7 +13,7 @@
             <DockPanel>
                 <!--AccountButton-->
                 <Border DockPanel.Dock="Top">
-                    <Button Click="SettingsButton_Click">
+                    <Button Click="AccountButton_Click">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Height="200" Background="#FCFFF7" CornerRadius="0,40,00,00" VerticalAlignment="Top">
@@ -74,9 +74,9 @@
             </DockPanel>
         </Border>
         <!--PagePanel-->
-        <Border x:Name="PagePanel">
-
-        </Border>
+        <Canvas x:Name="PagePanel">
+            
+        </Canvas>
     </DockPanel>
 
 </Window>

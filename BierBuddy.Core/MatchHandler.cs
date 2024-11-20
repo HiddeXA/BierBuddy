@@ -2,28 +2,46 @@ namespace BierBuddy.Core;
 
 public class MatchHandler
 {
-    public MatchHandler()
+    private IDataAccess DataAccess;
+    public Visitor ClientVisitor;
+    
+    EventHandler OnMatched;
+    public MatchHandler(IDataAccess dataAccess, Visitor clientVisitor)
     {
+        DataAccess = dataAccess;
+        ClientVisitor = clientVisitor;
+    }
+
+    public List<Visitor> GetPotentialMatches(Visitor visitor)
+    {
+        //TODO: algorithm implementation
+
+        #region Temporary algorithem implementation
+
+        List<Visitor> potentialMatches = DataAccess.GetNotSeenAccounts(visitor.ID, 5);
+        potentialMatches.AddRange(DataAccess.GetLikedNotSeenAccounts(visitor.ID ,5));
+        
+        potentialMatches.OrderBy(x=> Random.Shared.Next()).ToList();
+
+        #endregion
+        
+        return potentialMatches;
         
     }
 
-    public List<Visitor> getPotentialMatches(Visitor visitor)
+    public void LikeVisitor(Visitor visitor)
     {
-        List<Visitor> potentialMatches = new List<Visitor>();
-
-        //TODO: algorithm implementation
-
-        #region Temporary dummy data 
+        DataAccess.SetLike(ClientVisitor.ID, visitor.ID);
         
-        Visitor DummyVisitor = new Visitor(424242424242, "Alice",
-            "Ik ben Alice een dummy account als je dit ziet verwijder mij dan als nodig", 42);
-        
-        potentialMatches.Add(DummyVisitor);
-        
-        return potentialMatches;
-
-        #endregion 
-        
+        if (DataAccess.CheckIfMatch(ClientVisitor.ID, visitor.ID))
+        {
+            OnMatched?.Invoke(this, new MatchedEventArgs(ClientVisitor.ID ,visitor.ID));
+        }
+    }
+    
+    public void DislikeVisitor(Visitor visitor)
+    {
+        DataAccess.SetDislike(ClientVisitor.ID, visitor.ID);
     }
     
     

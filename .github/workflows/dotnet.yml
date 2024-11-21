@@ -18,18 +18,23 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Install MySQL client
-        run: sudo apt-get install mysql-client -y
-      - name: Start MySQL service
-        uses: mysql/mysql-action@v2
+        uses: actions/download-artifact@v3 # Download de MySQL installer
         with:
-          mysql version: '10.4.28' # Vervang door je MySQL versie
-          root password:  
+          name: mysql-installer
+          path: C:\mysql-installer
+      - name: Install MySQL Server
+        run: |
+          Start-Process -FilePath "C:\mysql-installer\mysql-installer-community-8.0.34.0.msi" -ArgumentList "/qn" -Wait
+          # Configure MySQL Server with root password
+          & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqld" --initialize-insecure --user=mysql
+          # Start MySQL service
+          net start mysql
       - name: Create test database
-        run: mysql -u root -p$ -e "CREATE DATABASE test_db;"
+        run: mysql -u root -e "CREATE DATABASE test_db;"
       - name: Restore database schema
         run: |
           for file in migrations/V*.sql; do
-            mysql -u root -p test_db < $file
+            mysql -u root test_db < $file
           done
       - name: Build
         run: dotnet build --no-restore
@@ -37,4 +42,4 @@ jobs:
         run: dotnet test --no-build --verbosity normal
       - name: Drop test database (optional)
         if: always()
-        run: mysql -u root -p -e "DROP DATABASE test_db;"
+        run: mysql -u root -e "DROP DATABASE test_db;"

@@ -20,10 +20,8 @@ jobs:
           name: mysql-installer
           path: C:\mysql-installer
       - name: Install MySQL Server
-        uses: WixTools/WixActions@v1
-        with:
-          path: C:\mysql-installer\mysql-installer-community-8.0.34.0.msi
-          args: "/qn"
+        run: |
+          Start-Process -FilePath "C:\mysql-installer\mysql-installer-community-8.0.34.0.msi" -ArgumentList "/qn" -Wait
       - name: Configure MySQL Server
         run: |
           # Configure MySQL Server with root password

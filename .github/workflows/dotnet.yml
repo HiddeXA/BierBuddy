@@ -20,12 +20,10 @@ jobs:
       - name: Install MySQL client
         uses: workflows/install-mysql-installer
       - name: Install MySQL Server
-        run: |
-          Start-Process -FilePath "C:\mysql-installer\mysql-installer-community-8.0.34.0.msi" -ArgumentList "/qn" -Wait
-          # Configure MySQL Server with root password
-          & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqld" --initialize-insecure --user=mysql
-          # Start MySQL service
-          net start mysql
+        uses: microsoft/setup-msbuild@v1.1 # Use the msi-installer action
+        with:
+          msi-package-path: C:\mysql-installer\mysql-installer-community-8.0.34.0.msi
+          args: "/qn"
       - name: Create test database
         run: mysql -u root -e "CREATE DATABASE test_db;"
       - name: Restore database schema

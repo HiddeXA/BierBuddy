@@ -16,36 +16,130 @@ namespace BierBuddy.UILib
     {
         
 
-        public WrapPanel GetFindBuddiesPage(double NavBarWidth, double ScreenWidth)
+        public WrapPanel GetFindBuddiesPage(double navBarWidth, double screenWidth, double screenHeight)
         {
             WrapPanel FindBuddiesPanel = new();
-            FindBuddiesPanel.Width = ScreenWidth - NavBarWidth;
+            double panelWidth = screenWidth - navBarWidth;
 
-            FindBuddiesPanel.Children.Add(GetDislikeButton());
-            FindBuddiesPanel.Children.Add(GetProfilePanel());
-            FindBuddiesPanel.Children.Add(GetlikeButton());
+            FindBuddiesPanel.Children.Add(GetDislikeButton(panelWidth / 4 , screenHeight));
+            FindBuddiesPanel.Children.Add(GetProfilePanel(panelWidth / 2 , screenHeight));
+            FindBuddiesPanel.Children.Add(GetlikeButton(panelWidth / 4 , screenHeight));
+
+            FindBuddiesPanel.VerticalAlignment = VerticalAlignment.Center;
+            FindBuddiesPanel.HorizontalAlignment = HorizontalAlignment.Center;
 
             return FindBuddiesPanel;
         }
 
 
-        private UIElement GetDislikeButton() 
+        private UIElement GetDislikeButton(double width, double height) 
         {
-            Button disLikeButton = new();
-            disLikeButton.Content = "Dislike";
-            disLikeButton.VerticalAlignment = VerticalAlignment.Center;
-            disLikeButton.HorizontalAlignment = HorizontalAlignment.Center;
+            DockPanel dislikeButtonPanel = new();
+            dislikeButtonPanel.Width = width;
+            dislikeButtonPanel.Height = height;
 
-            return disLikeButton;
+            Button dislikeButton = new();
+            dislikeButton.Template = GetLikeButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32)));
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = MaterialIconKind.GlassMugOff;
+            icon.Foreground = UIUtils.BabyPoeder;
+            dislikeButton.Content = icon;
+
+            dislikeButton.Width = width / 3;
+            dislikeButton.VerticalAlignment = VerticalAlignment.Center;
+            dislikeButton.HorizontalAlignment = HorizontalAlignment.Center;
+            dislikeButton.Background = UIUtils.Transparent;
+
+            dislikeButtonPanel.Children.Add(dislikeButton);
+
+            return dislikeButtonPanel;
+        }
+        private UIElement GetlikeButton(double width, double height)
+        {
+            DockPanel likeButtonPanel = new();
+            likeButtonPanel.Width = width;
+            likeButtonPanel.Height = height;
+
+
+            Button likeButton = new();
+            likeButton.Template = GetLikeButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72)));
+           
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = MaterialIconKind.GlassMug;
+            icon.Foreground = UIUtils.BabyPoeder;
+            likeButton.Content = icon;
+            likeButton.Width = width / 3;
+            likeButton.VerticalAlignment = VerticalAlignment.Center;
+            likeButton.HorizontalAlignment = HorizontalAlignment.Center;
+            likeButton.Background = UIUtils.Transparent;
+
+            //Canvas.SetLeft(likeButtonPanel, width/3);
+            //Canvas.SetTop(likeButtonPanel, height/2);
+            likeButtonPanel.Children.Add(likeButton);
+            return likeButtonPanel;
+        }
+        private ControlTemplate GetLikeButtonTemplate(Brush brush)
+        {
+            ControlTemplate template = new ControlTemplate(typeof(Button));
+            FrameworkElementFactory gridFactory = new FrameworkElementFactory(typeof(Grid));
+
+            FrameworkElementFactory borderFactory = new FrameworkElementFactory(typeof(Border));
+            //set background color
+            borderFactory.SetValue(Border.BackgroundProperty, brush);
+            borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(90));
+            gridFactory.AppendChild(borderFactory);
+
+            FrameworkElementFactory contentPresenterFactory = new FrameworkElementFactory(typeof(ContentPresenter));
+            contentPresenterFactory.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            contentPresenterFactory.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+            //contentPresenterFactory.SetBinding(ContentPresenter.ContentProperty, new TemplateBindingExtension(Button.ContentProperty));
+            gridFactory.AppendChild(contentPresenterFactory);
+
+            template.VisualTree = gridFactory;
+
+            return template;
+        }
+        private UIElement GetProfilePanel(double width, double height)
+        {
+            height -= 150;
+            Canvas profilePanel = new();
+            profilePanel.Width = width;
+            profilePanel.Height = height;
+
+            UIElement profilePicture = GetProfilePicture(width);
+            profilePanel.Children.Add(profilePicture);
+
+            
+            UIElement profileContent = GetProfileContentPanel(width);
+            Canvas.SetTop(profileContent, height - UIUtils.ProfileConentHeight);
+            profilePanel.Children.Add(profileContent);
+
+            profilePanel.Margin = new Thickness(20);
+
+            Border profileBorder = new();
+            profileBorder.Background = UIUtils.Outer_Space;
+            profileBorder.Child = profilePanel;
+            profileBorder.CornerRadius = UIUtils.UniversalCornerRadius;
+            profilePanel.VerticalAlignment = VerticalAlignment.Center;
+            
+            return profileBorder;
+        }
+        
+
+        private UIElement GetProfilePicture(double width)
+        {
+            Label tempFoto = new Label();
+            tempFoto.Content = "FOTO!";
+            tempFoto.Foreground = UIUtils.testMarking;
+            return  tempFoto;
         }
 
-
-        private UIElement GetProfilePanel()
+        private UIElement GetProfileContentPanel(double width)
         {
             // Create the Grid
             Grid profileGrid = new Grid();
-            profileGrid.Width = 400;
-            profileGrid.Height = 250;
+            profileGrid.Width = width;
+            profileGrid.Height = UIUtils.ProfileConentHeight;
             profileGrid.HorizontalAlignment = HorizontalAlignment.Left;
             profileGrid.VerticalAlignment = VerticalAlignment.Top;
             profileGrid.ShowGridLines = true;
@@ -87,10 +181,23 @@ namespace BierBuddy.UILib
             profileGrid.Children.Add(activityLabel);
             profileGrid.Children.Add(interestLabel);
 
-            profileGrid.Background = UIUtils.BabyPoeder;
-            
 
-            return profileGrid;
+            Border profileContentBorder = new Border();
+            //gradient toevoegen
+            LinearGradientBrush gradientBrush = new LinearGradientBrush
+            {
+                StartPoint = new System.Windows.Point(0, 0), // Bovenkant
+                EndPoint = new System.Windows.Point(0, 1)   // Onderkant
+            };
+            gradientBrush.GradientStops.Add(new GradientStop(Colors.Transparent, 0));
+            gradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF7), 1));
+            profileContentBorder.Background = gradientBrush;
+            profileContentBorder.CornerRadius = new CornerRadius(0, 0, 40, 40);
+
+            profileContentBorder.Child = profileGrid;
+
+
+            return profileContentBorder;
         }
         private UIElement GetProfileBanner()
         {
@@ -104,10 +211,9 @@ namespace BierBuddy.UILib
             bannerPanel.HorizontalAlignment = HorizontalAlignment.Center;
             bannerPanel.VerticalAlignment = VerticalAlignment.Center;
 
-            ProfileContentBorder profileContentBorder = new ProfileContentBorder();
-            profileContentBorder.Child = bannerPanel;
-
-            return bannerPanel;
+            ProfileContentBorder contentBannerBorder = new ProfileContentBorder();
+            contentBannerBorder.Child = bannerPanel;
+            return contentBannerBorder;
         }
         private UIElement GetNameLabel()
         {
@@ -146,14 +252,7 @@ namespace BierBuddy.UILib
 
 
 
-        private UIElement GetlikeButton()
-        {
-            Button likeButton = new();
-            likeButton.Content = "LIKE";
-            likeButton.VerticalAlignment = VerticalAlignment.Center;
-            likeButton.HorizontalAlignment = HorizontalAlignment.Center;
-            return likeButton;
-        }
+        
 
         public void UpdatePageSize(double NavBarWidth, double ScreenWidth)
         {
@@ -168,10 +267,10 @@ namespace BierBuddy.UILib
         public ProfileContentBorder(string content) : this()
         {
             ProfileContentLabel = new ProfileContentLabel(content);
+            this.Child = ProfileContentLabel;
         }
         public ProfileContentBorder()
         {
-            this.Child = ProfileContentLabel;
             this.Background = UIUtils.Onyx70;
             this.CornerRadius = UIUtils.UniversalCornerRadius;
             this.Margin = new Thickness(10);

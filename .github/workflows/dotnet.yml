@@ -17,7 +17,24 @@ jobs:
           dotnet-version: 8.0.x
       - name: Restore dependencies
         run: dotnet restore
+      - name: Install MySQL client
+        run: sudo apt-get install mysql-client -y
+      - name: Start MySQL service
+        uses: mysql/mysql-action@v2
+        with:
+          mysql version: '10.4.28' # Vervang door je MySQL versie
+          root password:  
+      - name: Create test database
+        run: mysql -u root -p$ -e "CREATE DATABASE test_db;"
+      - name: Restore database schema
+        run: |
+          for file in migrations/V*.sql; do
+            mysql -u root -p test_db < $file
+          done
       - name: Build
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build --verbosity normal
+      - name: Drop test database (optional)
+        if: always()
+        run: mysql -u root -p -e "DROP DATABASE test_db;"

@@ -2,6 +2,7 @@ name: Upload MySQL Installer
 
 on:
   workflow_dispatch: # Deze workflow handmatig starten
+  push:
 
 jobs:
   upload:

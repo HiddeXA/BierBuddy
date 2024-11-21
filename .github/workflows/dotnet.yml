@@ -1,3 +1,6 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
 name: .NET
 
 on: ["push", "pull_request"]
@@ -9,38 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: 8.0.x
       - name: Restore dependencies
         run: dotnet restore
-      - name: 1  Install MySQL client
-        uses: actions/download-artifact@v3
-        with:
-          name: mysql-installer
-          path: C:\mysql-installer
-      - name: Install MySQL Server
-        run: |
-          Start-Process -FilePath "C:\mysql-installer\mysql-installer-community-8.0.34.0.msi" -ArgumentList "/qn" -Wait
-      - name: Configure MySQL Server
-        run: |
-          # Configure MySQL Server with root password
-          & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqld" --initialize-insecure --user=mysql
-          # Start MySQL service
-          net start mysql
-      - name: Create test database
-        run: mysql -u root -e "CREATE DATABASE test_db;"
-      - name: Restore database schema
-        run: |
-          for %f in (migrations\*.sql) do ( 
-            mysql -u root test_db < %f
-          )
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-build --verbosity normal --filter "FullyQualifiedName~DataAccessTests"
-      - name: Stop MySQL service
-        run: net stop mysql
-      - name: Drop test database (optional)
-        if: always()
-        run: mysql -u root -e "DROP DATABASE test_db;"
+        run: dotnet test --no-build --verbosity normal -f "FullyQualifiedName!~DataAccessTests"

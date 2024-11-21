@@ -18,10 +18,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Install MySQL client
-        uses: actions/download-artifact@v3 # Download de MySQL installer
-        with:
-          name: mysql-installer
-          path: C:\mysql-installer
+        uses: workflows/install-mysql-installer
       - name: Install MySQL Server
         run: |
           Start-Process -FilePath "C:\mysql-installer\mysql-installer-community-8.0.34.0.msi" -ArgumentList "/qn" -Wait

@@ -58,7 +58,7 @@ namespace BierBuddy.UI
             {
                 NavBar.Width = _NavBarMinSize;
             }
-            
+            FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize.Width);
         }
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)

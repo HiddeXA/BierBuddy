@@ -14,10 +14,12 @@ namespace BierBuddy.UILib
 {
     public class FindBuddiesPageRenderer : IPageRenderer
     {
-        
 
         public WrapPanel GetFindBuddiesPage(double navBarWidth, double screenWidth, double screenHeight)
         {
+
+
+
             WrapPanel FindBuddiesPanel = new();
             double panelWidth = screenWidth - navBarWidth;
 
@@ -30,7 +32,6 @@ namespace BierBuddy.UILib
 
             return FindBuddiesPanel;
         }
-
 
         private UIElement GetDislikeButton(double width, double height) 
         {
@@ -60,7 +61,6 @@ namespace BierBuddy.UILib
             likeButtonPanel.Width = width;
             likeButtonPanel.Height = height;
 
-
             Button likeButton = new();
             likeButton.Template = GetLikeButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72)));
            
@@ -73,8 +73,6 @@ namespace BierBuddy.UILib
             likeButton.HorizontalAlignment = HorizontalAlignment.Center;
             likeButton.Background = UIUtils.Transparent;
 
-            //Canvas.SetLeft(likeButtonPanel, width/3);
-            //Canvas.SetTop(likeButtonPanel, height/2);
             likeButtonPanel.Children.Add(likeButton);
             return likeButtonPanel;
         }
@@ -92,7 +90,6 @@ namespace BierBuddy.UILib
             FrameworkElementFactory contentPresenterFactory = new FrameworkElementFactory(typeof(ContentPresenter));
             contentPresenterFactory.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
             contentPresenterFactory.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
-            //contentPresenterFactory.SetBinding(ContentPresenter.ContentProperty, new TemplateBindingExtension(Button.ContentProperty));
             gridFactory.AppendChild(contentPresenterFactory);
 
             template.VisualTree = gridFactory;
@@ -125,7 +122,6 @@ namespace BierBuddy.UILib
             return profileBorder;
         }
         
-
         private UIElement GetProfilePicture(double width)
         {
             Label tempFoto = new Label();
@@ -181,7 +177,6 @@ namespace BierBuddy.UILib
             profileGrid.Children.Add(activityLabel);
             profileGrid.Children.Add(interestLabel);
 
-
             Border profileContentBorder = new Border();
             //gradient toevoegen
             LinearGradientBrush gradientBrush = new LinearGradientBrush
@@ -196,13 +191,11 @@ namespace BierBuddy.UILib
 
             profileContentBorder.Child = profileGrid;
 
-
             return profileContentBorder;
         }
         private UIElement GetProfileBanner()
         {
             WrapPanel bannerPanel = new WrapPanel();
-
 
             bannerPanel.Children.Add(GetNameLabel());
             bannerPanel.Children.Add(GetProfileBannerDot());
@@ -250,11 +243,7 @@ namespace BierBuddy.UILib
             return profileContentBorder;
         }
 
-
-
-        
-
-        public void UpdatePageSize(double NavBarWidth, double ScreenWidth)
+        public void UpdatePageSize(double newNavBarWidth, double newScreenWidth)
         {
             
         }
@@ -275,7 +264,6 @@ namespace BierBuddy.UILib
             this.CornerRadius = UIUtils.UniversalCornerRadius;
             this.Margin = new Thickness(10);
         }
-
     }
     internal class ProfileContentLabel : Label
     {

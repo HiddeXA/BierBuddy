@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Material.Icons.WPF;
+using BierBuddy.Core;
 
 namespace BierBuddy.UI
 {
@@ -24,18 +25,19 @@ namespace BierBuddy.UI
         private readonly int _NavBarMinSize = 290;
 
         private readonly int _MinFontSize = 26;
-        private readonly int _DefaultFontSize = 32;
         private readonly int _FontSizeIncrement = 30;
         private int FontSizeModifier { get; }
 
         //definitie pageRenderers
         private FindBuddiesPageRenderer FindBuddiesPageRenderer { get; }
+        private AlgoritmePlaceHolder AlgoritmePlaceHolder { get; }
 
         public MainWindow()
         {
             InitializeComponent();
             //initialize page renderers
             FindBuddiesPageRenderer = new FindBuddiesPageRenderer();
+            AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
 
             FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
@@ -64,7 +66,7 @@ namespace BierBuddy.UI
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
         {
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(FindBuddiesPageRenderer.GetFindBuddiesPage(NavBar.Width, BBMainWindow.Width, BBMainWindow.Height));
+            PagePanel.Children.Add(FindBuddiesPageRenderer.GetFindBuddiesPage(AlgoritmePlaceHolder.GetVisitor(), NavBar.Width, BBMainWindow.Width, BBMainWindow.Height));
             
         }
 

@@ -7,18 +7,27 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml;
+using BierBuddy.Core;
 using Material.Icons;
 using Material.Icons.WPF;
+
+//TODO:
+//buttons like dislike
+//show picture
+//show profile bio and all interests 
 
 namespace BierBuddy.UILib
 {
     public class FindBuddiesPageRenderer : IPageRenderer
     {
-
-        public WrapPanel GetFindBuddiesPage(double navBarWidth, double screenWidth, double screenHeight)
+        private Visitor _Visitor { get; set; }
+        public FindBuddiesPageRenderer()
         {
-
-
+            _Visitor = new(0, "temp", "temp", 0);
+        }
+        public WrapPanel GetFindBuddiesPage(Visitor visitor, double navBarWidth, double screenWidth, double screenHeight)
+        {
+            _Visitor = visitor;
 
             WrapPanel FindBuddiesPanel = new();
             double panelWidth = screenWidth - navBarWidth;
@@ -50,11 +59,18 @@ namespace BierBuddy.UILib
             dislikeButton.VerticalAlignment = VerticalAlignment.Center;
             dislikeButton.HorizontalAlignment = HorizontalAlignment.Center;
             dislikeButton.Background = UIUtils.Transparent;
+            dislikeButton.Click += DislikeButton_Click;
 
             dislikeButtonPanel.Children.Add(dislikeButton);
 
             return dislikeButtonPanel;
         }
+
+        private void DislikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO dislike stuff
+        }
+
         private UIElement GetlikeButton(double width, double height)
         {
             DockPanel likeButtonPanel = new();
@@ -72,10 +88,17 @@ namespace BierBuddy.UILib
             likeButton.VerticalAlignment = VerticalAlignment.Center;
             likeButton.HorizontalAlignment = HorizontalAlignment.Center;
             likeButton.Background = UIUtils.Transparent;
+            likeButton.Click += LikeButton_Click;
 
             likeButtonPanel.Children.Add(likeButton);
             return likeButtonPanel;
         }
+
+        private void LikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO like stuff
+        }
+
         private ControlTemplate GetLikeButtonTemplate(Brush brush)
         {
             ControlTemplate template = new ControlTemplate(typeof(Button));
@@ -98,27 +121,32 @@ namespace BierBuddy.UILib
         }
         private UIElement GetProfilePanel(double width, double height)
         {
-            height -= 150;
+
+            height -= 100;
             Canvas profilePanel = new();
             profilePanel.Width = width;
             profilePanel.Height = height;
+            profilePanel.Margin = new Thickness(20);
+            profilePanel.VerticalAlignment = VerticalAlignment.Center;
+
+            Border profileBorder = new();
+            profileBorder.Background = UIUtils.Outer_Space;
+            profileBorder.CornerRadius = UIUtils.UniversalCornerRadius;
+            profileBorder.Child = profilePanel;
+
+            if (_Visitor == null)
+            {
+                return profileBorder;
+            }
+
 
             UIElement profilePicture = GetProfilePicture(width);
             profilePanel.Children.Add(profilePicture);
 
-            
             UIElement profileContent = GetProfileContentPanel(width);
             Canvas.SetTop(profileContent, height - UIUtils.ProfileConentHeight);
             profilePanel.Children.Add(profileContent);
 
-            profilePanel.Margin = new Thickness(20);
-
-            Border profileBorder = new();
-            profileBorder.Background = UIUtils.Outer_Space;
-            profileBorder.Child = profilePanel;
-            profileBorder.CornerRadius = UIUtils.UniversalCornerRadius;
-            profilePanel.VerticalAlignment = VerticalAlignment.Center;
-            
             return profileBorder;
         }
         
@@ -152,37 +180,71 @@ namespace BierBuddy.UILib
             RowDefinition rowDef1 = new RowDefinition();
             RowDefinition rowDef2 = new RowDefinition();
             RowDefinition rowDef3 = new RowDefinition();
+            RowDefinition rowDef4 = new RowDefinition();
+            rowDef4.Height = new GridLength(UIUtils.ProfileConentHeight / 6);
             profileGrid.RowDefinitions.Add(rowDef1);
             profileGrid.RowDefinitions.Add(rowDef2);
             profileGrid.RowDefinitions.Add(rowDef3);
+            profileGrid.RowDefinitions.Add(rowDef4);
 
             UIElement ProfileBanner = GetProfileBanner();
             Grid.SetColumnSpan(ProfileBanner, 3);
             Grid.SetRow(ProfileBanner, 1);
 
-            UIElement drinkLabel = GetDrinkLabel();
+            UIElement drinkLabel;
+            UIElement activityLabel;
+            UIElement interestLabel;
+
+            if (_Visitor.DrinkPreference.Count != 0)
+            {
+                drinkLabel = GetProfileLabel(_Visitor.DrinkPreference[0]);
+            }
+            else
+            {
+                drinkLabel = GetProfileLabel("Heb ik niet");
+            }
+            if (_Visitor.ActivityPreference.Count != 0)
+            {
+                activityLabel = GetProfileLabel(_Visitor.ActivityPreference[0]);
+            }
+            else
+            {
+                activityLabel = GetProfileLabel("Heb ik niet");
+            }
+            if (_Visitor.DrinkPreference.Count != 0)
+            {
+                interestLabel = GetProfileLabel(_Visitor.Interests[0]);
+            }
+            else
+            {
+                interestLabel = GetProfileLabel("Heb ik niet");
+            };
+            
             Grid.SetColumn(drinkLabel, 0);
             Grid.SetRow(drinkLabel, 2);
 
-            UIElement activityLabel = GetActivityLabel();
             Grid.SetColumn(activityLabel, 1);
             Grid.SetRow(activityLabel, 2);
 
-            UIElement interestLabel = GetInterestLabel();
             Grid.SetColumn(interestLabel, 2);
             Grid.SetRow(interestLabel, 2);
+
+            UIElement bioButton = GetBioButton();
+            Grid.SetColumn(bioButton, 1);
+            Grid.SetRow(bioButton, 3);
 
             profileGrid.Children.Add(ProfileBanner);
             profileGrid.Children.Add(drinkLabel);
             profileGrid.Children.Add(activityLabel);
             profileGrid.Children.Add(interestLabel);
+            profileGrid.Children.Add(bioButton);
 
             Border profileContentBorder = new Border();
             //gradient toevoegen
             LinearGradientBrush gradientBrush = new LinearGradientBrush
             {
-                StartPoint = new System.Windows.Point(0, 0), // Bovenkant
-                EndPoint = new System.Windows.Point(0, 1)   // Onderkant
+                StartPoint = new Point(0, 0), // Bovenkant
+                EndPoint = new Point(0, 1)   // Onderkant
             };
             gradientBrush.GradientStops.Add(new GradientStop(Colors.Transparent, 0));
             gradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF7), 1));
@@ -210,8 +272,13 @@ namespace BierBuddy.UILib
         }
         private UIElement GetNameLabel()
         {
-            ProfileContentLabel nameLabel = new ProfileContentLabel("Rick");
+            ProfileContentLabel nameLabel = new ProfileContentLabel(_Visitor.Name);
             return nameLabel;
+        }
+        private UIElement GetAgeLabel()
+        {
+            ProfileContentLabel ageLabel = new ProfileContentLabel(_Visitor.Age.ToString());
+            return ageLabel;
         }
         private UIElement GetProfileBannerDot()
         {
@@ -222,25 +289,22 @@ namespace BierBuddy.UILib
             nameLabel.FontSize = 56;
             return nameLabel;
         }
-        private UIElement GetAgeLabel()
+        private UIElement GetProfileLabel(string content)
         {
-            ProfileContentLabel ageLabel = new ProfileContentLabel("19");
-            return ageLabel;
+            ProfileContentBorder profileLabel = new ProfileContentBorder(content);
+            return profileLabel;
         }
-        private UIElement GetDrinkLabel()
+        private UIElement GetBioButton()
         {
-            ProfileContentBorder profileContentBorder = new ProfileContentBorder("sambuca");
-            return profileContentBorder;
-        }
-        private UIElement GetActivityLabel()
-        {
-            ProfileContentBorder profileContentBorder = new ProfileContentBorder("darten");
-            return profileContentBorder;
-        }
-        private UIElement GetInterestLabel()
-        {
-            ProfileContentBorder profileContentBorder = new ProfileContentBorder("OIKOS");
-            return profileContentBorder;
+            Label bioButton = new Label();
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = MaterialIconKind.ChevronDown;
+            
+            icon.Foreground = UIUtils.Onyx;
+            bioButton.Content = icon;
+
+            bioButton.HorizontalAlignment = HorizontalAlignment.Center;
+            return bioButton;
         }
 
         public void UpdatePageSize(double newNavBarWidth, double newScreenWidth)

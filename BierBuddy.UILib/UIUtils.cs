@@ -10,7 +10,7 @@ namespace BierBuddy.UILib
 {
     static internal class UIUtils
     {
-        internal static readonly double ProfileConentHeight = 250;
+        internal static readonly double ProfileConentHeight = 300;
 
         internal static readonly Brush BabyPoeder = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF7));
         internal static readonly Brush Onyx = new SolidColorBrush(Color.FromArgb(0xFF, 0x2E, 0x35, 0x32));

@@ -32,6 +32,11 @@ public class MatchHandler
     public void LikeVisitor(Visitor visitor)
     {
         DataAccess.SetLike(ClientVisitor.ID, visitor.ID);
+
+        if (DataAccess.GetReceivedLikes(ClientVisitor.ID).Contains(visitor.ID))
+        {
+            DataAccess.AddMatch(ClientVisitor.ID, visitor.ID);
+        }
         
         if (DataAccess.CheckIfMatch(ClientVisitor.ID, visitor.ID))
         {

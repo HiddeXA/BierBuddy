@@ -78,6 +78,10 @@ namespace BierBuddy.Core
         /// </summary>
         public List<long> GetMatches(long ID);
         /// <summary>
+        /// Maakt een match aan
+        /// </summary>
+        public void AddMatch(long ID1, long ID2);
+        /// <summary>
         /// haal alle mogelijke activiteiten op uit de database
         /// </summary>
         /// <returns>een Dictionary met alle mogelijke activiteiten met hun bijbehorende index</returns>

@@ -27,7 +27,7 @@ namespace BierBuddy.Tests
             _conn.Open();
 
             // Run alle sql bestanden in een folder
-            string[] files = Directory.GetFiles("../../../../BierBuddy/migrations", "V*.sql");
+            string[] files = Directory.GetFiles("../../../../BierBuddy/migrations", "V*.sql").OrderBy(f => f).ToArray();
             foreach (string file in files)
             {
                 // Lees de SQL-query uit het bestand
@@ -232,6 +232,21 @@ namespace BierBuddy.Tests
 
             // Assert
             Assert.Greater(interests.Count, 0);
+        }
+        
+        [Test]
+        public void AddMatch_ShouldAddMatch_WhenValid()
+        {
+            MySQLDatabase database = new MySQLDatabase(_conn);
+
+            // Act
+            database.AddAccount("Test1", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" });
+            database.AddAccount("Test2", "Bio", 20, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" });
+            
+            database.AddMatch(1, 1);
+
+            // Assert
+            Assert.IsTrue(database.CheckIfMatch(1, 2));
         }
 
         [OneTimeTearDown]

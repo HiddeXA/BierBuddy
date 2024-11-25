@@ -40,7 +40,7 @@ namespace BierBuddy.DataAccess
             }
             MySqlTransaction transaction = _conn.BeginTransaction();
             MySqlCommand activitiesCommand = _conn.CreateCommand();
-            activitiesCommand.CommandText = "INSERT INTO activitypreferences (Activities_ActivityID1, Activities_ActivityID2, Activities_ActivityID3, Activities_ActivityID4) VALUES (@ActivityID1, @ActivityID2, @ActivityID3, @ActivityID4)";
+            activitiesCommand.CommandText = "INSERT INTO ActivityPreferences (Activities_ActivityID1, Activities_ActivityID2, Activities_ActivityID3, Activities_ActivityID4) VALUES (@ActivityID1, @ActivityID2, @ActivityID3, @ActivityID4)";
             activitiesCommand.Parameters.AddWithValue("@ActivityID1", activities[0]);
             activitiesCommand.Parameters.AddWithValue("@ActivityID2", activities[1]);
             activitiesCommand.Parameters.AddWithValue("@ActivityID3", activities[2]);
@@ -48,7 +48,7 @@ namespace BierBuddy.DataAccess
             activitiesCommand.ExecuteNonQuery();
             long activitiesID = activitiesCommand.LastInsertedId;
             MySqlCommand drinksCommand = _conn.CreateCommand();
-            drinksCommand.CommandText = "INSERT INTO drinkpreferences (Drinks_DrinkID1, Drinks_DrinkID2, Drinks_DrinkID3, Drinks_DrinkID4) VALUES (@DrinkID1, @DrinkID2, @DrinkID3, @DrinkID4)";
+            drinksCommand.CommandText = "INSERT INTO DrinkPreferences (Drinks_DrinkID1, Drinks_DrinkID2, Drinks_DrinkID3, Drinks_DrinkID4) VALUES (@DrinkID1, @DrinkID2, @DrinkID3, @DrinkID4)";
             drinksCommand.Parameters.AddWithValue("@DrinkID1", drinks[0]);
             drinksCommand.Parameters.AddWithValue("@DrinkID2", drinks[1]);
             drinksCommand.Parameters.AddWithValue("@DrinkID3", drinks[2]);
@@ -56,7 +56,7 @@ namespace BierBuddy.DataAccess
             drinksCommand.ExecuteNonQuery();
             long drinksID = drinksCommand.LastInsertedId;
             MySqlCommand interestsCommand = _conn.CreateCommand();
-            interestsCommand.CommandText = "INSERT INTO interests (PossibleInterests_InterestID1, PossibleInterests_InterestID2, PossibleInterests_InterestID3, PossibleInterests_InterestID4) VALUES (@InterestID1, @InterestID2, @InterestID3, @InterestID4)";
+            interestsCommand.CommandText = "INSERT INTO Interests (PossibleInterests_InterestID1, PossibleInterests_InterestID2, PossibleInterests_InterestID3, PossibleInterests_InterestID4) VALUES (@InterestID1, @InterestID2, @InterestID3, @InterestID4)";
             interestsCommand.Parameters.AddWithValue("@InterestID1", interests[0]);
             interestsCommand.Parameters.AddWithValue("@InterestID2", interests[1]);
             interestsCommand.Parameters.AddWithValue("@InterestID3", interests[2]);
@@ -64,7 +64,7 @@ namespace BierBuddy.DataAccess
             interestsCommand.ExecuteNonQuery();
             long interestsID = interestsCommand.LastInsertedId;
             MySqlCommand photosCommand = _conn.CreateCommand();
-            photosCommand.CommandText = "INSERT INTO photo (Photo1URL, Photo2URL, Photo3URL, Photo4URL) VALUES (@Photo1, @Photo2, @Photo3, @Photo4)";
+            photosCommand.CommandText = "INSERT INTO Photo (Photo1URL, Photo2URL, Photo3URL, Photo4URL) VALUES (@Photo1, @Photo2, @Photo3, @Photo4)";
             photosCommand.Parameters.AddWithValue("@Photo1", photos[0]);
             photosCommand.Parameters.AddWithValue("@Photo2", photos[1]);
             photosCommand.Parameters.AddWithValue("@Photo3", photos[2]);
@@ -72,7 +72,7 @@ namespace BierBuddy.DataAccess
             photosCommand.ExecuteNonQuery();
             long photosID = photosCommand.LastInsertedId;
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO visitor (Name, Bio, Age, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID) VALUES (@Name, @Bio, @Age, @Photo_ID, @DrinksID, @InterestsID, @ActivitiesID)";
+            cmd.CommandText = "INSERT INTO Visitor (Name, Bio, Age, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID) VALUES (@Name, @Bio, @Age, @Photo_ID, @DrinksID, @InterestsID, @ActivitiesID)";
             cmd.Parameters.AddWithValue("@Name", name);
             cmd.Parameters.AddWithValue("@Bio", bio);
             cmd.Parameters.AddWithValue("@Age", age);
@@ -89,7 +89,7 @@ namespace BierBuddy.DataAccess
         public Visitor? GetAccount(long ID)
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM visitor WHERE VisitorID = @ID";
+            cmd.CommandText = "SELECT * FROM Visitor WHERE VisitorID = @ID";
             cmd.Parameters.AddWithValue("@ID", ID);
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -120,7 +120,7 @@ namespace BierBuddy.DataAccess
         public List<long> GetGivenLikes(long ID)
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM likes WHERE LikerID = @ID";
+            cmd.CommandText = "SELECT * FROM Likes WHERE LikerID = @ID";
             cmd.Parameters.AddWithValue("@ID", ID);
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -136,7 +136,7 @@ namespace BierBuddy.DataAccess
         public List<long> GetMatches(long ID)
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM matches WHERE Visitor_VisitorID1 = @ID OR Visitor_VisitorID2 = @ID";
+            cmd.CommandText = "SELECT * FROM Matches WHERE Visitor_VisitorID1 = @ID OR Visitor_VisitorID2 = @ID";
             cmd.Parameters.AddWithValue("@ID", ID);
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -156,10 +156,19 @@ namespace BierBuddy.DataAccess
             return matches;
         }
 
+        public void AddMatch(long ID1, long ID2)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "INSERT INTO Matches (Visitor_VisitorID1, Visitor_VisitorID2) VALUES (@ID1, @ID2)";
+            cmd.Parameters.AddWithValue("@ID1", ID1);
+            cmd.Parameters.AddWithValue("@ID2", ID2);
+            cmd.ExecuteNonQuery();
+        }
+
         public Dictionary<long, string> GetPossibleActivities()
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM possibleactivities";
+            cmd.CommandText = "SELECT * FROM PossibleActivities";
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
             Dictionary<long, string> activities = new Dictionary<long, string>();
@@ -174,7 +183,7 @@ namespace BierBuddy.DataAccess
         public Dictionary<long, string> GetPossibleDrinks()
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM possibledrinks";
+            cmd.CommandText = "SELECT * FROM PossibleDrinks";
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
             Dictionary<long, string> drinks = new Dictionary<long, string>();
@@ -189,7 +198,7 @@ namespace BierBuddy.DataAccess
         public Dictionary<long, string> GetPossibleInterests()
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM possibleinterests";
+            cmd.CommandText = "SELECT * FROM PossibleInterests";
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
             Dictionary<long, string> interests = new Dictionary<long, string>();
@@ -204,7 +213,7 @@ namespace BierBuddy.DataAccess
         public List<long> GetReceivedLikes(long ID)
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM likes WHERE LikedID = @ID";
+            cmd.CommandText = "SELECT * FROM Likes WHERE LikedID = @ID";
             cmd.Parameters.AddWithValue("@ID", ID);
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -221,7 +230,7 @@ namespace BierBuddy.DataAccess
         {
             MySqlTransaction transaction = _conn.BeginTransaction();
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO dislikes (DislikerID, DislikedID) VALUES (@DislikerID, @DislikedID)";
+            cmd.CommandText = "INSERT INTO Dislikes (DislikerID, DislikedID) VALUES (@DislikerID, @DislikedID)";
             cmd.Parameters.AddWithValue("@DislikerID", dislikerID);
             cmd.Parameters.AddWithValue("@DislikedID", dislikedID);
             cmd.ExecuteNonQuery();
@@ -232,7 +241,7 @@ namespace BierBuddy.DataAccess
         {
             MySqlTransaction transaction = _conn.BeginTransaction();
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO likes (LikerID, LikedID) VALUES (@LikerID, @LikedID)";
+            cmd.CommandText = "INSERT INTO Likes (LikerID, LikedID) VALUES (@LikerID, @LikedID)";
             cmd.Parameters.AddWithValue("@LikerID", likerID);
             cmd.Parameters.AddWithValue("@LikedID", likedID);
             cmd.ExecuteNonQuery();
@@ -240,7 +249,7 @@ namespace BierBuddy.DataAccess
             if (GetReceivedLikes(likerID).Contains(likedID))
             {
                 MySqlCommand cmd2 = _conn.CreateCommand();
-                cmd2.CommandText = "INSERT INTO matches (Visitor_VisitorID1, Visitor_VisitorID2) VALUES (@LikerID, @LikedID)";
+                cmd2.CommandText = "INSERT INTO Matches (Visitor_VisitorID1, Visitor_VisitorID2) VALUES (@LikerID, @LikedID)";
                 cmd2.Parameters.AddWithValue("@LikerID", likerID);
                 cmd2.Parameters.AddWithValue("@LikedID", likedID);
                 cmd2.ExecuteNonQuery();

@@ -27,8 +27,4 @@
         <Using Include="NUnit.Framework" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\BierBuddy.Core\BierBuddy.Core.csproj" />
-    </ItemGroup>
-
 </Project>

@@ -32,6 +32,7 @@ namespace BierBuddy.UI
         private FindBuddiesPageRenderer FindBuddiesPageRenderer { get; }
         private AlgoritmePlaceHolder AlgoritmePlaceHolder { get; }
 
+        public Size MainScreenSize { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -44,6 +45,7 @@ namespace BierBuddy.UI
         }
         private void BierBuddyMainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+
             //pas alleen de navBar size aan als deze niet kleiner zal zijn dan de minimum size
             if (BBMainWindow.ActualWidth * _SizeModifierNavBar > _NavBarMinSize)
             {
@@ -60,7 +62,7 @@ namespace BierBuddy.UI
             {
                 NavBar.Width = _NavBarMinSize;
             }
-            FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize.Width);
+            FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
         }
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)

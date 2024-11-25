@@ -20,4 +20,4 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-build --verbosity diag --where "cat != DataAccessTests" -p:TargetFramework=net8.0
+        run: dotnet test --no-build --verbosity diag BierBuddy/BierBuddy.Tests/BierBuddy.Tests.csproj --where "cat != DataAccessTests" -p:TargetFramework=net8.0

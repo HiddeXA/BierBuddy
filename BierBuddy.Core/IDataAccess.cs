@@ -11,7 +11,31 @@ namespace BierBuddy.Core
         /// <summary>
         /// haalt een account op op basis van een account ID
         /// </summary>
+
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public Visitor? GetAccount(long ID);
+        /// <summary>
+        /// geeft een lijst van accounts terug
+        /// </summary>
+        /// <param name="maxAmount"></param>
+        /// <returns></returns>
+        public List<Visitor> GetAccounts(int maxAmount); 
+        /// <summary>
+        /// geeft een lijst van accounts terug die de bezoeker nog niet heeft gezien
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="maxAmount"></param>
+        /// <returns></returns>
+        public List<Visitor> GetNotSeenAccounts(long ID, int maxAmount = 10);
+        /// <summary>
+        /// geeft een lijst van accounts terug die de bezoeker heeft geliked maar nog niet heeft gezien
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="maxAmount"></param>
+        /// <returns></returns>
+        public List<Visitor> GetLikedNotSeenAccounts(long ID, int maxAmount = 10);
+
         /// <summary>
         /// voegt een account toe aan de database
         /// </summary>
@@ -34,6 +58,13 @@ namespace BierBuddy.Core
         /// <param name="dislikerID">de id van degene die iemand anders disliked</param>
         /// <param name="dislikedID">de id van degene die gedisliked is</param>
         public void SetDislike(long dislikerID, long dislikedID);
+        /// <summary>
+        /// checkt als bezoekers gematched zijn
+        /// </summary>
+        /// <param name="ID1"></param>
+        /// <param name="ID2"></param>
+        /// <returns></returns>
+        public bool CheckIfMatch(long ID1, long ID2);
         /// <summary>
         /// haal alle IDs op van mensen die de bezoeker hebben gedisliked
         /// </summary>

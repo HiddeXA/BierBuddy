@@ -5,6 +5,8 @@ using System.Diagnostics;
 
 namespace BierBuddy.Tests
 {
+    [TestFixture]
+    [Category("DataAccessTests")]
     internal class DataAccessTests
     {
         private MySqlConnection _conn;

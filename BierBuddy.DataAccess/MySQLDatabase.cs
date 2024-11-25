@@ -15,6 +15,11 @@ namespace BierBuddy.DataAccess
             _conn = connection;
         }
 
+        public List<Visitor> GetLikedNotSeenAccounts(long ID, int maxAmount = 10)
+        {
+            throw new NotImplementedException();
+        }
+
         public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos)
         {
             if (activities.Count < 1 || activities.Count > 4)
@@ -95,6 +100,21 @@ namespace BierBuddy.DataAccess
             }
             reader.Close();
             return visitor;
+        }
+
+        public List<Visitor> GetAccounts(int maxAmount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Visitor> GetNotSeenAccounts(long ID, int maxAmount = 10)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CheckIfMatch(long ID1, long ID2)
+        {
+            throw new NotImplementedException();
         }
 
         public List<long> GetGivenLikes(long ID)

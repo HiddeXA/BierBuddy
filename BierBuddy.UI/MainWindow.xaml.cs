@@ -26,22 +26,22 @@ namespace BierBuddy.UI
 
         private readonly int _MinFontSize = 26;
         private readonly int _FontSizeIncrement = 30;
-        private int FontSizeModifier { get; }
+        private int _FontSizeModifier { get; }
 
         //definitie pageRenderers
-        private FindBuddiesPageRenderer FindBuddiesPageRenderer { get; }
-        private AlgoritmePlaceHolder AlgoritmePlaceHolder { get; }
+        private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
+        private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
 
-        public Size MainScreenSize { get; set; }
+        public Size _MainScreenSize { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             //initialize page renderers
-            FindBuddiesPageRenderer = new FindBuddiesPageRenderer();
-            AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
+            _FindBuddiesPageRenderer = new FindBuddiesPageRenderer();
+            _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
 
-            FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
+            _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
         private void BierBuddyMainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -62,13 +62,13 @@ namespace BierBuddy.UI
             {
                 NavBar.Width = _NavBarMinSize;
             }
-            FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
+            _FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
         }
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
         {
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(FindBuddiesPageRenderer.GetFindBuddiesPage(AlgoritmePlaceHolder.GetVisitor(), NavBar.Width, BBMainWindow.Width, BBMainWindow.Height));
+            PagePanel.Children.Add(FindBuddiesPageRenderer.GetFindBuddiesPage(_AlgoritmePlaceHolder.GetVisitor(), NavBar.Width, BBMainWindow.Width, BBMainWindow.Height));
             
         }
 
@@ -91,7 +91,7 @@ namespace BierBuddy.UI
 
         private int CalculateNavBarFontSize()
         {
-            int fontSize = (int)(NavBar.Width / _FontSizeIncrement + FontSizeModifier);
+            int fontSize = (int)(NavBar.Width / _FontSizeIncrement + _FontSizeModifier);
             return fontSize;
         }
         private void MoveBeerFoam(SizeChangedEventArgs e)

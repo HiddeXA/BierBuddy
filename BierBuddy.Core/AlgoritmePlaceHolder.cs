@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//TODO
+//DELETE THIS
+
 namespace BierBuddy.Core
 {
     public class AlgoritmePlaceHolder

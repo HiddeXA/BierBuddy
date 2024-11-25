@@ -22,21 +22,21 @@ namespace BierBuddy.UILib
 {
     public class FindBuddiesPageRenderer : IPageRenderer
     {
-        private Canvas profilePanel;
-        private Size MainWindowSize;
-        private double NavBarWidth;
+        private Canvas _profilePanel;
+        private Size _MainWindowSize;
+        private double _NavBarWidth;
         private Visitor _Visitor { get; set; }
 
         public FindBuddiesPageRenderer()
         {
-            profilePanel = new Canvas();
+            _profilePanel = new Canvas();
             _Visitor = new(0, "temp", "temp", 0);
         }
         public WrapPanel GetFindBuddiesPage(Visitor visitor, double navBarWidth, double screenWidth, double screenHeight)
         {
-            profilePanel = new();
-            profilePanel.Margin = new Thickness(20);
-            profilePanel.VerticalAlignment = VerticalAlignment.Center;
+            _profilePanel = new();
+            _profilePanel.Margin = new Thickness(20);
+            _profilePanel.VerticalAlignment = VerticalAlignment.Center;
             _Visitor = visitor;
 
             WrapPanel FindBuddiesPanel = new();
@@ -135,19 +135,19 @@ namespace BierBuddy.UILib
             Border profileBorder = new();
             profileBorder.Background = UIUtils.Outer_Space;
             profileBorder.CornerRadius = UIUtils.UniversalCornerRadius;
-            profileBorder.Child = profilePanel;
+            profileBorder.Child = _profilePanel;
             return profileBorder;
         }
         private void SetProfilePanel(double width, double height)
         {
-            profilePanel.Width = width;
-            profilePanel.Height = height - 150;
+            _profilePanel.Width = width;
+            _profilePanel.Height = height - 150;
             UIElement profilePicture = GetProfilePicture(width);
-            profilePanel.Children.Add(profilePicture);
+            _profilePanel.Children.Add(profilePicture);
 
             UIElement profileContent = GetProfileContentPanel(width);
             Canvas.SetTop(profileContent, height - UIUtils.ProfileConentHeight - 150);
-            profilePanel.Children.Add(profileContent);
+            _profilePanel.Children.Add(profileContent);
         }
         
         private UIElement GetProfilePicture(double width)
@@ -194,37 +194,15 @@ namespace BierBuddy.UILib
             UIElement activityLabel;
             UIElement interestLabel;
 
-            if (_Visitor.DrinkPreference.Count != 0)
-            {
-                drinkLabel = GetProfileLabel(_Visitor.DrinkPreference[0]);
-            }
-            else
-            {
-                drinkLabel = GetProfileLabel("Heb ik niet");
-            }
-            if (_Visitor.ActivityPreference.Count != 0)
-            {
-                activityLabel = GetProfileLabel(_Visitor.ActivityPreference[0]);
-            }
-            else
-            {
-                activityLabel = GetProfileLabel("Heb ik niet");
-            }
-            if (_Visitor.DrinkPreference.Count != 0)
-            {
-                interestLabel = GetProfileLabel(_Visitor.Interests[0]);
-            }
-            else
-            {
-                interestLabel = GetProfileLabel("Heb ik niet");
-            };
-            
+            drinkLabel = GetProfileLabel(_Visitor.DrinkPreference[0]);
             Grid.SetColumn(drinkLabel, 0);
             Grid.SetRow(drinkLabel, 2);
 
+            activityLabel = GetProfileLabel(_Visitor.ActivityPreference[0]);
             Grid.SetColumn(activityLabel, 1);
             Grid.SetRow(activityLabel, 2);
 
+            interestLabel = GetProfileLabel(_Visitor.Interests[0]);
             Grid.SetColumn(interestLabel, 2);
             Grid.SetRow(interestLabel, 2);
 
@@ -309,19 +287,19 @@ namespace BierBuddy.UILib
         }
         private void BioButton_Click(object sender, RoutedEventArgs e)
         {
-            profilePanel.Children.Clear();
+            _profilePanel.Children.Clear();
             SetPreferencesPanel();
             
         }
         private void SetPreferencesPanel()
         {
-            profilePanel.Children.Add(GetPreferencesTable());
-            profilePanel.Children.Add(GetBio());
+            _profilePanel.Children.Add(GetPreferencesTable());
+            _profilePanel.Children.Add(GetBio());
         }
         private UIElement GetPreferencesTable()
         {
             Grid profileGrid = new Grid();
-            profileGrid.Width = profilePanel.Width;
+            profileGrid.Width = _profilePanel.Width;
             profileGrid.Height = UIUtils.ProfileConentHeight;
             profileGrid.HorizontalAlignment = HorizontalAlignment.Left;
             profileGrid.VerticalAlignment = VerticalAlignment.Top;
@@ -392,8 +370,8 @@ namespace BierBuddy.UILib
         }
         private void BioBackButton_Click(object sender, RoutedEventArgs e)
         {
-            profilePanel.Children.Clear();
-            SetProfilePanel((MainWindowSize.Width - NavBarWidth)/2, MainWindowSize.Height);
+            _profilePanel.Children.Clear();
+            SetProfilePanel((_MainWindowSize.Width - _NavBarWidth)/2, _MainWindowSize.Height);
         }
         private ControlTemplate GetBioButtonTemplate()
         {
@@ -422,8 +400,8 @@ namespace BierBuddy.UILib
         }
         public void UpdatePageSize(double newNavBarWidth, Size newScreenSize)
         {
-            NavBarWidth = newNavBarWidth;
-            MainWindowSize = newScreenSize;
+            _NavBarWidth = newNavBarWidth;
+            _MainWindowSize = newScreenSize;
         }
     }
 

@@ -29,7 +29,7 @@ public class MatchHandlerTest
         DataAccessMoq.Setup(x => x.CheckIfMatch(It.IsAny<ulong>(), It.IsAny<ulong>())).
             Returns((ulong id1, ulong id2) => id1 == 1 && id2 == 2 || id1 == 2 && id2 == 1);
         
-        Visitor visitor = new Visitor(1, "Gert", "Ik be gek op testen maar ik hou ook van vissen.", 42);
+        Visitor visitor = new Visitor(1, "Gert", "Ik ben gek op testen maar ik hou ook van vissen.", 42);
         MatchHandler matchHandler = new MatchHandler(DataAccessMoq.Object, visitor);
         
         List<Visitor> potentialMatches = matchHandler.GetPotentialMatches(visitor);
@@ -50,8 +50,8 @@ public class MatchHandlerTest
         }
         
         Assert.That(onMatchCalled, Is.True);
-        Assert.That(matchid1, Is.EqualTo(1) | Is.EqualTo(2));
-        Assert.That(matchid2, Is.EqualTo(1) | Is.EqualTo(2));
+        Assert.That(matchid1, Is.EqualTo(1));
+        Assert.That(matchid2, Is.EqualTo(2));
 
     }
 }

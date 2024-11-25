@@ -15,20 +15,20 @@ namespace BierBuddy.Core
         /// <returns></returns>
         public Visitor GetAccount(ulong ID);
         /// <summary>
-        /// gives a list of random accounts
+        /// geeft een lijst van accounts terug
         /// </summary>
         /// <param name="maxAmount"></param>
         /// <returns></returns>
         public List<Visitor> GetAccounts(int maxAmount); 
         /// <summary>
-        /// gives a list of random accounts that are not liked or disliked by the visitor
+        /// geeft een lijst van accounts terug die de bezoeker nog niet heeft gezien
         /// </summary>
         /// <param name="ID"></param>
         /// <param name="maxAmount"></param>
         /// <returns></returns>
         public List<Visitor> GetNotSeenAccounts(ulong ID, int maxAmount = 10);
         /// <summary>
-        /// gives a list of random accounts that are not liked or disliked by the visitor but have liked the visitor
+        /// geeft een lijst van accounts terug die de bezoeker heeft geliked maar nog niet heeft gezien
         /// </summary>
         /// <param name="ID"></param>
         /// <param name="maxAmount"></param>

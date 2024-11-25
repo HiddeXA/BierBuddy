@@ -165,7 +165,6 @@ namespace BierBuddy.UILib
             _ProfilePicture.Stretch = Stretch.UniformToFill;
             _ProfilePicture.HorizontalAlignment = HorizontalAlignment.Center;
             _ProfilePicture.VerticalAlignment = VerticalAlignment.Center;
-            //only top bar rounded
             _ProfilePicture.Clip = new RectangleGeometry(new Rect(0, 0, width, height), UIUtils.UniversalCornerRadius.TopRight, UIUtils.UniversalCornerRadius.TopRight);
 
             canvas.Children.Add(_ProfilePicture);

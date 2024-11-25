@@ -19,14 +19,14 @@ public class MatchHandlerTest
     [Test]
     public void MatchProtocolEventTest()
     {
-        DataAccessMoq.Setup(x => x.GetNotSeenAccounts(It.IsAny<ulong>(), It.IsAny<int>())).Returns(new List<Visitor>{
+        DataAccessMoq.Setup(x => x.GetNotSeenAccounts(It.IsAny<long>(), It.IsAny<int>())).Returns(new List<Visitor>{
             new Visitor(3, "Piet", "Ik ben Piet en ik hou van bier", 19),
             new Visitor(4, "Klaas", "Ik ben Klaas en ik hou van bier", 27),
             });
-        DataAccessMoq.Setup(x => x.GetLikedNotSeenAccounts(It.IsAny<ulong>(), It.IsAny<int>())).Returns(new List<Visitor>{
+        DataAccessMoq.Setup(x => x.GetLikedNotSeenAccounts(It.IsAny<long>(), It.IsAny<int>())).Returns(new List<Visitor>{
             new Visitor(2, "Janita", "Ik ben Janita en ik hou van bier", 23),
             });
-        DataAccessMoq.Setup(x => x.CheckIfMatch(It.IsAny<ulong>(), It.IsAny<ulong>())).
+        DataAccessMoq.Setup(x => x.CheckIfMatch(It.IsAny<long>(), It.IsAny<long>())).
             Returns((ulong id1, ulong id2) => id1 == 1 && id2 == 2 || id1 == 2 && id2 == 1);
         
         Visitor visitor = new Visitor(1, "Gert", "Ik ben gek op testen maar ik hou ook van vissen.", 42);

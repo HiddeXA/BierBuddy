@@ -68,7 +68,7 @@ namespace BierBuddy.UI
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
         {
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_AlgoritmePlaceHolder.GetVisitor(), NavBar.Width, BBMainWindow.Width, BBMainWindow.Height));
+            PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_AlgoritmePlaceHolder.GetVisitor()));
             
         }
 

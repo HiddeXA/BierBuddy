@@ -36,7 +36,7 @@ namespace BierBuddy.UILib
             _ProfilePicture = new Image();
             _Visitor = new(0, "temp", "temp", 0);
         }
-        public WrapPanel GetFindBuddiesPage(Visitor visitor, double navBarWidth, double screenWidth, double screenHeight)
+        public WrapPanel GetFindBuddiesPage(Visitor visitor)
         {
             _profilePanel = new();
             _profilePanel.Margin = new Thickness(20);
@@ -44,12 +44,12 @@ namespace BierBuddy.UILib
             _Visitor = visitor;
 
             WrapPanel FindBuddiesPanel = new();
-            double panelWidth = screenWidth - navBarWidth;
+            double panelWidth = _MainWindowSize.Width - _NavBarWidth;
 
-            FindBuddiesPanel.Children.Add(GetDislikeButton(panelWidth / 4 , screenHeight));
+            FindBuddiesPanel.Children.Add(GetDislikeButton(panelWidth / 4 , _MainWindowSize.Height));
             FindBuddiesPanel.Children.Add(GetProfileBorder());
-            SetProfilePanel(panelWidth / 2, screenHeight);
-            FindBuddiesPanel.Children.Add(GetlikeButton(panelWidth / 4 , screenHeight));
+            SetProfilePanel(panelWidth / 2, _MainWindowSize.Height);
+            FindBuddiesPanel.Children.Add(GetlikeButton(panelWidth / 4 , _MainWindowSize.Height));
 
             FindBuddiesPanel.VerticalAlignment = VerticalAlignment.Center;
             FindBuddiesPanel.HorizontalAlignment = HorizontalAlignment.Center;
@@ -283,7 +283,7 @@ namespace BierBuddy.UILib
             profileGrid.RowDefinitions.Add(rowDef3);
             profileGrid.RowDefinitions.Add(rowDef4);
 
-            UIElement ProfileBanner = GetProfileBanner();
+            UIElement ProfileBanner = GetProfileBanner(UIUtils.Onyx70);
             Grid.SetColumnSpan(ProfileBanner, 3);
             Grid.SetRow(ProfileBanner, 1);
 
@@ -329,7 +329,7 @@ namespace BierBuddy.UILib
 
             return profileContentBorder;
         }
-        private UIElement GetProfileBanner()
+        private UIElement GetProfileBanner(Brush backgroundColor)
         {
             WrapPanel bannerPanel = new WrapPanel();
 
@@ -340,7 +340,7 @@ namespace BierBuddy.UILib
             bannerPanel.HorizontalAlignment = HorizontalAlignment.Center;
             bannerPanel.VerticalAlignment = VerticalAlignment.Center;
 
-            ProfileContentBorder contentBannerBorder = new ProfileContentBorder();
+            ProfileContentBorder contentBannerBorder = new ProfileContentBorder(backgroundColor);
             contentBannerBorder.Child = bannerPanel;
             return contentBannerBorder;
         }
@@ -390,67 +390,124 @@ namespace BierBuddy.UILib
         }
         private void SetPreferencesPanel()
         {
-            _profilePanel.Children.Add(GetPreferencesTable());
-            _profilePanel.Children.Add(GetBio());
-        }
-        private UIElement GetPreferencesTable()
-        {
-            Grid profileGrid = new Grid();
-            profileGrid.Width = _profilePanel.Width;
-            profileGrid.Height = UIUtils.ProfileConentHeight;
-            profileGrid.HorizontalAlignment = HorizontalAlignment.Left;
-            profileGrid.VerticalAlignment = VerticalAlignment.Top;
-            profileGrid.ShowGridLines = true;
+            Grid preferencesGrid = new Grid();
+            preferencesGrid.Width = _profilePanel.Width;
+            preferencesGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            preferencesGrid.VerticalAlignment = VerticalAlignment.Top;
 
-            // Define the Columns
             ColumnDefinition colDef1 = new ColumnDefinition();
             ColumnDefinition colDef2 = new ColumnDefinition();
             ColumnDefinition colDef3 = new ColumnDefinition();
-            profileGrid.ColumnDefinitions.Add(colDef1);
-            profileGrid.ColumnDefinitions.Add(colDef2);
-            profileGrid.ColumnDefinitions.Add(colDef3);
+            preferencesGrid.ColumnDefinitions.Add(colDef1);
+            preferencesGrid.ColumnDefinitions.Add(colDef2);
+            preferencesGrid.ColumnDefinitions.Add(colDef3);
 
             // Define the Rows
             RowDefinition rowDef1 = new RowDefinition();
+            rowDef1.Height = new GridLength(_profilePanel.Height / 12);
             RowDefinition rowDef2 = new RowDefinition();
+            rowDef2.Height = new GridLength(_profilePanel.Height / 9);
             RowDefinition rowDef3 = new RowDefinition();
+            rowDef3.Height = new GridLength(_profilePanel.Height / 9 * 4.5);
             RowDefinition rowDef4 = new RowDefinition();
+            rowDef4.Height = new GridLength(_profilePanel.Height / 9);
             RowDefinition rowDef5 = new RowDefinition();
-            profileGrid.RowDefinitions.Add(rowDef1);
-            profileGrid.RowDefinitions.Add(rowDef2);
-            profileGrid.RowDefinitions.Add(rowDef3);
-            profileGrid.RowDefinitions.Add(rowDef4);
-            profileGrid.RowDefinitions.Add(rowDef5);
+            rowDef5.Height = new GridLength(_profilePanel.Height / 9 * 2);
 
-            UIElement backButton = GetBioBackButton();
-            Grid.SetColumn(backButton, 1);
-            Grid.SetRow(backButton, 0);
-            profileGrid.Children.Add(backButton);
+            preferencesGrid.RowDefinitions.Add(rowDef1);
+            preferencesGrid.RowDefinitions.Add(rowDef2);
+            preferencesGrid.RowDefinitions.Add(rowDef3);
+            preferencesGrid.RowDefinitions.Add(rowDef4);
+            preferencesGrid.RowDefinitions.Add(rowDef5);
 
+            UIElement backToProfuileButton = GetBioBackButton();
+            Grid.SetColumn(backToProfuileButton, 1);
+            Grid.SetRow(backToProfuileButton, 0);
+            preferencesGrid.Children.Add(backToProfuileButton);
+
+            UIElement profileBanner = GetProfileBanner(UIUtils.Onyx);
+            Grid.SetColumnSpan(profileBanner, 3);
+            Grid.SetRow(profileBanner, 1);
+            preferencesGrid.Children.Add(profileBanner);
+
+            UIElement drinkPreferences = GetDrinkPreferenceTable();
+            Grid.SetColumn(drinkPreferences, 0);
+            Grid.SetRow(drinkPreferences, 2);
+            preferencesGrid.Children.Add(drinkPreferences);
+
+            UIElement activityPreferences = GetActivityPreferenceTable();
+            Grid.SetColumn(activityPreferences, 1);
+            Grid.SetRow(activityPreferences, 2);
+            preferencesGrid.Children.Add(activityPreferences);
+
+            UIElement interests = GetinterestsTable();
+            Grid.SetColumn(interests, 2);
+            Grid.SetRow(interests, 2);
+            preferencesGrid.Children.Add(interests);
+
+            ProfileContentBorder bioBorder = new ProfileContentBorder("BIO", UIUtils.Onyx);
+            Grid.SetColumnSpan(bioBorder, 3);
+            Grid.SetRow(bioBorder, 3);
+            preferencesGrid.Children.Add(bioBorder);
+
+            ProfileContentBorder bioText = new ProfileContentBorder(_Visitor.Bio, UIUtils.Onyx70);
+            Grid.SetColumnSpan(bioText, 3);
+            Grid.SetRow(bioText, 4);
+            preferencesGrid.Children.Add(bioText);
+
+            Border preferencesBorder = new Border();
+            preferencesBorder.Background = UIUtils.BabyPoeder;
+            preferencesBorder.CornerRadius = UIUtils.UniversalCornerRadius;
+            preferencesBorder.Child = preferencesGrid;
+
+            Canvas.SetTop(preferencesBorder, 0);
+            _profilePanel.Children.Add(preferencesBorder);
+        }
+        private UIElement GetDrinkPreferenceTable()
+        {
+            StackPanel drinkPrefPanel = new();
+            ProfileContentBorder drinkPrefContentBorder = new ProfileContentBorder("Drank Voorkeur", UIUtils.Onyx);
+            drinkPrefContentBorder.ProfileContentLabel.FontSize = 30;
+            drinkPrefPanel.Children.Add(drinkPrefContentBorder);
             for (int i = 0; i < _Visitor.DrinkPreference.Count; i++)
             {
                 ProfileContentBorder drinkPref = new(_Visitor.DrinkPreference[i]);
-                Grid.SetColumn(drinkPref, 0);
-                Grid.SetRow(drinkPref, i + 1);
-                profileGrid.Children.Add(drinkPref);
+                drinkPrefPanel.Children.Add(drinkPref);
             }
+            ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
+            profileContentBorder.Child = drinkPrefPanel;
+            return profileContentBorder;
+        }
+        private UIElement GetActivityPreferenceTable()
+        {
+            StackPanel activityPrefPanel = new();
+            ProfileContentBorder activityPrefContentBorder = new ProfileContentBorder("Activiteiten Voorkeur", UIUtils.Onyx);
+            activityPrefContentBorder.ProfileContentLabel.FontSize = 30;
+            activityPrefPanel.Children.Add(activityPrefContentBorder);
             for (int i = 0; i < _Visitor.ActivityPreference.Count; i++)
             {
-                ProfileContentBorder activityPref = new(_Visitor.ActivityPreference[i]);
-                Grid.SetColumn(activityPref, 1);
-                Grid.SetRow(activityPref, i + 1);
-                profileGrid.Children.Add(activityPref);
+                ProfileContentBorder drinkPref = new(_Visitor.ActivityPreference[i]);
+                activityPrefPanel.Children.Add(drinkPref);
             }
+            ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
+            profileContentBorder.Child = activityPrefPanel;
+            return profileContentBorder;
+        }
+        private UIElement GetinterestsTable()
+        {
+            StackPanel interestsPanel = new();
+            interestsPanel.Children.Add(new ProfileContentBorder("interesses", UIUtils.Onyx));
             for (int i = 0; i < _Visitor.Interests.Count; i++)
             {
-                ProfileContentBorder interests = new(_Visitor.Interests[i]);
-                Grid.SetColumn(interests, 2);
-                Grid.SetRow(interests, i + 1);
-                profileGrid.Children.Add(interests);
+                ProfileContentBorder drinkPref = new(_Visitor.Interests[i]);
+                interestsPanel.Children.Add(drinkPref);
             }
-
-            return profileGrid;
+            ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
+            profileContentBorder.Child = interestsPanel;
+            return profileContentBorder;
         }
+
+
         private UIElement GetBioBackButton()
         {
             Button bioButton = new Button();
@@ -465,11 +522,7 @@ namespace BierBuddy.UILib
             bioButton.HorizontalAlignment = HorizontalAlignment.Center;
             return bioButton;
         }
-        private void BioBackButton_Click(object sender, RoutedEventArgs e)
-        {
-            _profilePanel.Children.Clear();
-            SetProfilePanel((_MainWindowSize.Width - _NavBarWidth)/2, _MainWindowSize.Height);
-        }
+
         private ControlTemplate GetChevronButtonTemplate(Brush background)
         {
             ControlTemplate template = new ControlTemplate(typeof(Button));
@@ -489,6 +542,13 @@ namespace BierBuddy.UILib
             template.VisualTree = gridFactory;
             return template;
         }
+        private void BioBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            _profilePanel.Children.Clear();
+            SetProfilePanel((_MainWindowSize.Width - _NavBarWidth)/2, _MainWindowSize.Height);
+        }
+
+        
         private UIElement GetBio()
         {
             TextBlock bio = new();
@@ -504,16 +564,21 @@ namespace BierBuddy.UILib
 
     internal class ProfileContentBorder : Border
     {
-        public Label? ProfileContentLabel { get; set; }
-
-        public ProfileContentBorder(string content) : this()
+        public Label ProfileContentLabel { get; set; }
+        public ProfileContentBorder(string content) : this(content, UIUtils.Onyx70) { }
+        public ProfileContentBorder(string content, Brush backgroundColor)
         {
             ProfileContentLabel = new ProfileContentLabel(content);
             this.Child = ProfileContentLabel;
+            this.Background = backgroundColor;
+            this.CornerRadius = UIUtils.UniversalCornerRadius;
+            this.Margin = new Thickness(10);
         }
-        public ProfileContentBorder()
+        public ProfileContentBorder() : this(UIUtils.Onyx70) { }
+        public ProfileContentBorder(Brush backgroundColor)
         {
-            this.Background = UIUtils.Onyx70;
+            ProfileContentLabel = new Label();
+            this.Background = backgroundColor;
             this.CornerRadius = UIUtils.UniversalCornerRadius;
             this.Margin = new Thickness(10);
         }
@@ -529,7 +594,7 @@ namespace BierBuddy.UILib
             this.Foreground = UIUtils.BabyPoeder;
             this.VerticalAlignment = VerticalAlignment.Center;
             this.HorizontalAlignment = HorizontalAlignment.Center;
-            this.FontFamily = UIUtils.ÜniversalFontFamily;
+            this.FontFamily = UIUtils.UniversalFontFamily;
             this.FontSize = 30;
         }
     }

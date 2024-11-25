@@ -32,7 +32,7 @@ namespace BierBuddy.UI
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
 
-        public Size _MainScreenSize { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -68,7 +68,7 @@ namespace BierBuddy.UI
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
         {
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(FindBuddiesPageRenderer.GetFindBuddiesPage(_AlgoritmePlaceHolder.GetVisitor(), NavBar.Width, BBMainWindow.Width, BBMainWindow.Height));
+            PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_AlgoritmePlaceHolder.GetVisitor(), NavBar.Width, BBMainWindow.Width, BBMainWindow.Height));
             
         }
 

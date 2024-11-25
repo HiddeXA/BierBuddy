@@ -27,7 +27,7 @@ public class MatchHandlerTest
             new Visitor(2, "Janita", "Ik ben Janita en ik hou van bier", 23),
             });
         DataAccessMoq.Setup(x => x.CheckIfMatch(It.IsAny<long>(), It.IsAny<long>())).
-            Returns((ulong id1, ulong id2) => id1 == 1 && id2 == 2 || id1 == 2 && id2 == 1);
+            Returns((long id1, long id2) => id1 == 1 && id2 == 2 || id1 == 2 && id2 == 1);
         
         Visitor visitor = new Visitor(1, "Gert", "Ik ben gek op testen maar ik hou ook van vissen.", 42);
         MatchHandler matchHandler = new MatchHandler(DataAccessMoq.Object, visitor);
@@ -35,8 +35,8 @@ public class MatchHandlerTest
         List<Visitor> potentialMatches = matchHandler.GetPotentialMatches(visitor);
 
         bool onMatchCalled = false;
-        ulong matchid1 = 0;
-        ulong matchid2 = 0;
+        long matchid1 = 0;
+        long matchid2 = 0;
         matchHandler.OnMatched += (o,e) =>
         {
             onMatchCalled = true;

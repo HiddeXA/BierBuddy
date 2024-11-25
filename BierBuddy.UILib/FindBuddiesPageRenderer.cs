@@ -16,6 +16,7 @@ using Material.Icons.WPF;
 //buttons like dislike
 //show picture
 //opmaak profile bio and all interests 
+//dubbelle code weg halen
 
 namespace BierBuddy.UILib
 {

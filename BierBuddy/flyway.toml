@@ -1,0 +1,28 @@
+databaseType = "MySql"
+id = "1f660f51-cb83-42f1-8c51-a03a3ae450f3"
+name = "BierBuddy"
+
+[flyway]
+locations = [ "filesystem:migrations" ]
+mixed = true
+outOfOrder = true
+validateMigrationNaming = true
+
+  [flyway.check]
+  majorTolerance = 0
+
+[flywayDesktop]
+developmentEnvironment = "development"
+schemaModel = "schema-model"
+shadowEnvironment = "shadow"
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[redgateCompare.mysql.options.ignores]
+ignoreNewlinesInTextObjects = "off"
+
+[environments.BierBuddy]
+url = "jdbc:mysql://localhost"
+user = "root"
+schemas = [ "BierBuddyDB" ]

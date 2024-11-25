@@ -17,9 +17,21 @@ namespace BierBuddy.DataAccess
 
         public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos)
         {
-            if (activities.Count < 1 || activities.Count > 4 || drinks.Count < 1 || drinks.Count > 4 || interests.Count < 1 || interests.Count > 4 || photos.Count < 1 || photos.Count > 4)
+            if (activities.Count < 1 || activities.Count > 4)
             {
-                throw new ArgumentException("Er moeten minimaal 1 en maximaal 4 activiteiten, drankjes, interesses en foto's worden meegegeven.");
+                throw new ArgumentException("Er moeten minimaal 1 en maximaal 4 activiteiten worden meegegeven.");
+            }
+            if(drinks.Count < 1 || drinks.Count > 4)
+            {
+                throw new ArgumentException("Er moeten minimaal 1 en maximaal 4 drankjes worden meegegeven.");
+            }
+            if (interests.Count < 1 || interests.Count > 4)
+            {
+                throw new ArgumentException("Er moeten minimaal 1 en maximaal 4 interesses worden meegegeven.");
+            }
+            if (photos.Count < 1 || photos.Count > 4)
+            {
+                throw new ArgumentException("Er moeten minimaal 1 en maximaal 4 foto's worden meegegeven.");
             }
             MySqlTransaction transaction = _conn.BeginTransaction();
             MySqlCommand activitiesCommand = _conn.CreateCommand();

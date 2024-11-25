@@ -435,16 +435,15 @@ namespace BierBuddy.UILib
             Grid.SetRow(drinkPreferences, 2);
             preferencesGrid.Children.Add(drinkPreferences);
 
-            UIElement interests = GetinterestsTable();
-            Grid.SetColumn(interests, 1);
-            Grid.SetRow(interests, 2);
-            preferencesGrid.Children.Add(interests);
-
             UIElement activityPreferences = GetActivityPreferenceTable();
-            Grid.SetColumn(activityPreferences, 2);
+            Grid.SetColumn(activityPreferences, 1);
             Grid.SetRow(activityPreferences, 2);
             preferencesGrid.Children.Add(activityPreferences);
 
+            UIElement interests = GetinterestsTable();
+            Grid.SetColumn(interests, 2);
+            Grid.SetRow(interests, 2);
+            preferencesGrid.Children.Add(interests);
 
             ProfileContentBorder bioBorder = new ProfileContentBorder("BIO", UIUtils.Onyx);
             Grid.SetColumnSpan(bioBorder, 3);
@@ -523,11 +522,7 @@ namespace BierBuddy.UILib
             bioButton.HorizontalAlignment = HorizontalAlignment.Center;
             return bioButton;
         }
-        private void BioBackButton_Click(object sender, RoutedEventArgs e)
-        {
-            _profilePanel.Children.Clear();
-            SetProfilePanel((_MainWindowSize.Width - _NavBarWidth)/2, _MainWindowSize.Height);
-        }
+
         private ControlTemplate GetChevronButtonTemplate(Brush background)
         {
             ControlTemplate template = new ControlTemplate(typeof(Button));

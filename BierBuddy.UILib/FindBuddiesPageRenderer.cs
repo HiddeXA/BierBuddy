@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Xml;
 using BierBuddy.Core;
@@ -25,11 +26,14 @@ namespace BierBuddy.UILib
         private Canvas _profilePanel;
         private Size _MainWindowSize;
         private double _NavBarWidth;
+        private int _CurrentPhotoIndex = 0;
+        private Image _ProfilePicture;
         private Visitor _Visitor { get; set; }
 
         public FindBuddiesPageRenderer()
         {
             _profilePanel = new Canvas();
+            _ProfilePicture = new Image();
             _Visitor = new(0, "temp", "temp", 0);
         }
         public WrapPanel GetFindBuddiesPage(Visitor visitor, double navBarWidth, double screenWidth, double screenHeight)
@@ -142,20 +146,113 @@ namespace BierBuddy.UILib
         {
             _profilePanel.Width = width;
             _profilePanel.Height = height - 150;
-            UIElement profilePicture = GetProfilePicture(width);
+            UIElement profilePicture = GetProfilePicture(width, height - 150);
             _profilePanel.Children.Add(profilePicture);
+            Panel.SetZIndex(profilePicture, -1);
 
             UIElement profileContent = GetProfileContentPanel(width);
             Canvas.SetTop(profileContent, height - UIUtils.ProfileConentHeight - 150);
             _profilePanel.Children.Add(profileContent);
         }
         
-        private UIElement GetProfilePicture(double width)
+        private UIElement GetProfilePicture(double width, double height)
         {
-            Label tempFoto = new Label();
-            tempFoto.Content = "FOTO!";
-            tempFoto.Foreground = UIUtils.testMarking;
-            return  tempFoto;
+            Canvas canvas = new();
+            _ProfilePicture = new();
+            _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
+            _ProfilePicture.Width = width;
+            _ProfilePicture.Height = height;
+            _ProfilePicture.Stretch = Stretch.UniformToFill;
+            _ProfilePicture.HorizontalAlignment = HorizontalAlignment.Center;
+            _ProfilePicture.VerticalAlignment = VerticalAlignment.Center;
+            _ProfilePicture.Clip = new RectangleGeometry(new Rect(0, 0, width, height), UIUtils.UniversalCornerRadius.TopRight, UIUtils.UniversalCornerRadius.TopRight);
+
+            canvas.Children.Add(_ProfilePicture);
+
+            if (_Visitor.Photos.Count > 1)
+            {
+                UIElement previousPicture = GetPreviousPictureButton(100, 100);
+                canvas.Children.Add(previousPicture);
+                Canvas.SetLeft(previousPicture, 0 - 25);
+                Canvas.SetTop(previousPicture, height / 2 - 25);
+                UIElement nextPicture = GetNextPictureButton(100, 100);
+                canvas.Children.Add(nextPicture);
+                Canvas.SetLeft(nextPicture, width - 75);
+                Canvas.SetTop(nextPicture, height / 2 - 25);
+            }
+            return canvas;
+        }
+
+        private UIElement GetPreviousPictureButton(double width, double height)
+        {
+            DockPanel previousButtonPanel = new();
+            previousButtonPanel.Width = width;
+            previousButtonPanel.Height = height;
+
+            Button previousButton = new();
+            previousButton.Template = GetChevronButtonTemplate(UIUtils.BabyPoeder);
+
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = MaterialIconKind.ChevronLeft;
+            icon.Foreground = UIUtils.Onyx;
+            previousButton.Content = icon;
+            previousButton.Width = width / 3;
+            previousButton.VerticalAlignment = VerticalAlignment.Center;
+            previousButton.HorizontalAlignment = HorizontalAlignment.Center;
+            previousButton.Background = UIUtils.Transparent;
+            previousButton.Click += PreviousButton_Click;
+
+            previousButtonPanel.Children.Add(previousButton);
+            return previousButtonPanel;
+        }
+
+        private UIElement GetNextPictureButton(double width, double height)
+        {
+            DockPanel nextButtonPanel = new();
+            nextButtonPanel.Width = width;
+            nextButtonPanel.Height = height;
+
+            Button nextButton = new();
+            nextButton.Template = GetChevronButtonTemplate(UIUtils.BabyPoeder);
+
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = MaterialIconKind.ChevronRight;
+            icon.Foreground = UIUtils.Onyx;
+            nextButton.Content = icon;
+            nextButton.Width = width / 3;
+            nextButton.VerticalAlignment = VerticalAlignment.Center;
+            nextButton.HorizontalAlignment = HorizontalAlignment.Center;
+            nextButton.Background = UIUtils.Transparent;
+            nextButton.Click += NextButton_Click;
+
+            nextButtonPanel.Children.Add(nextButton);
+            return nextButtonPanel;
+        }
+
+        private void PreviousButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_CurrentPhotoIndex > 0)
+            {
+                _CurrentPhotoIndex--;
+            }
+            else
+            {
+                _CurrentPhotoIndex = _Visitor.Photos.Count - 1;
+            }
+            _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_CurrentPhotoIndex < _Visitor.Photos.Count - 1)
+            {
+                _CurrentPhotoIndex++;
+            }
+            else
+            {
+                _CurrentPhotoIndex = 0;
+            }
+            _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
         }
 
         private UIElement GetProfileContentPanel(double width)
@@ -274,7 +371,7 @@ namespace BierBuddy.UILib
         private UIElement GetBioButton()
         {
             Button bioButton = new Button();
-            bioButton.Template = GetBioButtonTemplate();
+            bioButton.Template = GetChevronButtonTemplate(UIUtils.Onyx70);
 
             MaterialIcon icon = new MaterialIcon();
             icon.Kind = MaterialIconKind.ChevronDown;
@@ -357,7 +454,7 @@ namespace BierBuddy.UILib
         private UIElement GetBioBackButton()
         {
             Button bioButton = new Button();
-            bioButton.Template = GetBioButtonTemplate();
+            bioButton.Template = GetChevronButtonTemplate(UIUtils.Onyx70);
 
             MaterialIcon icon = new MaterialIcon();
             icon.Kind = MaterialIconKind.ChevronUp;
@@ -373,14 +470,14 @@ namespace BierBuddy.UILib
             _profilePanel.Children.Clear();
             SetProfilePanel((_MainWindowSize.Width - _NavBarWidth)/2, _MainWindowSize.Height);
         }
-        private ControlTemplate GetBioButtonTemplate()
+        private ControlTemplate GetChevronButtonTemplate(Brush background)
         {
             ControlTemplate template = new ControlTemplate(typeof(Button));
             FrameworkElementFactory gridFactory = new FrameworkElementFactory(typeof(Grid));
 
             FrameworkElementFactory borderFactory = new FrameworkElementFactory(typeof(Border));
             //set background color
-            borderFactory.SetValue(Border.BackgroundProperty, UIUtils.Onyx70);
+            borderFactory.SetValue(Border.BackgroundProperty, background);
             borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(90));
             gridFactory.AppendChild(borderFactory);
 

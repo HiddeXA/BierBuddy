@@ -20,7 +20,7 @@ namespace BierBuddy.Core
         public List<string> ActivityPreference = new List<string>();
 
         // Fotos
-        public List<string> Images = new List<string>();
+        public List<string> Photos = new List<string>();
 
 
         public Visitor(long id, string name, string bio, int age)

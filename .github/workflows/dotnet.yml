@@ -3,7 +3,7 @@
 
 name: .NET
 
-on: ["push", "pull_request"]
+on: ["pull_request"]
 
 jobs:
   build:
@@ -20,4 +20,4 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-build --verbosity normal -f "FullyQualifiedName!~DataAccessTests"
+        run: dotnet test --no-build --verbosity diag --filter TestCategory!=DataAccessTests -p:TargetFramework=net8.0

@@ -16,6 +16,7 @@ namespace BierBuddy.Core
             Visitor rick = new Visitor(1, "Rick", "oikos for life <3", 19);
             rick.AddToDrinkPreference("sambuca");
             rick.AddToDrinkPreference("speciaal bier");
+            rick.AddToActivityPreference("je moeder");
             rick.AddToInterests("oikos");
             return rick;
         }

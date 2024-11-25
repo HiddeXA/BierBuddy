@@ -19,7 +19,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="NUnit.Framework"/>
+      <ProjectReference Include="..\BierBuddy.Core\BierBuddy.Core.csproj" />
+      <ProjectReference Include="..\BierBuddy.DataAccess\BierBuddy.DataAccess.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="NUnit.Framework" />
     </ItemGroup>
 
     <ItemGroup>

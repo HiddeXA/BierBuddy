@@ -11,9 +11,10 @@ namespace BierBuddy.Core
         /// <summary>
         /// haalt een account op op basis van een account ID
         /// </summary>
+
         /// <param name="ID"></param>
         /// <returns></returns>
-        public Visitor GetAccount(ulong ID);
+        public Visitor? GetAccount(long ID);
         /// <summary>
         /// geeft een lijst van accounts terug
         /// </summary>
@@ -26,55 +27,70 @@ namespace BierBuddy.Core
         /// <param name="ID"></param>
         /// <param name="maxAmount"></param>
         /// <returns></returns>
-        public List<Visitor> GetNotSeenAccounts(ulong ID, int maxAmount = 10);
+        public List<Visitor> GetNotSeenAccounts(long ID, int maxAmount = 10);
         /// <summary>
         /// geeft een lijst van accounts terug die de bezoeker heeft geliked maar nog niet heeft gezien
         /// </summary>
         /// <param name="ID"></param>
         /// <param name="maxAmount"></param>
         /// <returns></returns>
-        public List<Visitor> GetLikedNotSeenAccounts(ulong ID, int maxAmount = 10);
+        public List<Visitor> GetLikedNotSeenAccounts(long ID, int maxAmount = 10);
+
         /// <summary>
         /// voegt een account toe aan de database
         /// </summary>
-        /// <param name="visitor"></param>
-        public void AddAccount(Visitor visitor);
+        /// <param name="activities">de activiteiten van de bezoeker, minimaal 1, maximaal 4</param>
+        /// <param name="drinks">de drankjes van de bezoeker, minimaal 1, maximaal 4</param>
+        /// <param name="interests">de interesses van de bezoeker, minimaal 1, maximaal 4</param>
+        /// <param name="photos">de foto's van de bezoeker, minimaal 1, maximaal 4</param>
+        /// <returns>het aangemaakte account</returns>
+        /// <exception cref="ArgumentException">als er minder dan 1 of meer dan 4 activiteiten, drankjes, interesses of foto's worden meegegeven</exception>"
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos);
         /// <summary>
         /// zet een like op een bezoeker
         /// </summary>
         /// <param name="likerID">de id van degene die iemand anders liked</param>
         /// <param name="likedID">de id van degene die geliked is</param>
-        public void SetLike(ulong likerID, ulong likedID);
+        public void SetLike(long likerID, long likedID);
         /// <summary>
         /// zet een dislike op een bezoeker
         /// </summary>
         /// <param name="dislikerID">de id van degene die iemand anders disliked</param>
         /// <param name="dislikedID">de id van degene die gedisliked is</param>
-        public void SetDislike(ulong dislikerID, ulong dislikedID);
-        /// <summary>
-        /// haal alle IDs op van mensen die de bezoeker hebben gedisliked
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <returns></returns>
-        public List<int> GetGivenLikes(ulong ID);
-        /// <summary>
-        /// haal alle IDs op van mensen die de bezoeker hebben geliked
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <returns></returns>
-        public List<int> GetReceivedLikes(ulong ID);
-        /// <summary>
-        /// haal alle IDs op van de bezoekers die een match hebben met de bezoeker
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <returns></returns>
-        public List<int> GetMatches(ulong ID); 
+        public void SetDislike(long dislikerID, long dislikedID);
         /// <summary>
         /// checkt als bezoekers gematched zijn
         /// </summary>
         /// <param name="ID1"></param>
         /// <param name="ID2"></param>
         /// <returns></returns>
-        public bool CheckIfMatch(ulong ID1, ulong ID2);
+        public bool CheckIfMatch(long ID1, long ID2);
+        /// <summary>
+        /// haal alle IDs op van mensen die de bezoeker hebben gedisliked
+        /// </summary>
+        public List<long> GetGivenLikes(long ID);
+        /// <summary>
+        /// haal alle IDs op van mensen die de bezoeker hebben geliked
+        /// </summary>
+        public List<long> GetReceivedLikes(long ID);
+        /// <summary>
+        /// haal alle IDs op van de bezoekers die een match hebben met de bezoeker
+        /// </summary>
+        public List<long> GetMatches(long ID);
+        /// <summary>
+        /// haal alle mogelijke activiteiten op uit de database
+        /// </summary>
+        /// <returns>een Dictionary met alle mogelijke activiteiten met hun bijbehorende index</returns>
+        public Dictionary<long, String> GetPossibleActivities();
+        /// <summary>
+        /// haal alle mogelijke drankjes op uit de database
+        /// </summary>
+        /// <returns>een Dictionary met alle mogelijke drankjes met hun bijbehorende index</returns>
+        public Dictionary<long, String> GetPossibleDrinks();
+        /// <summary>
+        /// haal alle mogelijke interesses op uit de database
+        /// </summary>
+        /// <returns>een Dictionary met alle mogelijke interesses met hun bijbehorende index</returns>
+        public Dictionary<long, String> GetPossibleInterests();
     }
 }

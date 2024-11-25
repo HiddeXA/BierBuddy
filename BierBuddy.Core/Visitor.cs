@@ -9,7 +9,7 @@ namespace BierBuddy.Core
     public class Visitor
     {
         // Basis atributen van de gebruiker.
-        public ulong ID { get; private set; }
+        public long ID { get; private set; }
         public string Name { get; set; }
         public string Bio { get; set; }
         public int Age { get; private set; }
@@ -23,7 +23,7 @@ namespace BierBuddy.Core
         public List<string> Images = new List<string>();
 
 
-        public Visitor(ulong id, string name, string bio, int age)
+        public Visitor(long id, string name, string bio, int age)
         {
             ID = id;
             Name = name;

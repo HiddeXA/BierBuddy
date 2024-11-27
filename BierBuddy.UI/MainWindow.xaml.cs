@@ -31,6 +31,7 @@ namespace BierBuddy.UI
         //definitie pageRenderers
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
+        private Visitor _ClientVisitor { set; get; }
 
 
         public MainWindow()

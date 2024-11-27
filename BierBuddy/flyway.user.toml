@@ -1,0 +1,5 @@
+[environments.BB]
+url = "jdbc:mysql://localhost"
+user = "root"
+schemas = [ "BierBuddy" ]
+displayName = "BierBuddyDB"

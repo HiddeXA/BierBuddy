@@ -76,6 +76,24 @@ namespace BierBuddy.UI
         {
             PagePanel.Children.Clear();
             //todo voor mijn buddies userstory
+
+            //haal dit weg als de userstory is geimplementeerd
+            DateTimePlannerDialog dialog = new();
+
+            // Show the dialog as a modal dialog
+            bool? result = dialog.ShowDialog();
+
+            // Check the dialog result (if needed)
+            if (result == true)
+            {
+                // User clicked OK
+                MessageBox.Show("Dialog closed with OK.");
+            }
+            else
+            {
+                // User clicked Cancel or closed the dialog
+                MessageBox.Show("Dialog closed with Cancel or Close button.");
+            }
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

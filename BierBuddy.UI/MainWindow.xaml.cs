@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Material.Icons.WPF;
 using BierBuddy.Core;
+using BierBuddy.DataAccess;
 
 namespace BierBuddy.UI
 {
@@ -29,18 +30,27 @@ namespace BierBuddy.UI
         private int _FontSizeModifier { get; }
 
         //definitie pageRenderers
+        private Main _Main { get; }
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
-        private Visitor _ClientVisitor { set; get; }
-
-
+        private IDataAccess _DataAccess { get; }
+        
         public MainWindow()
         {
             InitializeComponent();
             //initialize page renderers
+            MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
+            connection.Open();
+            _DataAccess = new MySQLDatabase(connection);
             _FindBuddiesPageRenderer = new FindBuddiesPageRenderer();
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
+            Visitor? defaultVisitor = _DataAccess.GetAccount(1);
+            if (defaultVisitor == null)
+            {
+                defaultVisitor = _AlgoritmePlaceHolder.GetVisitor();
+            }
+            _Main = new Main(_DataAccess, defaultVisitor);
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
@@ -86,8 +96,15 @@ namespace BierBuddy.UI
         }
         private void AccountButton_Click(object sender, RoutedEventArgs e)
         {
-            PagePanel.Children.Clear();
-            //todo voor account userstories
+            //PagePanel.Children.Clear();
+            //todo account aanpassen screen
+            //todo aanpassen account switchen en authenticatie enzo
+
+            //dit is een tijdelijke oplossing
+            SwitchAccountDialog switchAccDialog = new SwitchAccountDialog(_Main);
+            switchAccDialog.ShowDialog();
+
+
         }
 
         private int CalculateNavBarFontSize()

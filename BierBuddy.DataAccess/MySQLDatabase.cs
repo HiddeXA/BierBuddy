@@ -89,7 +89,14 @@ namespace BierBuddy.DataAccess
         public Visitor? GetAccount(long ID)
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM visitor WHERE VisitorID = @ID";
+            cmd.CommandText = 
+                "SELECT V.VisitorID, V.Name, V.BIO, V.Age, P.Photo1URL, P.Photo2URL, P.Photo3URL, P.Photo4URL, D.Drinks_DrinkID1, D.Drinks_DrinkID2, D.Drinks_DrinkID3, D.Drinks_DrinkID4, A.Activities_ActivityID1, A.Activities_ActivityID2, A.Activities_ActivityID3, A.Activities_ActivityID4, I.PossibleInterests_InterestID1, I.PossibleInterests_InterestID2, I.PossibleInterests_InterestID3, I.PossibleInterests_InterestID4" +
+                "FROM visitor V" +
+                "JOIN photo P ON V.Photo_PhotoID = P.PhotoID" +
+                "JOIN drinkpreferences D ON V.DrinkPreferences_DrinkPreferencesID = D.DrinkPreferencesID" +
+                "JOIN activitypreferences A ON V.ActivityPreferences_ActivityPreferencesID = A.ActivityPreferencesID" +
+                "JOIN interests I ON V.Interests_InterestsID = I.interestsID" +
+                "WHERE V.VisitorID = @ID";
             cmd.Parameters.AddWithValue("@ID", ID);
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -99,6 +106,7 @@ namespace BierBuddy.DataAccess
                 visitor = new Visitor(reader.GetInt64(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3));
             }
             reader.Close();
+
             return visitor;
         }
 

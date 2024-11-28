@@ -11,9 +11,8 @@ namespace BierBuddy.Core
         private IDataAccess _DataAccess;
         private Visitor _ClientVisitor;
         private List<Visitor> _PotentialMatches;
-        private MatchHandler _MatchHandler;
 
-        public event EventHandler<MatchedEventArgs> OnMatched;
+        public event EventHandler<MatchedEventArgs>? OnMatched;
         public FindBuddies(IDataAccess dataAccess, Visitor clientVisitor) 
         { 
             _DataAccess = dataAccess;

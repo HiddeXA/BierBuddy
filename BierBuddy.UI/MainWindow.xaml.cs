@@ -24,7 +24,7 @@ namespace BierBuddy.UI
         private readonly double _SizeModifierNavBar = 0.25;
         private readonly int _NavBarMinSize = 290;
 
-        private readonly int _MinFontSize = 26;
+        private readonly int _MinFontSize = 24;
         private readonly int _FontSizeIncrement = 30;
         private int _FontSizeModifier { get; }
 
@@ -60,8 +60,15 @@ namespace BierBuddy.UI
             }
             else
             {
+                MoveBeerFoam(e);
+                int fontSize = CalculateNavBarFontSize();
+                FindBuddiesLabel.FontSize = fontSize;
+                MyBuddiesLabel.FontSize = fontSize;
                 NavBar.Width = _NavBarMinSize;
             }
+
+            MoveBeerFoam(e);
+
             _FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
         }
 

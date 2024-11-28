@@ -34,13 +34,13 @@
                     <Ellipse x:Name="EllipseFoam1" Width="130" Height="130" Fill="#FCFFF7" Stroke="#FF57615D" StrokeThickness="3"
                         Canvas.Left="182" Canvas.Top="-83" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <Ellipse x:Name="EllipseFoam0" Width="130" Height="130" Fill="#FCFFF7" Stroke="#FF57615D" StrokeThickness="3"
-                        Canvas.Left="270" Canvas.Top="-65" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                        Canvas.Left="270" Canvas.Top="-65" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <Ellipse x:Name="EllipseFoam3" Width="130" Height="130" Fill="#FCFFF7" Stroke="#FF57615D" StrokeThickness="3"
                         Canvas.Left="35" Canvas.Top="-83" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <Ellipse x:Name="EllipseFoam4" Width="130" Height="130" Fill="#FCFFF7" Stroke="#FF57615D" StrokeThickness="3"
                         Canvas.Left="-12" Canvas.Top="-65" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <Ellipse x:Name="EllipseFoam2" Width="130" Height="130" Fill="#FCFFF7" Stroke="#FF57615D" StrokeThickness="3"
-                        Canvas.Left="100" Canvas.Top="-83" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                        Canvas.Left="100" Canvas.Top="-83" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 </Canvas>
                 <!--NavButtons-->
                 <Button Height="75" Margin="20" Click="FindBuddyButton_Click" DockPanel.Dock="Top" >
@@ -74,9 +74,7 @@
             </DockPanel>
         </Border>
         <!--PagePanel-->
-        <Canvas x:Name="PagePanel">
-            
-        </Canvas>
+        <Canvas x:Name="PagePanel"/>
     </DockPanel>
 
 </Window>

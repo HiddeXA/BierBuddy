@@ -29,12 +29,14 @@ namespace BierBuddy.UILib
         private int _CurrentPhotoIndex = 0;
         private Image _ProfilePicture;
         private Visitor _Visitor { get; set; }
+        private FindBuddies _FindBussies;
 
-        public FindBuddiesPageRenderer()
+        public FindBuddiesPageRenderer(FindBuddies findBuddies)
         {
             _profilePanel = new Canvas();
             _ProfilePicture = new Image();
             _Visitor = new(0, "temp", "temp", 0);
+            _FindBussies = findBuddies;
         }
         public WrapPanel GetFindBuddiesPage(Visitor visitor)
         {
@@ -83,7 +85,7 @@ namespace BierBuddy.UILib
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO dislike stuff
+            _FindBussies.DislikeVisitor(_Visitor);
         }
 
         private UIElement GetlikeButton(double width, double height)
@@ -111,7 +113,7 @@ namespace BierBuddy.UILib
 
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO like stuff
+            _FindBussies.LikeVisitor(_Visitor);
         }
 
         private ControlTemplate GetLikeButtonTemplate(Brush brush)

@@ -43,7 +43,6 @@ namespace BierBuddy.UI
             MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
             connection.Open();
             _DataAccess = new MySQLDatabase(connection);
-            _FindBuddiesPageRenderer = new FindBuddiesPageRenderer();
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
             Visitor? defaultVisitor = _DataAccess.GetAccount(1);
@@ -53,6 +52,7 @@ namespace BierBuddy.UI
             }
             _Main = new Main(_DataAccess, defaultVisitor);
             _FindBuddies = new FindBuddies(_DataAccess, _Main.ClientVisitor);
+            _FindBuddiesPageRenderer = new FindBuddiesPageRenderer(_FindBuddies);
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }

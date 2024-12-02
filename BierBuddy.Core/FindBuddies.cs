@@ -45,6 +45,7 @@ namespace BierBuddy.Core
         public void LikeVisitor(Visitor visitor)
         {
             _DataAccess.SetLike(_ClientVisitor.ID, visitor.ID);
+            _PotentialMatches.Remove(visitor);
 
             if (_DataAccess.CheckIfMatch(_ClientVisitor.ID, visitor.ID))
             {

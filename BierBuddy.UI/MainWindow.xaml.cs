@@ -88,6 +88,11 @@ namespace BierBuddy.UI
             {
                 // User clicked OK
                 MessageBox.Show("Dialog closed with OK.");
+                List<List<DateTime>> selectedDateTimes = dialog.SelectedDateTimes;
+                foreach (List<DateTime> dateTime in selectedDateTimes)
+                {
+                    MessageBox.Show($"Selected date and time: {dateTime[0]} - {dateTime[1]}");
+                }
             }
             else
             {

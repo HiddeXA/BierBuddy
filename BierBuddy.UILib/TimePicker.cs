@@ -11,10 +11,13 @@ namespace BierBuddy.UILib
     internal class TimePicker : Grid
     {
         public TimeSpan SelectedTime { get; set; }
+        public event EventHandler<TimeSpan>? TimeChanged;
+
         public TimePicker()
         {
             Background = UIUtils.Onyx;
             SelectedTime = DateTime.Now.TimeOfDay;
+            SelectedTime = new TimeSpan(SelectedTime.Hours, SelectedTime.Minutes, 0);
 
             ComboBox hours = new ComboBox { Margin = new Thickness(0, 0, 5, 0) };
             ComboBox minutes = new ComboBox { Margin = new Thickness(0, 0, 5, 0) };
@@ -47,11 +50,13 @@ namespace BierBuddy.UILib
         private void Hours_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedTime = new TimeSpan(int.Parse((string)((ComboBox)sender).SelectedItem), SelectedTime.Minutes, 0);
+            TimeChanged?.Invoke(this, SelectedTime);
         }
 
         private void Minutes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedTime = new TimeSpan(SelectedTime.Hours, int.Parse((string)((ComboBox)sender).SelectedItem), 0);
+            TimeChanged?.Invoke(this, SelectedTime);
         }
     }
 }

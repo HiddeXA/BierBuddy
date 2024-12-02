@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Media.Effects;
+using System.Windows.Documents;
 
 namespace BierBuddy.UILib
 {
@@ -26,12 +27,17 @@ namespace BierBuddy.UILib
 
         public DateTimePlannerDialog()
         {
-            this.Title = "My Dialog";
+            this.Title = "Beschikbaarheden";
             this.SizeToContent = SizeToContent.WidthAndHeight;
             this.ResizeMode = ResizeMode.NoResize;
+            this.Background = UIUtils.Onyx;
 
             _StackPanel = new StackPanel { Margin = new Thickness(10) };
             TextBlock textBlock = new TextBlock { Text = "GEEF BESCHIKBAARHEID DOOR:" };
+            textBlock.Foreground = Brushes.White;
+            textBlock.FontSize = 20;
+            textBlock.FontWeight = FontWeights.Bold;
+            textBlock.FontFamily = UIUtils.UniversalFontFamily;
             _StackPanel.Children.Add(textBlock);
 
             _DateTimeSelectors = new StackPanel { Orientation = Orientation.Vertical };
@@ -45,8 +51,10 @@ namespace BierBuddy.UILib
                 Margin = new Thickness(0, 10, 0, 0)
             };
             Button cancelButton = new Button { Content = "CANCEL", IsCancel = true };
+            cancelButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(190, 55, 50)));
             _OkButton = new Button { Content = "GEEF DOOR", IsDefault = true };
             _OkButton.Click += OK_Click;
+            _OkButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(126, 161, 114)));
             buttonPanel.Children.Add(cancelButton);
             buttonPanel.Children.Add(_OkButton);
 
@@ -168,6 +176,24 @@ namespace BierBuddy.UILib
                     }
                 }
             }
+        }
+
+        private ControlTemplate GetButtonPanelButtonTemplate(SolidColorBrush background)
+        {
+            ControlTemplate template = new ControlTemplate(typeof(Button));
+            FrameworkElementFactory border = new FrameworkElementFactory(typeof(Border));
+            border.SetValue(Border.CornerRadiusProperty, new CornerRadius(5));
+            border.SetValue(Border.BackgroundProperty, background);
+            border.SetValue(Border.MarginProperty, new Thickness(5));
+            FrameworkElementFactory contentPresenter = new FrameworkElementFactory(typeof(ContentPresenter));
+            contentPresenter.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            contentPresenter.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+            contentPresenter.SetValue(ContentPresenter.MarginProperty, new Thickness(20, 10, 20, 10 ));
+            contentPresenter.SetValue(TextElement.FontWeightProperty, FontWeights.Bold);
+            contentPresenter.SetValue(TextElement.FontFamilyProperty, UIUtils.UniversalFontFamily);
+            border.AppendChild(contentPresenter);
+            template.VisualTree = border;
+            return template;
         }
     }
 }

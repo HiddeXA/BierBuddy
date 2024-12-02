@@ -70,7 +70,7 @@ namespace BierBuddy.UILib
         {
             try
             {
-                _Main.SwitchAccount.SwitchClientProfile(NewAccountID_Text.Text);
+                _Main.AccountSwitcher.SwitchClientProfile(NewAccountID_Text.Text);
                 this.Close();
             }
             catch (ArgumentOutOfRangeException)

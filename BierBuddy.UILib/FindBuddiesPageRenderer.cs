@@ -158,27 +158,31 @@ namespace BierBuddy.UILib
         private UIElement GetProfilePicture(double width, double height)
         {
             Canvas canvas = new();
-            _ProfilePicture = new();
-            _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
-            _ProfilePicture.Width = width;
-            _ProfilePicture.Height = height;
-            _ProfilePicture.Stretch = Stretch.UniformToFill;
-            _ProfilePicture.HorizontalAlignment = HorizontalAlignment.Center;
-            _ProfilePicture.VerticalAlignment = VerticalAlignment.Center;
-            _ProfilePicture.Clip = new RectangleGeometry(new Rect(0, 0, width, height), UIUtils.UniversalCornerRadius.TopRight, UIUtils.UniversalCornerRadius.TopRight);
-
-            canvas.Children.Add(_ProfilePicture);
-
-            if (_Visitor.Photos.Count > 1)
+            if (!_Visitor.Photos[_CurrentPhotoIndex].Equals("Geen URL gevonden"))
             {
-                UIElement previousPicture = GetPreviousPictureButton(100, 100);
-                canvas.Children.Add(previousPicture);
-                Canvas.SetLeft(previousPicture, 0 - 25);
-                Canvas.SetTop(previousPicture, height / 2 - 25);
-                UIElement nextPicture = GetNextPictureButton(100, 100);
-                canvas.Children.Add(nextPicture);
-                Canvas.SetLeft(nextPicture, width - 75);
-                Canvas.SetTop(nextPicture, height / 2 - 25);
+                
+                _ProfilePicture = new();
+                _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
+                _ProfilePicture.Width = width;
+                _ProfilePicture.Height = height;
+                _ProfilePicture.Stretch = Stretch.UniformToFill;
+                _ProfilePicture.HorizontalAlignment = HorizontalAlignment.Center;
+                _ProfilePicture.VerticalAlignment = VerticalAlignment.Center;
+                _ProfilePicture.Clip = new RectangleGeometry(new Rect(0, 0, width, height), UIUtils.UniversalCornerRadius.TopRight, UIUtils.UniversalCornerRadius.TopRight);
+
+                canvas.Children.Add(_ProfilePicture);
+
+                if (_Visitor.Photos.Count > 1)
+                {
+                    UIElement previousPicture = GetPreviousPictureButton(100, 100);
+                    canvas.Children.Add(previousPicture);
+                    Canvas.SetLeft(previousPicture, 0 - 25);
+                    Canvas.SetTop(previousPicture, height / 2 - 25);
+                    UIElement nextPicture = GetNextPictureButton(100, 100);
+                    canvas.Children.Add(nextPicture);
+                    Canvas.SetLeft(nextPicture, width - 75);
+                    Canvas.SetTop(nextPicture, height / 2 - 25);
+                }
             }
             return canvas;
         }

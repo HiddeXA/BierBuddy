@@ -32,6 +32,7 @@ namespace BierBuddy.UI
         //definitie pageRenderers
         private Main _Main { get; }
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
+        private FindBuddies _FindBuddies { get; }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
         private IDataAccess _DataAccess { get; }
         
@@ -51,6 +52,7 @@ namespace BierBuddy.UI
                 defaultVisitor = _AlgoritmePlaceHolder.GetVisitor();
             }
             _Main = new Main(_DataAccess, defaultVisitor);
+            _FindBuddies = new FindBuddies(_DataAccess, _Main.ClientVisitor);
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
@@ -79,7 +81,7 @@ namespace BierBuddy.UI
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
         {
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_AlgoritmePlaceHolder.GetVisitor()));
+            PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_FindBuddies.GetPotentialMatch()));
             
         }
 

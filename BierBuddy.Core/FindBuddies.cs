@@ -22,7 +22,6 @@ namespace BierBuddy.Core
         public Visitor GetPotentialMatch()
         {
             Visitor potentialMatch = _PotentialMatches.First();
-            _PotentialMatches.Remove(potentialMatch);
             return potentialMatch;
         }
 
@@ -33,7 +32,7 @@ namespace BierBuddy.Core
             #region Temporary algorithem implementation
 
             List<Visitor> potentialMatches = _DataAccess.GetNotSeenAccounts(visitor.ID, 5);
-            potentialMatches.AddRange(_DataAccess.GetLikedNotSeenAccounts(visitor.ID, 5));
+            //potentialMatches.AddRange(_DataAccess.GetLikedNotSeenAccounts(visitor.ID, 5));
 
             potentialMatches.OrderBy(x => Random.Shared.Next()).ToList();
 

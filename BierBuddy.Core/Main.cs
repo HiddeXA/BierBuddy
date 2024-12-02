@@ -9,14 +9,18 @@ namespace BierBuddy.Core
     public class Main
     {
         public Visitor ClientVisitor { get; set; }
-        public SwitchAccount SwitchAccount { get; }
+        public SwitchAccount AccountSwitcher { get; }
+
+
         private IDataAccess _DataAccess { get; }
 
         public Main(IDataAccess dataAccess, Visitor clientVisitor) 
         {
             ClientVisitor = clientVisitor;
             _DataAccess = dataAccess;
-            SwitchAccount = new SwitchAccount(_DataAccess);
+            AccountSwitcher = new SwitchAccount(_DataAccess);
+            
+
         }
     }
 }

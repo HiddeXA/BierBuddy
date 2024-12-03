@@ -568,6 +568,10 @@ namespace BierBuddy.UILib
         {
             _NavBarWidth = newNavBarWidth;
             _MainWindowSize = newScreenSize;
+
+            // Fontsize aanpassen
+            BigFontSize = 1;
+            GeneralFontSize = 1;
         }
     }
 

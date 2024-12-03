@@ -20,6 +20,6 @@ namespace BierBuddy.UILib
         internal static readonly Brush Transparent = new SolidColorBrush(Colors.Transparent);
         internal static readonly FontFamily UniversalFontFamily = new FontFamily("Bayon");
         internal static readonly FontWeight UniversalFontWeight = new FontWeight();
-        internal static readonly CornerRadius UniversalCornerRadius = new CornerRadius(40);
+        internal static readonly CornerRadius UniversalCornerRadius = new CornerRadius(25);
     }
 }

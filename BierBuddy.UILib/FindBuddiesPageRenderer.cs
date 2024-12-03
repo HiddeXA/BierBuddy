@@ -37,6 +37,7 @@ namespace BierBuddy.UILib
             _ProfilePicture = new Image();
             _Visitor = new(0, "temp", "temp", 0);
             _FindBussies = findBuddies;
+            _FindBussies._Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
         }
         public WrapPanel GetFindBuddiesPage(Visitor visitor)
         {
@@ -86,6 +87,7 @@ namespace BierBuddy.UILib
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
             _FindBussies.DislikeVisitor(_Visitor);
+            RefreshPage();
         }
 
         private UIElement GetlikeButton(double width, double height)
@@ -114,6 +116,7 @@ namespace BierBuddy.UILib
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
             _FindBussies.LikeVisitor(_Visitor);
+            RefreshPage();
         }
 
         private ControlTemplate GetLikeButtonTemplate(Brush brush)
@@ -146,6 +149,7 @@ namespace BierBuddy.UILib
         }
         private void SetProfilePanel(double width, double height)
         {
+            _profilePanel.Children.Clear();
             _profilePanel.Width = width;
             _profilePanel.Height = height - 150;
             UIElement profilePicture = GetProfilePicture(width, height - 150);
@@ -160,6 +164,11 @@ namespace BierBuddy.UILib
         private UIElement GetProfilePicture(double width, double height)
         {
             Canvas canvas = new();
+            if (_Visitor == null)
+            {
+                return canvas;
+            }
+            
             if (!_Visitor.Photos[_CurrentPhotoIndex].Equals("Geen URL gevonden"))
             {
                 
@@ -561,12 +570,24 @@ namespace BierBuddy.UILib
             bio.Text = _Visitor.Bio;
             return bio;
         }
+        public void RefreshPage()
+        {
+            double panelWidth = _MainWindowSize.Width - _NavBarWidth;
+            _Visitor = _FindBussies.GetPotentialMatch();
+            SetProfilePanel(panelWidth / 2, _MainWindowSize.Height);
+
+        }
         public void UpdatePageSize(double newNavBarWidth, Size newScreenSize)
         {
             _NavBarWidth = newNavBarWidth;
             _MainWindowSize = newScreenSize;
         }
+        public void OnClientProfileChanged(object sender, ClientProfileChangedEventArgs args)
+        {
+            RefreshPage();
+        }
     }
+    
 
     internal class ProfileContentBorder : Border
     {

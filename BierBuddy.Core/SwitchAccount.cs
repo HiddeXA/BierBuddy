@@ -9,12 +9,15 @@ namespace BierBuddy.Core
     public class SwitchAccount
     {
         private IDataAccess _DataAccess;
-        public SwitchAccount(IDataAccess dataAcces) 
+        private Main _Main;
+        public event EventHandler<ClientProfileChangedEventArgs>? OnClientProfileChanged;
+        public SwitchAccount(IDataAccess dataAcces, Main main)
         { 
             _DataAccess = dataAcces;
+            _Main = main;
         }
 
-        public Visitor SwitchClientProfile(string input)
+        public void SwitchClientProfile(string input)
         {
             long newAccountID = int.Parse(input);
 
@@ -25,7 +28,8 @@ namespace BierBuddy.Core
                 throw new ArgumentOutOfRangeException();
             }
 
-            return newClientProfile;
+            _Main.ClientVisitor = newClientProfile;
+            OnClientProfileChanged?.Invoke(this, new ClientProfileChangedEventArgs(newAccountID));
         }
     }
     

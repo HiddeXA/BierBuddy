@@ -51,7 +51,7 @@ namespace BierBuddy.UI
                 defaultVisitor = _AlgoritmePlaceHolder.GetVisitor();
             }
             _Main = new Main(_DataAccess, defaultVisitor);
-            _FindBuddies = new FindBuddies(_DataAccess, _Main.ClientVisitor);
+            _FindBuddies = new FindBuddies(_DataAccess, _Main);
             _FindBuddiesPageRenderer = new FindBuddiesPageRenderer(_FindBuddies);
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;

@@ -51,10 +51,10 @@ namespace BierBuddy.UILib
                 Margin = new Thickness(0, 10, 0, 0)
             };
             Button cancelButton = new Button { Content = "CANCEL", IsCancel = true };
-            cancelButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(190, 55, 50)));
+            cancelButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(190, 55, 50)), Brushes.Black);
             _OkButton = new Button { Content = "GEEF DOOR", IsDefault = true };
             _OkButton.Click += OK_Click;
-            _OkButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(126, 161, 114)));
+            _OkButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(126, 161, 114)), Brushes.Black);
             buttonPanel.Children.Add(cancelButton);
             buttonPanel.Children.Add(_OkButton);
 
@@ -75,21 +75,22 @@ namespace BierBuddy.UILib
         private void AddDateTimeSelector(DateTime dateTime)
         {
             Grid dateTimeSelector = new Grid();
+            dateTimeSelector.Margin = new Thickness(0, 0, 0, 5);
             dateTimeSelector.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             dateTimeSelector.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             dateTimeSelector.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             dateTimeSelector.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            DatePicker datePicker = new DatePicker { SelectedDate = dateTime.Date, IsTodayHighlighted = true, DisplayDateStart = dateTime.Date, Margin = new Thickness(0, 0, 5, 0) };
+            DatePicker datePicker = new CustomDatePicker { SelectedDate = dateTime.Date, IsTodayHighlighted = true, DisplayDateStart = dateTime.Date, Margin = new Thickness(0, 0, 5, 0), Background = UIUtils.Outer_Space, Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily };
             Grid.SetColumn(datePicker, 0);
             dateTimeSelector.Children.Add(datePicker);
-            TimePicker timePickerStart = new TimePicker { SelectedTime = dateTime.TimeOfDay, Margin = new Thickness(0, 0, 5, 0) };
+            TimePicker timePickerStart = new TimePicker { Margin = new Thickness(0, 0, 5, 0) };
             Grid.SetColumn(timePickerStart, 1);
             timePickerStart.TimeChanged += TimePicker_TimeChanged;
             dateTimeSelector.Children.Add(timePickerStart);
-            TextBlock textBlock = new TextBlock { Text = "TOT", Margin = new Thickness(0, 0, 5, 0) };
+            TextBlock textBlock = new TextBlock { Text = "TOT", Margin = new Thickness(0, 0, 5, 0), Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center };
             Grid.SetColumn(textBlock, 2);
             dateTimeSelector.Children.Add(textBlock);
-            TimePicker timePickerEnd = new TimePicker { SelectedTime = dateTime.AddHours(1).TimeOfDay, Margin = new Thickness(0, 0, 5, 0) };
+            TimePicker timePickerEnd = new TimePicker { Margin = new Thickness(0, 0, 5, 0) };
             Grid.SetColumn(timePickerEnd, 3);
             timePickerEnd.TimeChanged += TimePicker_TimeChanged;
             dateTimeSelector.Children.Add(timePickerEnd);
@@ -127,7 +128,7 @@ namespace BierBuddy.UILib
                 {
                     StackPanel buttonPanel = _StackPanel.Children.OfType<StackPanel>().Last();
                     _StackPanel.Children.Remove(buttonPanel);
-                    _StackPanel.Children.Add(new Button { Content = "VERWIJDER LAATSTE DATUM", Margin = new Thickness(0, 5, 0, 0) });
+                    _StackPanel.Children.Add(new Button { Content = "VERWIJDER LAATSTE DATUM", Margin = new Thickness(0, 5, 0, 0), Template = GetButtonPanelButtonTemplate(UIUtils.Outer_Space, UIUtils.BabyPoeder) });
                     _StackPanel.Children.OfType<Button>().Last().Click += (sender, e) => {
                         _DateTimeSelectors.Children.Remove(_DateTimeSelectors.Children.OfType<Grid>().Last());
                         CheckSelectors();
@@ -145,6 +146,7 @@ namespace BierBuddy.UILib
         private void AddAddDateTimeSelectorButton()
         {
             Button addDateTimeSelectorButton = new Button { Content = "VOEG DATUM TOE" };
+            addDateTimeSelectorButton.Template = GetButtonPanelButtonTemplate(UIUtils.Outer_Space, UIUtils.BabyPoeder);
             addDateTimeSelectorButton.Click += (sender, e) => AddDateTimeSelector(DateTime.Now);
             _StackPanel.Children.Add(addDateTimeSelectorButton);
         }
@@ -158,12 +160,13 @@ namespace BierBuddy.UILib
             }
             if (timePicker.Parent is Grid grid)
             {
-                if (((TimePicker)grid.Children[1]).SelectedTime > ((TimePicker)grid.Children[3]).SelectedTime)
+                if (((TimePicker)grid.Children[1]).SelectedTime.CompareTo(((TimePicker)grid.Children[3]).SelectedTime) > 0)
                 {
                     ((TimePicker)grid.Children[1]).Effect = new DropShadowEffect { Color = Colors.Red, ShadowDepth = 0 };
                     ((TimePicker)grid.Children[3]).Effect = new DropShadowEffect { Color = Colors.Red, ShadowDepth = 0 };
                     _InvalidPickers.Add(grid.Uid);
                     _OkButton.IsEnabled = false;
+                    _OkButton.Template = GetButtonPanelButtonTemplate(UIUtils.BabyPoeder, Brushes.Black);
                 }
                 else
                 {
@@ -172,23 +175,25 @@ namespace BierBuddy.UILib
                     _InvalidPickers.Remove(grid.Uid);
                     if (_InvalidPickers.Count == 0)
                     {
+                        _OkButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(126, 161, 114)), Brushes.Black);
                         _OkButton.IsEnabled = true;
                     }
                 }
             }
         }
 
-        private ControlTemplate GetButtonPanelButtonTemplate(SolidColorBrush background)
+        private ControlTemplate GetButtonPanelButtonTemplate(Brush background, Brush foreground)
         {
             ControlTemplate template = new ControlTemplate(typeof(Button));
             FrameworkElementFactory border = new FrameworkElementFactory(typeof(Border));
-            border.SetValue(Border.CornerRadiusProperty, new CornerRadius(5));
+            border.SetValue(Border.CornerRadiusProperty, UIUtils.UniversalCornerRadius);
             border.SetValue(Border.BackgroundProperty, background);
             border.SetValue(Border.MarginProperty, new Thickness(5));
             FrameworkElementFactory contentPresenter = new FrameworkElementFactory(typeof(ContentPresenter));
             contentPresenter.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
             contentPresenter.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
             contentPresenter.SetValue(ContentPresenter.MarginProperty, new Thickness(20, 10, 20, 10 ));
+            contentPresenter.SetValue(TextElement.ForegroundProperty, foreground);
             contentPresenter.SetValue(TextElement.FontWeightProperty, FontWeights.Bold);
             contentPresenter.SetValue(TextElement.FontFamilyProperty, UIUtils.UniversalFontFamily);
             border.AppendChild(contentPresenter);

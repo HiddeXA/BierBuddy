@@ -8,20 +8,24 @@ using System.Windows.Documents;
 using System.Windows.Media.Effects;
 using System.Windows.Media;
 using System.Windows;
+using Material.Icons.WPF;
+using Material.Icons;
 
 namespace BierBuddy.UILib
 {
     public class DateTimeAccepterDialog : Window
     {
         private Button _OkButton { get; }
-        private StackPanel _DateTimeSelectors { get; }
+        private StackPanel _DateTimeAccepters { get; }
         private StackPanel _StackPanel { get; }
-        private HashSet<string> _InvalidPickers { get; } = new HashSet<string>();
-        public Dictionary<List<DateTime>, bool> AcceptedNotAcceptedDateTimes => _DateTimeSelectors.Children.OfType<Grid>().ToDictionary(grid => new List<DateTime>
+        private HashSet<string> _ChoiceMade { get; } = new HashSet<string>();
+        public Dictionary<List<DateTime>, bool> AcceptedNotAcceptedDateTimes => _DateTimeAccepters.Children.OfType<Grid>().ToDictionary(grid => new List<DateTime>
         {
             ((DatePicker)grid.Children[0]).SelectedDate.Value + ((TimePicker)grid.Children[1]).SelectedTime,
             ((DatePicker)grid.Children[0]).SelectedDate.Value + ((TimePicker)grid.Children[3]).SelectedTime
-        }, grid => ((CheckBox)grid.Children[4]).IsChecked.Value);
+        }, grid => 
+            ((Border)grid.Children[6]).Background == new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72))
+        );
 
         public DateTimeAccepterDialog(List<List<DateTime>> dateTimes)
         {
@@ -38,8 +42,8 @@ namespace BierBuddy.UILib
             textBlock.FontFamily = UIUtils.UniversalFontFamily;
             _StackPanel.Children.Add(textBlock);
 
-            _DateTimeSelectors = new StackPanel { Orientation = Orientation.Vertical };
-            _StackPanel.Children.Add(_DateTimeSelectors);
+            _DateTimeAccepters = new StackPanel { Orientation = Orientation.Vertical };
+            _StackPanel.Children.Add(_DateTimeAccepters);
             foreach (List<DateTime> dateTime in dateTimes)
             {
                 AddDateTimeAccepter(dateTime);
@@ -55,7 +59,8 @@ namespace BierBuddy.UILib
             cancelButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(190, 55, 50)), Brushes.Black);
             _OkButton = new Button { Content = "GEEF DOOR", IsDefault = true };
             _OkButton.Click += OK_Click;
-            _OkButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(126, 161, 114)), Brushes.Black);
+            _OkButton.Template = GetButtonPanelButtonTemplate(UIUtils.BabyPoeder, Brushes.Black);
+            _OkButton.IsEnabled = false;
             buttonPanel.Children.Add(cancelButton);
             buttonPanel.Children.Add(_OkButton);
 
@@ -70,7 +75,7 @@ namespace BierBuddy.UILib
         }
 
         /// <summary>
-        /// Voegt een DateTimeSelector toe aan de _DateTimeSelectors stackpanel
+        /// Voegt een DateTimeSelector toe aan de _DateTimeAccepters stackpanel
         /// </summary>
         /// <param name="dateTime">De datum die standaard geselecteerd is, ook kan er geen datum meer hiervoor gekozen worden</param>
         private void AddDateTimeAccepter(List<DateTime> dateTimes)
@@ -81,7 +86,10 @@ namespace BierBuddy.UILib
             dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            TextBlock dateText = new TextBlock { Text = dateTimes[0].ToShortDateString(), Background = UIUtils.Outer_Space, Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily };
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            TextBlock dateText = new TextBlock { Text = dateTimes[0].ToShortDateString(), Background = UIUtils.Outer_Space, Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center };
             Border dateTextBorder = GenerateThemedTextBlock(dateText);
             Grid.SetColumn(dateTextBorder, 0);
             dateTimeAccepter.Children.Add(dateTextBorder);
@@ -96,39 +104,112 @@ namespace BierBuddy.UILib
             Border timeTextEndBorder = GenerateThemedTextBlock(timeTextEnd);
             Grid.SetColumn(timeTextEndBorder, 3);
             dateTimeAccepter.Children.Add(timeTextEndBorder);
+            UIElement declineButton = GetDeclineButton(30, 30);
+            Grid.SetColumn(declineButton, 4);
+            dateTimeAccepter.Children.Add(declineButton);
+            UIElement acceptButton = GetAcceptButton(30, 30);
+            Grid.SetColumn(acceptButton, 5);
+            dateTimeAccepter.Children.Add(acceptButton);
+            Border accepted = new Border { CornerRadius = UIUtils.UniversalCornerRadius, Background = UIUtils.Outer_Space, Padding = new Thickness(5) };
+            Grid.SetColumn(accepted, 6);
+            dateTimeAccepter.Children.Add(accepted);
             dateTimeAccepter.Uid = Guid.NewGuid().ToString();
-            _DateTimeSelectors.Children.Add(dateTimeAccepter);
+            _DateTimeAccepters.Children.Add(dateTimeAccepter);
         }
 
-        private void TimePicker_TimeChanged(object sender, TimeSpan e)
+        private void AcceptDecline_Clicked(object sender, EventArgs e)
         {
-            TimePicker timePicker = (TimePicker)sender;
-            if (timePicker == null)
+            Button button = (Button)sender;
+            if (button == null)
             {
                 return;
             }
-            if (timePicker.Parent is Grid grid)
+            if (button.Parent is Grid grid)
             {
-                if (((TimePicker)grid.Children[1]).SelectedTime.CompareTo(((TimePicker)grid.Children[3]).SelectedTime) > 0)
+                if (button.Name == "accept")
                 {
-                    ((TimePicker)grid.Children[1]).Effect = new DropShadowEffect { Color = Colors.Red, ShadowDepth = 0 };
-                    ((TimePicker)grid.Children[3]).Effect = new DropShadowEffect { Color = Colors.Red, ShadowDepth = 0 };
-                    _InvalidPickers.Add(grid.Uid);
-                    _OkButton.IsEnabled = false;
-                    _OkButton.Template = GetButtonPanelButtonTemplate(UIUtils.BabyPoeder, Brushes.Black);
+                    ((Border)grid.Children[6]).Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72));
+                    _ChoiceMade.Add(grid.Uid);
+                    CheckIfAllChoicesMade();
                 }
-                else
+                else if (button.Name == "decline")
                 {
-                    ((TimePicker)grid.Children[1]).Effect = null;
-                    ((TimePicker)grid.Children[3]).Effect = null;
-                    _InvalidPickers.Remove(grid.Uid);
-                    if (_InvalidPickers.Count == 0)
-                    {
-                        _OkButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(126, 161, 114)), Brushes.Black);
-                        _OkButton.IsEnabled = true;
-                    }
+                    ((Border)grid.Children[6]).Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32));
+                    _ChoiceMade.Add(grid.Uid);
+                    CheckIfAllChoicesMade();
                 }
             }
+        }
+
+        private void CheckIfAllChoicesMade()
+        {
+            if (_ChoiceMade.Count == _DateTimeAccepters.Children.Count)
+            {
+                _OkButton.IsEnabled = true;
+                _OkButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(126, 161, 114)), Brushes.Black);
+            }
+        }
+
+        private UIElement GetDeclineButton(double width, double height)
+        {
+            Button declineButton = new();
+            declineButton.Template = GetAcceptButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32)));
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = MaterialIconKind.GlassMugOff;
+            icon.Foreground = UIUtils.BabyPoeder;
+            declineButton.Width = width;
+            declineButton.Height = height;
+            declineButton.Content = icon;
+            declineButton.VerticalAlignment = VerticalAlignment.Center;
+            declineButton.HorizontalAlignment = HorizontalAlignment.Center;
+            declineButton.Background = UIUtils.Transparent;
+            declineButton.Margin = new Thickness(0, 0, 5, 0);
+            declineButton.Click += AcceptDecline_Clicked;
+            declineButton.Name = "decline";
+
+            return declineButton;
+        }
+
+        private UIElement GetAcceptButton(double width, double height)
+        {
+            Button acceptButton = new();
+            acceptButton.Template = GetAcceptButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72)));
+
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = MaterialIconKind.GlassMug;
+            icon.Foreground = UIUtils.BabyPoeder;
+            acceptButton.Width = width;
+            acceptButton.Height = height;
+            acceptButton.Content = icon;
+            acceptButton.VerticalAlignment = VerticalAlignment.Center;
+            acceptButton.HorizontalAlignment = HorizontalAlignment.Center;
+            acceptButton.Background = UIUtils.Transparent;
+            acceptButton.Margin = new Thickness(0, 0, 5, 0);
+            acceptButton.Click += AcceptDecline_Clicked;
+            acceptButton.Name = "accept";
+
+            return acceptButton;
+        }
+
+        private ControlTemplate GetAcceptButtonTemplate(Brush brush)
+        {
+            ControlTemplate template = new ControlTemplate(typeof(Button));
+            FrameworkElementFactory gridFactory = new FrameworkElementFactory(typeof(Grid));
+
+            FrameworkElementFactory borderFactory = new FrameworkElementFactory(typeof(Border));
+            //set background color
+            borderFactory.SetValue(Border.BackgroundProperty, brush);
+            borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(90));
+            gridFactory.AppendChild(borderFactory);
+
+            FrameworkElementFactory contentPresenterFactory = new FrameworkElementFactory(typeof(ContentPresenter));
+            contentPresenterFactory.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            contentPresenterFactory.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+            gridFactory.AppendChild(contentPresenterFactory);
+
+            template.VisualTree = gridFactory;
+
+            return template;
         }
 
         private ControlTemplate GetButtonPanelButtonTemplate(Brush background, Brush foreground)

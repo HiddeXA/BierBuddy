@@ -1,112 +1,112 @@
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Martial arts'
 WHERE InterestID = 40;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Handwerken'
 WHERE InterestID = 6;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Sieraden'
 WHERE InterestID = 11;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Muziek'
 WHERE InterestID = 20;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Dansen'
 WHERE InterestID = 22;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Theater'
 WHERE InterestID = 24;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Gedichten'
 WHERE InterestID = 25;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Wiskunde'
 WHERE InterestID = 51;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Experimenten'
 WHERE InterestID = 52;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Biologie'
 WHERE InterestID = 54;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Virtual reality'
 WHERE InterestID = 56;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'AI'
 WHERE InterestID = 57;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Survivalen'
 WHERE InterestID = 68;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Lezen'
 WHERE InterestID = 70;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Schrijven'
 WHERE InterestID = 71;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Talen'
 WHERE InterestID = 72;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Taalkunde'
 WHERE InterestID = 76;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Stripverhalen'
 WHERE InterestID = 77;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Wildplukken'
 WHERE InterestID = 85;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Barista'
 WHERE InterestID = 86;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Edelstenen'
 WHERE InterestID = 94;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Rubiks kubus'
 WHERE InterestID = 105;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Historische locaties'
 WHERE InterestID = 109;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Treinreizen'
 WHERE InterestID = 110;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Festivals'
 WHERE InterestID = 111;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Youtube-videos'
 WHERE InterestID = 116;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'LARP'
 WHERE InterestID = 121;
 
-UPDATE possibleinterests 
+UPDATE PossibleInterests 
 SET Interest = 'Ruimtevaart'
 WHERE InterestID = 124;
 

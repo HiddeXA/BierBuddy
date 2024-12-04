@@ -39,18 +39,14 @@ namespace BierBuddy.UI
         public MainWindow()
         {
             InitializeComponent();
-            //initialize page renderers
+            //initialize dataAccess
             MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
             connection.Open();
             _DataAccess = new MySQLDatabase(connection);
-            _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
-            Visitor? defaultVisitor = _DataAccess.GetAccount(1);
-            if (defaultVisitor == null)
-            {
-                defaultVisitor = _AlgoritmePlaceHolder.GetVisitor();
-            }
-            _Main = new Main(_DataAccess, defaultVisitor);
+            //initialize main
+            _Main = new Main(_DataAccess);
+            //initialize page renderers
             _FindBuddies = new FindBuddies(_DataAccess, _Main);
             _FindBuddiesPageRenderer = new FindBuddiesPageRenderer(_FindBuddies);
 

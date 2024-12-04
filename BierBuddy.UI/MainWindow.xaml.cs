@@ -70,7 +70,6 @@ namespace BierBuddy.UI
             }
 
             MoveBeerFoam(e);
-
             _FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
 
             if (WindowStatus == 1)

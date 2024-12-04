@@ -30,10 +30,11 @@ namespace BierBuddy.UILib
         private Image _ProfilePicture;
         private Visitor _Visitor { get; set; }
 
-        private readonly int _MinFontSizeBig = 20;
-
         private int BigFontSize = 28;
         private int GeneralFontSize = 16;
+
+        private readonly int _MinFontSizeBig = 20;
+        private readonly int _MinFontSizeGeneral = 12;
 
         public FindBuddiesPageRenderer()
         {
@@ -464,7 +465,7 @@ namespace BierBuddy.UILib
 
             Border preferencesBorder = new Border();
             preferencesBorder.Background = UIUtils.BabyPoeder;
-            preferencesBorder.CornerRadius = UIUtils.UniversalCornerRadius;
+            preferencesBorder.CornerRadius = UIUtils.SquirqilCornerRadius;
             preferencesBorder.Child = preferencesGrid;
 
             Canvas.SetTop(preferencesBorder, 0);
@@ -570,8 +571,16 @@ namespace BierBuddy.UILib
             _MainWindowSize = newScreenSize;
 
             // Fontsize aanpassen
-            BigFontSize = 1;
-            GeneralFontSize = 1;
+            if (_MainWindowSize.Width < 1500)
+            {
+                BigFontSize = _MinFontSizeBig;
+                GeneralFontSize = _MinFontSizeGeneral;
+            }
+            else
+            {
+                BigFontSize = 28;
+                GeneralFontSize = 16;
+            }
         }
     }
 

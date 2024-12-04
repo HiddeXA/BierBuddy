@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BierBuddy.UI"
         xmlns:materialIcons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" MinHeight="800" Width="1920" MinWidth="600" SizeChanged="BierBuddyMainWindow_SizeChanged">
+        Title="MainWindow" Height="1080" MinHeight="800" Width="1920" MinWidth="1200" SizeChanged="BierBuddyMainWindow_SizeChanged">
     <DockPanel Background="#2E3532">
         <!--NavBar-->
         <Border x:Name="NavBar" Width="400" Background="#F19F2C" DockPanel.Dock="Left" CornerRadius="0,40,40,0">

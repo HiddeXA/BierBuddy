@@ -30,6 +30,12 @@ namespace BierBuddy.UILib
         private Image _ProfilePicture;
         private Visitor _Visitor { get; set; }
 
+        private int BigFontSize = 28;
+        private int GeneralFontSize = 16;
+
+        private readonly int _MinFontSizeBig = 20;
+        private readonly int _MinFontSizeGeneral = 12;
+
         public FindBuddiesPageRenderer()
         {
             _profilePanel = new Canvas();
@@ -57,7 +63,7 @@ namespace BierBuddy.UILib
             return FindBuddiesPanel;
         }
 
-        private UIElement GetDislikeButton(double width, double height) 
+        private UIElement GetDislikeButton(double width, double height)
         {
             DockPanel dislikeButtonPanel = new();
             dislikeButtonPanel.Width = width;
@@ -323,7 +329,7 @@ namespace BierBuddy.UILib
             gradientBrush.GradientStops.Add(new GradientStop(Colors.Transparent, 0));
             gradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF7), 1));
             profileContentBorder.Background = gradientBrush;
-            profileContentBorder.CornerRadius = new CornerRadius(0, 0, 40, 40);
+            profileContentBorder.CornerRadius = new CornerRadius(0, 0, 25, 25);
 
             profileContentBorder.Child = profileGrid;
 
@@ -346,26 +352,28 @@ namespace BierBuddy.UILib
         }
         private UIElement GetNameLabel()
         {
-            ProfileContentLabel nameLabel = new ProfileContentLabel(_Visitor.Name);
+            ProfileContentLabel nameLabel = new ProfileContentLabel(_Visitor.Name, BigFontSize);
+            nameLabel.FontSize = BigFontSize;
             return nameLabel;
         }
         private UIElement GetAgeLabel()
         {
-            ProfileContentLabel ageLabel = new ProfileContentLabel(_Visitor.Age.ToString());
+            ProfileContentLabel ageLabel = new ProfileContentLabel(_Visitor.Age.ToString(), BigFontSize);
+            ageLabel.FontSize = BigFontSize;
             return ageLabel;
         }
         private UIElement GetProfileBannerDot()
         {
             MaterialIcon icon = new MaterialIcon();
             icon.Kind = MaterialIconKind.Dot;
-            ProfileContentLabel nameLabel = new ProfileContentLabel();
+            ProfileContentLabel nameLabel = new ProfileContentLabel(icon.ToString(), BigFontSize);
             nameLabel.Content = icon;
-            nameLabel.FontSize = 56;
+            nameLabel.FontSize = BigFontSize;
             return nameLabel;
         }
         private UIElement GetProfileLabel(string content)
         {
-            ProfileContentBorder profileLabel = new ProfileContentBorder(content);
+            ProfileContentBorder profileLabel = new ProfileContentBorder(content, GeneralFontSize);
             return profileLabel;
         }
         private UIElement GetBioButton()
@@ -445,19 +453,19 @@ namespace BierBuddy.UILib
             Grid.SetRow(interests, 2);
             preferencesGrid.Children.Add(interests);
 
-            ProfileContentBorder bioBorder = new ProfileContentBorder("BIO", UIUtils.Onyx);
+            ProfileContentBorder bioBorder = new ProfileContentBorder("BIO", UIUtils.Onyx, BigFontSize);
             Grid.SetColumnSpan(bioBorder, 3);
             Grid.SetRow(bioBorder, 3);
             preferencesGrid.Children.Add(bioBorder);
 
-            ProfileContentBorder bioText = new ProfileContentBorder(_Visitor.Bio, UIUtils.Onyx70);
+            ProfileContentBorder bioText = new ProfileContentBorder(_Visitor.Bio, UIUtils.Onyx70, GeneralFontSize);
             Grid.SetColumnSpan(bioText, 3);
             Grid.SetRow(bioText, 4);
             preferencesGrid.Children.Add(bioText);
 
             Border preferencesBorder = new Border();
             preferencesBorder.Background = UIUtils.BabyPoeder;
-            preferencesBorder.CornerRadius = UIUtils.UniversalCornerRadius;
+            preferencesBorder.CornerRadius = UIUtils.SquirqilCornerRadius;
             preferencesBorder.Child = preferencesGrid;
 
             Canvas.SetTop(preferencesBorder, 0);
@@ -466,12 +474,11 @@ namespace BierBuddy.UILib
         private UIElement GetDrinkPreferenceTable()
         {
             StackPanel drinkPrefPanel = new();
-            ProfileContentBorder drinkPrefContentBorder = new ProfileContentBorder("Drank Voorkeur", UIUtils.Onyx);
-            drinkPrefContentBorder.ProfileContentLabel.FontSize = 30;
+            ProfileContentBorder drinkPrefContentBorder = new ProfileContentBorder("Drank", UIUtils.Onyx, BigFontSize);
             drinkPrefPanel.Children.Add(drinkPrefContentBorder);
             for (int i = 0; i < _Visitor.DrinkPreference.Count; i++)
             {
-                ProfileContentBorder drinkPref = new(_Visitor.DrinkPreference[i]);
+                ProfileContentBorder drinkPref = new(_Visitor.DrinkPreference[i], GeneralFontSize);
                 drinkPrefPanel.Children.Add(drinkPref);
             }
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
@@ -481,12 +488,12 @@ namespace BierBuddy.UILib
         private UIElement GetActivityPreferenceTable()
         {
             StackPanel activityPrefPanel = new();
-            ProfileContentBorder activityPrefContentBorder = new ProfileContentBorder("Activiteiten Voorkeur", UIUtils.Onyx);
-            activityPrefContentBorder.ProfileContentLabel.FontSize = 30;
+            ProfileContentBorder activityPrefContentBorder = new ProfileContentBorder("Activiteiten", UIUtils.Onyx, GeneralFontSize);
+            activityPrefContentBorder.ProfileContentLabel.FontSize = BigFontSize;
             activityPrefPanel.Children.Add(activityPrefContentBorder);
             for (int i = 0; i < _Visitor.ActivityPreference.Count; i++)
             {
-                ProfileContentBorder drinkPref = new(_Visitor.ActivityPreference[i]);
+                ProfileContentBorder drinkPref = new(_Visitor.ActivityPreference[i], GeneralFontSize);
                 activityPrefPanel.Children.Add(drinkPref);
             }
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
@@ -496,10 +503,12 @@ namespace BierBuddy.UILib
         private UIElement GetinterestsTable()
         {
             StackPanel interestsPanel = new();
-            interestsPanel.Children.Add(new ProfileContentBorder("interesses", UIUtils.Onyx));
+            ProfileContentBorder interestsContentBorder = new ProfileContentBorder("Interesses", UIUtils.Onyx, GeneralFontSize);
+            interestsContentBorder.ProfileContentLabel.FontSize = BigFontSize;
+            interestsPanel.Children.Add(interestsContentBorder);
             for (int i = 0; i < _Visitor.Interests.Count; i++)
             {
-                ProfileContentBorder drinkPref = new(_Visitor.Interests[i]);
+                ProfileContentBorder drinkPref = new(_Visitor.Interests[i], GeneralFontSize);
                 interestsPanel.Children.Add(drinkPref);
             }
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
@@ -552,6 +561,7 @@ namespace BierBuddy.UILib
         private UIElement GetBio()
         {
             TextBlock bio = new();
+            bio.FontSize = GeneralFontSize;
             bio.Text = _Visitor.Bio;
             return bio;
         }
@@ -559,22 +569,36 @@ namespace BierBuddy.UILib
         {
             _NavBarWidth = newNavBarWidth;
             _MainWindowSize = newScreenSize;
+
+            // Fontsize aanpassen
+            if (_MainWindowSize.Width < 1500)
+            {
+                BigFontSize = _MinFontSizeBig;
+                GeneralFontSize = _MinFontSizeGeneral;
+            }
+            else
+            {
+                BigFontSize = 28;
+                GeneralFontSize = 16;
+            }
         }
     }
 
     internal class ProfileContentBorder : Border
     {
+        public int FatherFont;
         public Label ProfileContentLabel { get; set; }
-        public ProfileContentBorder(string content) : this(content, UIUtils.Onyx70) { }
-        public ProfileContentBorder(string content, Brush backgroundColor)
+        public ProfileContentBorder(string content, int fatherfont) : this(content, UIUtils.Onyx70, fatherfont) { }
+        public ProfileContentBorder(string content, Brush backgroundColor, int fatherfont)
         {
-            ProfileContentLabel = new ProfileContentLabel(content);
+            this.FatherFont = fatherfont;
+            ProfileContentLabel = new ProfileContentLabel(content, FatherFont);
             this.Child = ProfileContentLabel;
             this.Background = backgroundColor;
             this.CornerRadius = UIUtils.UniversalCornerRadius;
             this.Margin = new Thickness(10);
         }
-        public ProfileContentBorder() : this(UIUtils.Onyx70) { }
+        public ProfileContentBorder(int fatherfont) : this(UIUtils.Onyx70) { }
         public ProfileContentBorder(Brush backgroundColor)
         {
             ProfileContentLabel = new Label();
@@ -582,22 +606,33 @@ namespace BierBuddy.UILib
             this.CornerRadius = UIUtils.UniversalCornerRadius;
             this.Margin = new Thickness(10);
         }
+
     }
     internal class ProfileContentLabel : Label
     {
-        public TextAlignment TextAlignment { get; internal set; }
 
-        public ProfileContentLabel(string content) : this()
+
+        public ProfileContentLabel(string content, int fontsize) : this(fontsize)
         {
             this.Content = content;
+            this.FontSize = fontsize;
         }
-        public ProfileContentLabel()
+
+        public TextAlignment TextAlignment { get; internal set; }
+
+
+        public ProfileContentLabel(int fontsize)
         {
             this.Foreground = UIUtils.BabyPoeder;
             this.VerticalAlignment = VerticalAlignment.Center;
             this.HorizontalAlignment = HorizontalAlignment.Center;
             this.FontFamily = UIUtils.UniversalFontFamily;
-            this.FontSize = 30;
+            this.FontSize = fontsize;
+        }
+
+        public ProfileContentLabel(string name)
+        {
+            Name = name;
         }
     }
 }

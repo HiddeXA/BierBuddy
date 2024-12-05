@@ -210,6 +210,7 @@ VALUES
 (16, 99, 54, 108, 49),
 (32, 120, 17, 100, 50);
 
+
 INSERT INTO Visitor (Name, Bio, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, VisitorID, Age)
 VALUES
 ('Jan de Vries', 'Een open en vriendelijke persoon die altijd in is voor een gezellig gesprek of een leuke activiteit.', 1, 1, 1, 1, 1, 25),

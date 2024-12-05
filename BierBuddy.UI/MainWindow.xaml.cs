@@ -30,6 +30,7 @@ namespace BierBuddy.UI
 
         //definitie pageRenderers
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
+        private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get; }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
 
 
@@ -38,6 +39,7 @@ namespace BierBuddy.UI
             InitializeComponent();
             //initialize page renderers
             _FindBuddiesPageRenderer = new FindBuddiesPageRenderer();
+            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(); 
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
 
@@ -63,6 +65,7 @@ namespace BierBuddy.UI
                 NavBar.Width = _NavBarMinSize;
             }
             _FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
+            _MyBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
         }
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
@@ -75,7 +78,7 @@ namespace BierBuddy.UI
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
             PagePanel.Children.Clear();
-            //todo voor mijn buddies userstory
+            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_AlgoritmePlaceHolder.GetVisitor()));
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

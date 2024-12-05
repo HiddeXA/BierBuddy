@@ -12,7 +12,9 @@ namespace BierBuddy.UILib
     {
         internal static readonly double ProfileConentHeight = 300;
 
+        internal static readonly Brush AcceptGreen = new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72));
         internal static readonly Brush BabyPoeder = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF7));
+        internal static readonly Brush DeclineRed = new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32));
         internal static readonly Brush Onyx = new SolidColorBrush(Color.FromArgb(0xFF, 0x2E, 0x35, 0x32));
         internal static readonly Brush Onyx70 = new SolidColorBrush(Color.FromArgb(178, 0x2E, 0x35, 0x32));
         internal static readonly Brush Outer_Space = new SolidColorBrush(Color.FromArgb(0xFF, 0x43, 0x4D, 0x49));

@@ -1,2 +1,2 @@
-ALTER TABLE visitor
+ALTER TABLE Visitor
 ADD COLUMN Age int NOT NULL AFTER Bio;

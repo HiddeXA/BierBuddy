@@ -1,4 +1,4 @@
-INSERT INTO activitypreferences (Activities_ActivityID1, Activities_ActivityID2, Activities_ActivityID3, Activities_ActivityID4, ActivityPreferencesID)
+INSERT INTO ActivityPreferences (Activities_ActivityID1, Activities_ActivityID2, Activities_ActivityID3, Activities_ActivityID4, ActivityPreferencesID)
 VALUES
 (7, 15, 3, 10, 1),
 (8, 14, 9, 2, 2),
@@ -51,7 +51,7 @@ VALUES
 (5, 3, 14, 11, 49),
 (6, 17, 19, 12, 50);
 
-INSERT INTO drinkpreferences(Drinks_DrinkID1, Drinks_DrinkID2, Drinks_DrinkID3, Drinks_DrinkID4, DrinkPreferencesID) 
+INSERT INTO DrinkPreferences(Drinks_DrinkID1, Drinks_DrinkID2, Drinks_DrinkID3, Drinks_DrinkID4, DrinkPreferencesID) 
 VALUES
 (15, 22, 9, 31, 1),
 (12, 7, 26, 5, 2),
@@ -104,7 +104,7 @@ VALUES
 (32, 19, 28, 8, 49),
 (35, 1, 25, 30, 50);
 
-INSERT INTO photo(Photo1URL, Photo2URL, Photo3URL, Photo4URL, PhotoID) 
+INSERT INTO Photo(Photo1URL, Photo2URL, Photo3URL, Photo4URL, PhotoID) 
 VALUES
 ('Geen URL gevonden', 'Geen URL gevonden', 'Geen URL gevonden', 'Geen URL gevonden', 1),
 ('Geen URL gevonden', 'Geen URL gevonden', 'Geen URL gevonden', 'Geen URL gevonden', 2),
@@ -157,7 +157,7 @@ VALUES
 ('Geen URL gevonden', 'Geen URL gevonden', 'Geen URL gevonden', 'Geen URL gevonden', 49),
 ('Geen URL gevonden', 'Geen URL gevonden', 'Geen URL gevonden', 'Geen URL gevonden', 50);
 
-INSERT INTO interests (PossibleInterests_InterestID1, PossibleInterests_InterestID2, PossibleInterests_InterestID3, PossibleInterests_InterestID4, InterestsID)
+INSERT INTO Interests (PossibleInterests_InterestID1, PossibleInterests_InterestID2, PossibleInterests_InterestID3, PossibleInterests_InterestID4, InterestsID)
 VALUES
 (8, 45, 103, 67, 1),
 (11, 33, 77, 92, 2),
@@ -210,7 +210,8 @@ VALUES
 (16, 99, 54, 108, 49),
 (32, 120, 17, 100, 50);
 
-INSERT INTO visitor (Name, Bio, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, VisitorID, Age)
+
+INSERT INTO Visitor (Name, Bio, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, VisitorID, Age)
 VALUES
 ('Jan de Vries', 'Een open en vriendelijke persoon die altijd in is voor een gezellig gesprek of een leuke activiteit.', 1, 1, 1, 1, 1, 25),
 ('Sophie Jansen', 'Een creatieve geest die het fijn vindt om tijd door te brengen met vrienden en nieuwe ideeën te bespreken.', 2, 2, 2, 2, 2, 30),
@@ -232,3 +233,4 @@ VALUES
 ('Joris de Vos', 'Een nuchter persoon die geniet van de kleine dingen in het leven, het liefst met goede vrienden om zich heen.', 18, 18, 18, 18, 18, 36),
 ('Ilse de Graaf', 'Houdt van rust en natuur, en zoekt graag de stilte op voor reflectie, maar kan ook genieten van sociale momenten.', 19, 19, 19, 19, 19, 25),
 ('Bart de Ruiter', 'Geniet van een goed gesprek en gezellige tijd doorbrengen met zijn vrienden, altijd met een vleugje humor.', 20, 20, 20, 20, 20, 37);
+

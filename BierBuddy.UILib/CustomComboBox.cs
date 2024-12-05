@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Runtime.Intrinsics.X86;
 
 namespace BierBuddy.UILib
 {
     internal class CustomComboBox : ComboBox
     {
+        //deze klasse is gemaakt om de comboboxen in de TimePicker een custom style te geven
         public CustomComboBox()
         {
             Loaded += MyComboBox_Loaded;
@@ -21,6 +15,7 @@ namespace BierBuddy.UILib
 
         private void MyComboBox_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            //vind de juiste elementen en maak de box mooi
             if (Template.FindName("toggleButton", this) is ToggleButton toggleButton)
             {
                 if (toggleButton.Template.FindName("templateRoot", toggleButton) is Border border)
@@ -33,6 +28,7 @@ namespace BierBuddy.UILib
             SetItemContainerStyle();
         }
 
+        //omdat de dropdown de textkleur van de box pakt, moet deze apart gezet worden
         private void SetItemContainerStyle() {
             Style style = new Style(typeof(ComboBoxItem));
             style.Setters.Add(new Setter(ForegroundProperty, Brushes.Black));

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Media.Effects;
 using System.Windows.Media;
 using System.Windows;
 using Material.Icons.WPF;
@@ -19,13 +13,9 @@ namespace BierBuddy.UILib
         private StackPanel _DateTimeAccepters { get; }
         private StackPanel _StackPanel { get; }
         private HashSet<string> _ChoiceMade { get; } = new HashSet<string>();
-        public Dictionary<List<DateTime>, bool> AcceptedNotAcceptedDateTimes => _DateTimeAccepters.Children.OfType<Grid>().ToDictionary(grid => new List<DateTime>
-        {
-            ((DatePicker)grid.Children[0]).SelectedDate.Value + ((TimePicker)grid.Children[1]).SelectedTime,
-            ((DatePicker)grid.Children[0]).SelectedDate.Value + ((TimePicker)grid.Children[3]).SelectedTime
-        }, grid => 
-            ((Border)grid.Children[6]).Background == new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72))
-        );
+        public List<bool> AcceptedNotAcceptedDateTimes => _DateTimeAccepters.Children.OfType<Grid>().Select(grid =>
+            ((Border)grid.Children[6]).Background == UIUtils.AcceptGreen
+        ).ToList();
 
         public DateTimeAccepterDialog(List<List<DateTime>> dateTimes)
         {
@@ -42,6 +32,7 @@ namespace BierBuddy.UILib
             textBlock.FontFamily = UIUtils.UniversalFontFamily;
             _StackPanel.Children.Add(textBlock);
 
+            //alle datetimes toevoegen aan de stackpanel
             _DateTimeAccepters = new StackPanel { Orientation = Orientation.Vertical };
             _StackPanel.Children.Add(_DateTimeAccepters);
             foreach (List<DateTime> dateTime in dateTimes)
@@ -49,6 +40,7 @@ namespace BierBuddy.UILib
                 AddDateTimeAccepter(dateTime);
             }
 
+            //de buttons toevoegen. de geef door is standaard niet enabled omdat nog niet alle beschikbaarheden zijn beoordeeld
             StackPanel buttonPanel = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -56,7 +48,7 @@ namespace BierBuddy.UILib
                 Margin = new Thickness(0, 10, 0, 0)
             };
             Button cancelButton = new Button { Content = "CANCEL", IsCancel = true };
-            cancelButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(190, 55, 50)), Brushes.Black);
+            cancelButton.Template = GetButtonPanelButtonTemplate(UIUtils.DeclineRed, Brushes.Black);
             _OkButton = new Button { Content = "GEEF DOOR", IsDefault = true };
             _OkButton.Click += OK_Click;
             _OkButton.Template = GetButtonPanelButtonTemplate(UIUtils.BabyPoeder, Brushes.Black);
@@ -70,53 +62,71 @@ namespace BierBuddy.UILib
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            // Set the dialog result to true (OK)
             this.DialogResult = true;
         }
 
         /// <summary>
-        /// Voegt een DateTimeSelector toe aan de _DateTimeAccepters stackpanel
+        /// Voegt een DateTimeAccepter toe aan de _DateTimeAccepters stackpanel
         /// </summary>
-        /// <param name="dateTime">De datum die standaard geselecteerd is, ook kan er geen datum meer hiervoor gekozen worden</param>
+        /// <param name="dateTime">De datum die standaard weergeven wordt</param>
         private void AddDateTimeAccepter(List<DateTime> dateTimes)
         {
             Grid dateTimeAccepter = new Grid();
             dateTimeAccepter.Margin = new Thickness(0, 0, 0, 5);
-            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            //7 kolommen: datum, starttijd, tot, eindtijd, decline, accept, accepted
+            //datum
             dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             TextBlock dateText = new TextBlock { Text = dateTimes[0].ToShortDateString(), Background = UIUtils.Outer_Space, Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center };
             Border dateTextBorder = GenerateThemedTextBlock(dateText);
             Grid.SetColumn(dateTextBorder, 0);
             dateTimeAccepter.Children.Add(dateTextBorder);
+
+            //starttijd
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             TextBlock timeTextStart = new TextBlock { Text = dateTimes[0].ToShortTimeString(), Background = UIUtils.Outer_Space, Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center };
             Border timeTextStartBorder = GenerateThemedTextBlock(timeTextStart);
             Grid.SetColumn(timeTextStartBorder, 1);
             dateTimeAccepter.Children.Add(timeTextStartBorder);
+
+            //tot, deze heeft geen GenerateThemedTextBlock omdat hij geen achtergrond heeft
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             TextBlock textBlock = new TextBlock { Text = "TOT", Margin = new Thickness(0, 0, 5, 0), Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center };
             Grid.SetColumn(textBlock, 2);
             dateTimeAccepter.Children.Add(textBlock);
+
+            //eindtijd
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             TextBlock timeTextEnd = new TextBlock { Text = dateTimes[1].ToShortTimeString(), Background = UIUtils.Outer_Space, Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center };
             Border timeTextEndBorder = GenerateThemedTextBlock(timeTextEnd);
             Grid.SetColumn(timeTextEndBorder, 3);
             dateTimeAccepter.Children.Add(timeTextEndBorder);
+
+            //decline
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             UIElement declineButton = GetDeclineButton(30, 30);
             Grid.SetColumn(declineButton, 4);
             dateTimeAccepter.Children.Add(declineButton);
+
+            //accept
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             UIElement acceptButton = GetAcceptButton(30, 30);
             Grid.SetColumn(acceptButton, 5);
             dateTimeAccepter.Children.Add(acceptButton);
+
+            //accepted
+            dateTimeAccepter.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             Border accepted = new Border { CornerRadius = UIUtils.UniversalCornerRadius, Background = UIUtils.Outer_Space, Padding = new Thickness(5) };
             Grid.SetColumn(accepted, 6);
             dateTimeAccepter.Children.Add(accepted);
+
+            //uid toevoegen aan de grid zodat we deze kunnen gebruiken om te checken of de gebruiker al een keuze heeft gemaakt
             dateTimeAccepter.Uid = Guid.NewGuid().ToString();
             _DateTimeAccepters.Children.Add(dateTimeAccepter);
         }
 
+        /// <summary>
+        /// zet het bolletje achter de datum op groen of rood
+        /// </summary>
         private void AcceptDecline_Clicked(object sender, EventArgs e)
         {
             Button button = (Button)sender;
@@ -128,67 +138,67 @@ namespace BierBuddy.UILib
             {
                 if (button.Name == "accept")
                 {
-                    ((Border)grid.Children[6]).Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72));
+                    ((Border)grid.Children[6]).Background = UIUtils.AcceptGreen;
                     _ChoiceMade.Add(grid.Uid);
                     CheckIfAllChoicesMade();
                 }
                 else if (button.Name == "decline")
                 {
-                    ((Border)grid.Children[6]).Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32));
+                    ((Border)grid.Children[6]).Background = UIUtils.DeclineRed;
                     _ChoiceMade.Add(grid.Uid);
                     CheckIfAllChoicesMade();
                 }
             }
         }
 
+        /// <summary>
+        /// kijken of alle keuzes gemaakt zijn, zo ja dan kan de gebruiker op de OK knop drukken
+        /// </summary>
         private void CheckIfAllChoicesMade()
         {
             if (_ChoiceMade.Count == _DateTimeAccepters.Children.Count)
             {
                 _OkButton.IsEnabled = true;
-                _OkButton.Template = GetButtonPanelButtonTemplate(new SolidColorBrush(Color.FromRgb(126, 161, 114)), Brushes.Black);
+                _OkButton.Template = GetButtonPanelButtonTemplate(UIUtils.AcceptGreen, Brushes.Black);
             }
         }
 
         private UIElement GetDeclineButton(double width, double height)
         {
             Button declineButton = new();
-            declineButton.Template = GetAcceptButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32)));
-            MaterialIcon icon = new MaterialIcon();
-            icon.Kind = MaterialIconKind.GlassMugOff;
-            icon.Foreground = UIUtils.BabyPoeder;
-            declineButton.Width = width;
-            declineButton.Height = height;
-            declineButton.Content = icon;
-            declineButton.VerticalAlignment = VerticalAlignment.Center;
-            declineButton.HorizontalAlignment = HorizontalAlignment.Center;
-            declineButton.Background = UIUtils.Transparent;
-            declineButton.Margin = new Thickness(0, 0, 5, 0);
-            declineButton.Click += AcceptDecline_Clicked;
-            declineButton.Name = "decline";
+            declineButton.Template = GetAcceptButtonTemplate(UIUtils.DeclineRed);
 
-            return declineButton;
+            return GenerateAcceptDeclineButton(declineButton, width, height, MaterialIconKind.GlassMugOff, "decline");
         }
 
         private UIElement GetAcceptButton(double width, double height)
         {
             Button acceptButton = new();
-            acceptButton.Template = GetAcceptButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0x7E, 0xA1, 0x72)));
+            acceptButton.Template = GetAcceptButtonTemplate(UIUtils.AcceptGreen);
 
+            return GenerateAcceptDeclineButton(acceptButton, width, height, MaterialIconKind.Glass, "accept");
+
+        }
+
+        /// <summary>
+        /// zet alle standaard waardes voor de accept en decline buttons
+        /// </summary>
+        private Button GenerateAcceptDeclineButton(Button button, double width, double height, MaterialIconKind iconKind, string name)
+        {
             MaterialIcon icon = new MaterialIcon();
-            icon.Kind = MaterialIconKind.GlassMug;
+            icon.Kind = iconKind;
             icon.Foreground = UIUtils.BabyPoeder;
-            acceptButton.Width = width;
-            acceptButton.Height = height;
-            acceptButton.Content = icon;
-            acceptButton.VerticalAlignment = VerticalAlignment.Center;
-            acceptButton.HorizontalAlignment = HorizontalAlignment.Center;
-            acceptButton.Background = UIUtils.Transparent;
-            acceptButton.Margin = new Thickness(0, 0, 5, 0);
-            acceptButton.Click += AcceptDecline_Clicked;
-            acceptButton.Name = "accept";
+            button.Width = width;
+            button.Height = height;
+            button.Content = icon;
+            button.VerticalAlignment = VerticalAlignment.Center;
+            button.HorizontalAlignment = HorizontalAlignment.Center;
+            button.Background = UIUtils.Transparent;
+            button.Margin = new Thickness(0, 0, 5, 0);
+            button.Click += AcceptDecline_Clicked;
+            button.Name = name;
 
-            return acceptButton;
+            return button;
         }
 
         private ControlTemplate GetAcceptButtonTemplate(Brush brush)
@@ -196,29 +206,33 @@ namespace BierBuddy.UILib
             ControlTemplate template = new ControlTemplate(typeof(Button));
             FrameworkElementFactory gridFactory = new FrameworkElementFactory(typeof(Grid));
 
+            //achtergrond
             FrameworkElementFactory borderFactory = new FrameworkElementFactory(typeof(Border));
-            //set background color
             borderFactory.SetValue(Border.BackgroundProperty, brush);
             borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(90));
             gridFactory.AppendChild(borderFactory);
 
+            //voorgrond
             FrameworkElementFactory contentPresenterFactory = new FrameworkElementFactory(typeof(ContentPresenter));
             contentPresenterFactory.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
             contentPresenterFactory.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
             gridFactory.AppendChild(contentPresenterFactory);
 
             template.VisualTree = gridFactory;
-
             return template;
         }
 
         private ControlTemplate GetButtonPanelButtonTemplate(Brush background, Brush foreground)
         {
             ControlTemplate template = new ControlTemplate(typeof(Button));
+
+            //achtergrond
             FrameworkElementFactory border = new FrameworkElementFactory(typeof(Border));
             border.SetValue(Border.CornerRadiusProperty, UIUtils.UniversalCornerRadius);
             border.SetValue(Border.BackgroundProperty, background);
             border.SetValue(Border.MarginProperty, new Thickness(5));
+
+            //voorgrond
             FrameworkElementFactory contentPresenter = new FrameworkElementFactory(typeof(ContentPresenter));
             contentPresenter.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
             contentPresenter.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
@@ -227,10 +241,14 @@ namespace BierBuddy.UILib
             contentPresenter.SetValue(TextElement.FontWeightProperty, FontWeights.Bold);
             contentPresenter.SetValue(TextElement.FontFamilyProperty, UIUtils.UniversalFontFamily);
             border.AppendChild(contentPresenter);
+
             template.VisualTree = border;
             return template;
         }
 
+        /// <summary>
+        /// deze functie zet een textblock in een border zodat deze geround is
+        /// </summary>
         private Border GenerateThemedTextBlock(TextBlock textBlock)
         {
             Border border = new Border();

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace BierBuddy.UILib
 {
@@ -18,11 +12,12 @@ namespace BierBuddy.UILib
         {
             Background = UIUtils.Outer_Space;
             SelectedTime = DateTime.Now.TimeOfDay;
-            SelectedTime = new TimeSpan(SelectedTime.Hours, SelectedTime.Minutes, 0);
+            SelectedTime = new TimeSpan(SelectedTime.Hours, SelectedTime.Minutes, 0); //haal de secondes weg
             CornerRadius = UIUtils.UniversalCornerRadius;
             Padding = new Thickness(10, 0, 10, 0);
             Grid grid = new Grid();
 
+            //maak de comboboxes, voeg de items toe en selecteer de juiste tijd
             CustomComboBox hours = new CustomComboBox { Margin = new Thickness(0, 0, 5, 0) };
             CustomComboBox minutes = new CustomComboBox { Margin = new Thickness(0, 0, 5, 0) };
             for (int i = 0; i < 24; i++)
@@ -44,6 +39,8 @@ namespace BierBuddy.UILib
 
             TextBlock seperator = new TextBlock { Text = ":", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 0, 0), Foreground = UIUtils.BabyPoeder, FontFamily = UIUtils.UniversalFontFamily, FontWeight = FontWeights.Bold };
 
+            //maak de grid en voeg de items toe
+            //uur : minuut
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto});
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -56,6 +53,7 @@ namespace BierBuddy.UILib
             Child = grid;
         }
 
+        //deze functies zijn apart omdat bij de een de uur aangepast moet worden en bij de ander de minuut
         private void Hours_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedTime = new TimeSpan(int.Parse((string)((ComboBox)sender).SelectedItem), SelectedTime.Minutes, 0);

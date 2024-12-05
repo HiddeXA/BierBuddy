@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using Material.Icons.WPF;
-using Material.Icons;
 using System.Windows.Controls.Primitives;
 
 namespace BierBuddy.UILib
 {
     internal class CustomDatePicker : DatePicker
     {
+        //deze klasse is gemaakt om de DatePicker een custom style te geven
         public CustomDatePicker()
         {
             Loaded += CustomDatePicker_Loaded;
@@ -22,9 +14,10 @@ namespace BierBuddy.UILib
 
         private void CustomDatePicker_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            // Ensure the template is applied
             ApplyTemplate();
 
+            //vind de juiste elementen en maak de box mooi
+            //de textbox is de box waar de datum in staat
             if (Template.FindName("PART_TextBox", this) is TextBox textBox)
             {
                 textBox.Background = Background;
@@ -34,11 +27,13 @@ namespace BierBuddy.UILib
                 textBox.FontFamily = FontFamily;
                 textBox.VerticalContentAlignment = VerticalAlignment.Center;
             }
+            //de button is de knop waar je op klikt om de kalender te openen
             if (Template.FindName("PART_Button", this) is Button button)
             {
                 button.Background = Background;
                 button.BorderBrush = Background;
             }
+            //de popup is de kalender, deze moet een andere achtergrond hebben omdat de text niet aanpasbaar is zonder extreem veel extra werk
             if (Template.FindName("PART_Popup", this) is Popup popup)
             {
                 if(popup.Child is Calendar calendar)

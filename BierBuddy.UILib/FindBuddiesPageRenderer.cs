@@ -611,7 +611,12 @@ namespace BierBuddy.UILib
     internal class ProfileContentLabel : Label
     {
 
+
         public ProfileContentLabel(string content, int fontsize) : this(fontsize)
+
+        public TextAlignment TextAlignment { get; internal set; }
+
+
         {
             this.Content = content;
             this.FontSize = fontsize;

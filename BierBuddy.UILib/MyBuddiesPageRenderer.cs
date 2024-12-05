@@ -26,6 +26,12 @@ namespace BierBuddy.UILib
         private double _NavBarWidth;
         private Canvas _buddyPanel;
 
+        private int BigFontSize = 28;
+        private int GeneralFontSize = 16;
+
+                private readonly int _MinFontSizeBig = 20;
+        private readonly int _MinFontSizeGeneral = 12;
+
         private Visitor _Visitor { get; set; }
         
 
@@ -41,7 +47,7 @@ namespace BierBuddy.UILib
             double panelWidth = _MainWindowSize.Width - _NavBarWidth;
             _Visitor = visitor;
 
-            // Maak een panel voor de buttons (Mijn Buddies en Mijn Afspraken)
+            // Maak een panel voor de buttons Mijn Buddies en Mijn Afspraken
             StackPanel buttonPanel = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -49,27 +55,28 @@ namespace BierBuddy.UILib
                 Margin = new Thickness(0, 10, 0, 10),
             };
 
-            // Voeg de buttons toe aan het buttonPanel
+            
             buttonPanel.Children.Add(GetMijnBuddiesButton(300, 50));
             buttonPanel.Children.Add(GetMijnAfsprakenButton(300, 50));
 
-            // Maak de buddyBorder en voeg deze toe aan het panel
+            
+            SetBuddyPanel(1000, 100); 
             Border buddyBorder = (Border)GetBuddyBorder();
             buddyBorder.Margin = new Thickness(45, 20, 0, 20);
-            SetBuddyPanel(1000, 100); // Set de buddyPanel inhoud
+            
 
-            // Maak een StackPanel voor de knoppen en de buddyBorder
+            // StackPanel voor de knoppen en de buddies
             StackPanel mainPanel = new StackPanel
             {
                 Orientation = Orientation.Vertical,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            // Voeg de buttonPanel en buddyBorder toe aan mainPanel
-            mainPanel.Children.Add(buttonPanel);  // Voeg knoppen bovenaan toe
-            mainPanel.Children.Add(buddyBorder);  // Voeg de buddyBorder onder de knoppen toe
+            
+            mainPanel.Children.Add(buttonPanel);  
+            mainPanel.Children.Add(buddyBorder); 
 
-            MyBuddiesPanel.Children.Add(mainPanel);  // Voeg het hoofdpanel toe aan het WrapPanel
+            MyBuddiesPanel.Children.Add(mainPanel);  
 
             MyBuddiesPanel.VerticalAlignment = VerticalAlignment.Center;
             MyBuddiesPanel.HorizontalAlignment = HorizontalAlignment.Center;
@@ -79,11 +86,23 @@ namespace BierBuddy.UILib
 
         private UIElement GetBuddyBorder()
         {
-            Border buddyBorder = new()
+            // Maak een nieuw Canvas aan om Child issues te voorkomen 
+            Canvas newBuddyPanel = new Canvas
+            {
+                Width = _MainWindowSize.Width - _NavBarWidth - 100,  
+                Height = _buddyPanel.Height,  
+                Margin = _buddyPanel.Margin  
+            };
+
+            
+            UIElement buddyContent = GetBuddyContentPanel(newBuddyPanel.Width, newBuddyPanel.Height);
+            newBuddyPanel.Children.Add(buddyContent);
+
+            Border buddyBorder = new Border
             {
                 Background = UIUtils.Outer_Space,
                 CornerRadius = UIUtils.UniversalCornerRadius,
-                Child = _buddyPanel,
+                Child = newBuddyPanel,  
             };
 
             return buddyBorder;
@@ -306,10 +325,24 @@ namespace BierBuddy.UILib
             return buddyContentBorder;
         }
 
-        public void UpdatePageSize(double NavBarWidth, Size ScreenWidth)
+        public void UpdatePageSize(double newNavBarWidth, Size newScreenSize)
         {
-            
+            _NavBarWidth = newNavBarWidth;
+            _MainWindowSize = newScreenSize;
+
+            // Fontsize aanpassen
+            if (_MainWindowSize.Width < 1500)
+            {
+                BigFontSize = _MinFontSizeBig;
+                GeneralFontSize = _MinFontSizeGeneral;
+            }
+            else
+            {
+                BigFontSize = 28;
+                GeneralFontSize = 16;
+            }
         }
+ 
 
     }
 }

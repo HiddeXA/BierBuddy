@@ -366,7 +366,7 @@ namespace BierBuddy.UILib
         {
             MaterialIcon icon = new MaterialIcon();
             icon.Kind = MaterialIconKind.Dot;
-            ProfileContentLabel nameLabel = new ProfileContentLabel(56);
+            ProfileContentLabel nameLabel = new ProfileContentLabel(icon.ToString(), BigFontSize);
             nameLabel.Content = icon;
             nameLabel.FontSize = BigFontSize;
             return nameLabel;
@@ -613,14 +613,12 @@ namespace BierBuddy.UILib
 
 
         public ProfileContentLabel(string content, int fontsize) : this(fontsize)
-
-        public TextAlignment TextAlignment { get; internal set; }
-
-
         {
             this.Content = content;
             this.FontSize = fontsize;
         }
+
+        public TextAlignment TextAlignment { get; internal set; }
 
 
         public ProfileContentLabel(int fontsize)
@@ -630,6 +628,11 @@ namespace BierBuddy.UILib
             this.HorizontalAlignment = HorizontalAlignment.Center;
             this.FontFamily = UIUtils.UniversalFontFamily;
             this.FontSize = fontsize;
+        }
+
+        public ProfileContentLabel(string name)
+        {
+            Name = name;
         }
     }
 }

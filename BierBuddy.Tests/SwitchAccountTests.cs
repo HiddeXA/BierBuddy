@@ -39,9 +39,9 @@ public class SwitchClientProfileTests
         _switchAccount.SwitchClientProfile(validAccountID.ToString());
 
         // Assert
-        Assert.AreEqual(expectedVisitor, _main.ClientVisitor);
+        Assert.That(_main.ClientVisitor, Is.EqualTo(expectedVisitor));
         Assert.IsTrue(eventFired);
-        Assert.AreEqual(validAccountID, eventAccountID);
+        Assert.That(eventAccountID, Is.EqualTo(validAccountID));
     }
 
     [Test]
@@ -54,7 +54,7 @@ public class SwitchClientProfileTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() => _switchAccount.SwitchClientProfile(invalidAccountID.ToString()));
-        Assert.AreEqual(typeof(ArgumentOutOfRangeException), ex.GetType());
+        Assert.That(ex.GetType(), Is.EqualTo(typeof(ArgumentOutOfRangeException)));
     }
 
     [Test]
@@ -65,7 +65,7 @@ public class SwitchClientProfileTests
 
         // Act & Assert
         var ex = Assert.Throws<FormatException>(() => _switchAccount.SwitchClientProfile(invalidInput));
-        Assert.AreEqual(typeof(FormatException), ex.GetType());
+        Assert.That(ex.GetType(), Is.EqualTo(typeof(FormatException)));
     }
 }
 

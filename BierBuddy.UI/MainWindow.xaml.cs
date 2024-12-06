@@ -33,7 +33,6 @@ namespace BierBuddy.UI
         private Main _Main { get; }
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
         private FindBuddies _FindBuddies { get; }
-        private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
         private IDataAccess _DataAccess { get; }
         
         public MainWindow()

@@ -46,6 +46,10 @@ namespace BierBuddy.Core
         {
             ActivityPreference.Add(activity);
         }
-        
+
+        public void AddToPhotos(string photoUrl)
+        {
+            Photos.Add(photoUrl);
+        }
     }
 }

@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Material.Icons.WPF;
 using BierBuddy.Core;
+using BierBuddy.DataAccess;
 
 namespace BierBuddy.UI
 {
@@ -32,19 +33,29 @@ namespace BierBuddy.UI
         private int WindowStatus { get; set; } = 0;
 
         //definitie pageRenderers
+        private Main _Main { get; }
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
+        private FindBuddies _FindBuddies { get; }
+        private IDataAccess _DataAccess { get; }
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
-
 
         public MainWindow()
         {
             InitializeComponent();
+            //initialize dataAccess
+            MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
+            connection.Open();
+            _DataAccess = new MySQLDatabase(connection);
+            //initialize main
+            _Main = new Main(_DataAccess);
             //initialize page renderers
-            _FindBuddiesPageRenderer = new FindBuddiesPageRenderer();
             _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(); 
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
+            //initialize page renderers
+            _FindBuddies = new FindBuddies(_DataAccess, _Main);
+            _FindBuddiesPageRenderer = new FindBuddiesPageRenderer(_FindBuddies);
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
@@ -101,7 +112,7 @@ namespace BierBuddy.UI
         {
             this.WindowStatus = 1;
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_AlgoritmePlaceHolder.GetVisitor()));
+            PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_FindBuddies.GetPotentialMatch()));
             
         }
 
@@ -120,9 +131,17 @@ namespace BierBuddy.UI
         }
         private void AccountButton_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowStatus = 4;
+
+            //todo account aanpassen screen
+            //todo aanpassen account switchen en authenticatie enzo
+
+            //dit is een tijdelijke oplossing
+            #region
+            SwitchAccountDialog switchAccDialog = new SwitchAccountDialog(_Main);
+            switchAccDialog.ShowDialog();
+
             PagePanel.Children.Clear();
-            //todo voor account userstories
+            #endregion
         }
 
         private int CalculateNavBarFontSize()

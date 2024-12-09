@@ -212,6 +212,7 @@ VALUES
 
 
 INSERT INTO Visitor (Name, Bio, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, VisitorID, Age)
+
 VALUES
 ('Jan de Vries', 'Een open en vriendelijke persoon die altijd in is voor een gezellig gesprek of een leuke activiteit.', 1, 1, 1, 1, 1, 25),
 ('Sophie Jansen', 'Een creatieve geest die het fijn vindt om tijd door te brengen met vrienden en nieuwe ideeën te bespreken.', 2, 2, 2, 2, 2, 30),

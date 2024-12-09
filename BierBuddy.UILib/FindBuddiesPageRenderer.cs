@@ -31,6 +31,7 @@ namespace BierBuddy.UILib
         private int _CurrentPhotoIndex = 0;
         private Image _ProfilePicture;
         private Visitor _Visitor { get; set; }
+        private FindBuddies _FindBuddies;
 
         private int BigFontSize = 28;
         private int GeneralFontSize = 16;
@@ -38,11 +39,12 @@ namespace BierBuddy.UILib
         private readonly int _MinFontSizeBig = 20;
         private readonly int _MinFontSizeGeneral = 12;
 
-        public FindBuddiesPageRenderer()
-        {
+        public FindBuddiesPageRenderer(FindBuddies findBuddies){
             _profilePanel = new Canvas();
             _ProfilePicture = new Image();
             _Visitor = new(0, "temp", "temp", 0);
+            _FindBuddies = findBuddies;
+            _FindBuddies.Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
         }
         public WrapPanel GetFindBuddiesPage(Visitor visitor)
         {
@@ -91,7 +93,8 @@ namespace BierBuddy.UILib
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO dislike stuff
+            _FindBuddies.DislikeVisitor(_Visitor);
+            RefreshPage();
         }
 
         private UIElement GetlikeButton(double width, double height)
@@ -119,7 +122,8 @@ namespace BierBuddy.UILib
 
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO like stuff
+            _FindBuddies.LikeVisitor(_Visitor);
+            RefreshPage();
         }
 
         private ControlTemplate GetLikeButtonTemplate(Brush brush)
@@ -152,6 +156,7 @@ namespace BierBuddy.UILib
         }
         private void SetProfilePanel(double width, double height)
         {
+            _profilePanel.Children.Clear();
             _profilePanel.Width = width;
             _profilePanel.Height = height - 150;
             UIElement profilePicture = GetProfilePicture(width, height - 150);
@@ -166,27 +171,36 @@ namespace BierBuddy.UILib
         private UIElement GetProfilePicture(double width, double height)
         {
             Canvas canvas = new();
-            _ProfilePicture = new();
-            _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
-            _ProfilePicture.Width = width;
-            _ProfilePicture.Height = height;
-            _ProfilePicture.Stretch = Stretch.UniformToFill;
-            _ProfilePicture.HorizontalAlignment = HorizontalAlignment.Center;
-            _ProfilePicture.VerticalAlignment = VerticalAlignment.Center;
-            _ProfilePicture.Clip = new RectangleGeometry(new Rect(0, 0, width, height), UIUtils.UniversalCornerRadius.TopRight, UIUtils.UniversalCornerRadius.TopRight);
-
-            canvas.Children.Add(_ProfilePicture);
-
-            if (_Visitor.Photos.Count > 1)
+            if (_Visitor == null)
             {
-                UIElement previousPicture = GetPreviousPictureButton(100, 100);
-                canvas.Children.Add(previousPicture);
-                Canvas.SetLeft(previousPicture, 0 - 25);
-                Canvas.SetTop(previousPicture, height / 2 - 25);
-                UIElement nextPicture = GetNextPictureButton(100, 100);
-                canvas.Children.Add(nextPicture);
-                Canvas.SetLeft(nextPicture, width - 75);
-                Canvas.SetTop(nextPicture, height / 2 - 25);
+                return canvas;
+            }
+            
+            if (!_Visitor.Photos[_CurrentPhotoIndex].Equals("Geen URL gevonden"))
+            {
+                
+                _ProfilePicture = new();
+                _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
+                _ProfilePicture.Width = width;
+                _ProfilePicture.Height = height;
+                _ProfilePicture.Stretch = Stretch.UniformToFill;
+                _ProfilePicture.HorizontalAlignment = HorizontalAlignment.Center;
+                _ProfilePicture.VerticalAlignment = VerticalAlignment.Center;
+                _ProfilePicture.Clip = new RectangleGeometry(new Rect(0, 0, width, height), UIUtils.UniversalCornerRadius.TopRight, UIUtils.UniversalCornerRadius.TopRight);
+
+                canvas.Children.Add(_ProfilePicture);
+
+                if (_Visitor.Photos.Count > 1)
+                {
+                    UIElement previousPicture = GetPreviousPictureButton(100, 100);
+                    canvas.Children.Add(previousPicture);
+                    Canvas.SetLeft(previousPicture, 0 - 25);
+                    Canvas.SetTop(previousPicture, height / 2 - 25);
+                    UIElement nextPicture = GetNextPictureButton(100, 100);
+                    canvas.Children.Add(nextPicture);
+                    Canvas.SetLeft(nextPicture, width - 75);
+                    Canvas.SetTop(nextPicture, height / 2 - 25);
+                }
             }
             return canvas;
         }
@@ -567,6 +581,13 @@ namespace BierBuddy.UILib
             bio.Text = _Visitor.Bio;
             return bio;
         }
+        public void RefreshPage()
+        {
+            double panelWidth = _MainWindowSize.Width - _NavBarWidth;
+            _Visitor = _FindBuddies.GetPotentialMatch();
+            SetProfilePanel(panelWidth / 2, _MainWindowSize.Height);
+
+        }
         public void UpdatePageSize(double newNavBarWidth, Size newScreenSize)
         {
             _NavBarWidth = newNavBarWidth;
@@ -584,7 +605,12 @@ namespace BierBuddy.UILib
                 GeneralFontSize = 16;
             }
         }
+        public void OnClientProfileChanged(object sender, ClientProfileChangedEventArgs args)
+        {
+            RefreshPage();
+        }
     }
+    
 
     internal class ProfileContentBorder : Border
     {

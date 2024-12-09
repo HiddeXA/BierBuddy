@@ -374,7 +374,7 @@ namespace BierBuddy.DataAccess
         {
             MySqlTransaction transaction = _conn.BeginTransaction();
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "UPDATE appointments SET Approved = 1 WHERE AppointmentID = @ID";
+            cmd.CommandText = "UPDATE appointments SET Accepted = 1 WHERE AppointmentID = @ID";
             cmd.Parameters.AddWithValue("@ID", appointmentID);
             cmd.ExecuteNonQuery();
             transaction.Commit();
@@ -430,24 +430,6 @@ namespace BierBuddy.DataAccess
             reader.Close();
             transaction.Commit();
             return appointments;
-        }
-
-        public Appointment? GetAppointment(long appointmentID)
-        {
-            MySqlTransaction transaction = _conn.BeginTransaction();
-            MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM appointments WHERE AppointmentID = @ID";
-            cmd.Parameters.AddWithValue("@ID", appointmentID);
-            cmd.ExecuteNonQuery();
-            MySqlDataReader reader = cmd.ExecuteReader();
-            Appointment? appointment = null;
-            while (reader.Read())
-            {
-                appointment = new Appointment(reader.GetInt64(0), reader.GetInt64(1), reader.GetInt64(2), reader.GetDateTime(3), reader.GetDateTime(4), reader.GetBoolean(5));
-            }
-            reader.Close();
-            transaction.Commit();
-            return appointment;
         }
     }
 }

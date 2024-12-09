@@ -19,9 +19,11 @@ namespace BierBuddy.UILib
         internal static readonly Brush Onyx70 = new SolidColorBrush(Color.FromArgb(178, 0x2E, 0x35, 0x32));
         internal static readonly Brush Outer_Space = new SolidColorBrush(Color.FromArgb(0xFF, 0x43, 0x4D, 0x49));
         internal static readonly Brush testMarking = new SolidColorBrush(Color.FromRgb( 255, 255, 0));
+        internal static readonly Brush PhantomShip = new SolidColorBrush(Color.FromArgb(255, 46, 53, 50));
         internal static readonly Brush Transparent = new SolidColorBrush(Colors.Transparent);
         internal static readonly FontFamily UniversalFontFamily = new FontFamily("Bayon");
         internal static readonly FontWeight UniversalFontWeight = new FontWeight();
-        internal static readonly CornerRadius UniversalCornerRadius = new CornerRadius(40);
+        internal static readonly CornerRadius UniversalCornerRadius = new CornerRadius(25);
+        internal static readonly CornerRadius SquirqilCornerRadius = new CornerRadius(15);
     }
 }

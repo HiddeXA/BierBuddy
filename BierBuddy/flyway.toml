@@ -26,3 +26,8 @@ ignoreNewlinesInTextObjects = "off"
 url = "jdbc:mysql://localhost"
 user = "root"
 schemas = [ "BierBuddyDB" ]
+
+[environments.BierBuddyLive]
+url = "jdbc:mysql://mysql-1284b19-bierbuddy.c.aivencloud.com:26316"
+schemas = [ "BierBuddyDB" ]
+displayName = "BierBuddyLive"

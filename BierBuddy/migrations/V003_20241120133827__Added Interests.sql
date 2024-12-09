@@ -1,47 +1,47 @@
-INSERT INTO possibledrinks(Drink) VALUES('Heineken');
-INSERT INTO possibledrinks(Drink) VALUES('Hertog Jan');
-INSERT INTO possibledrinks(Drink) VALUES('Grolsch');
-INSERT INTO possibledrinks(Drink) VALUES('Jupiler');
-INSERT INTO possibledrinks(Drink) VALUES('Bavaria');
-INSERT INTO possibledrinks(Drink) VALUES('Speciaalbier');
-INSERT INTO possibledrinks(Drink) VALUES('Rode Wijn');
-INSERT INTO possibledrinks(Drink) VALUES('Witte Wijn');
-INSERT INTO possibledrinks(Drink) VALUES('Rosé');
-INSERT INTO possibledrinks(Drink) VALUES('Frisdrank');
-INSERT INTO possibledrinks(Drink) VALUES('Water');
-INSERT INTO possibledrinks(Drink) VALUES('Port');
-INSERT INTO possibledrinks(Drink) VALUES('Champagne');
-INSERT INTO possibledrinks(Drink) VALUES('Jenever');
-INSERT INTO possibledrinks(Drink) VALUES('Radler');
-INSERT INTO possibledrinks(Drink) VALUES('Advocaat');
-INSERT INTO possibledrinks(Drink) VALUES('Beerenburg');
-INSERT INTO possibledrinks(Drink) VALUES('Baileys');
-INSERT INTO possibledrinks(Drink) VALUES('Cider');
-INSERT INTO possibledrinks(Drink) VALUES('Cognac');
-INSERT INTO possibledrinks(Drink) VALUES('Gin');
-INSERT INTO possibledrinks(Drink) VALUES('Dropshot');
-INSERT INTO possibledrinks(Drink) VALUES('Goldstrike');
-INSERT INTO possibledrinks(Drink) VALUES('Jägermeister');
-INSERT INTO possibledrinks(Drink) VALUES('Licor 43');
-INSERT INTO possibledrinks(Drink) VALUES('Sambuca');
-INSERT INTO possibledrinks(Drink) VALUES('Amaretto');
-INSERT INTO possibledrinks(Drink) VALUES('Perenwijn');
-INSERT INTO possibledrinks(Drink) VALUES('Rum');
-INSERT INTO possibledrinks(Drink) VALUES('Sake');
-INSERT INTO possibledrinks(Drink) VALUES('Tequila');
-INSERT INTO possibledrinks(Drink) VALUES('Koffie met liqour');
-INSERT INTO possibledrinks(Drink) VALUES('Chocolademelk met liqour');
-INSERT INTO possibledrinks(Drink) VALUES('Vermout');
-INSERT INTO possibledrinks(Drink) VALUES('Cocktails');
-INSERT INTO possibledrinks(Drink) VALUES('Vruchtenliqour');
-INSERT INTO possibledrinks(Drink) VALUES('Whiskey');
-INSERT INTO possibledrinks(Drink) VALUES('Glühwein');
-INSERT INTO possibledrinks(Drink) VALUES('Wodka');
-INSERT INTO possibledrinks(Drink) VALUES('Feestshots');
+INSERT INTO PossibleDrinks(Drink) VALUES('Heineken');
+INSERT INTO PossibleDrinks(Drink) VALUES('Hertog Jan');
+INSERT INTO PossibleDrinks(Drink) VALUES('Grolsch');
+INSERT INTO PossibleDrinks(Drink) VALUES('Jupiler');
+INSERT INTO PossibleDrinks(Drink) VALUES('Bavaria');
+INSERT INTO PossibleDrinks(Drink) VALUES('Speciaalbier');
+INSERT INTO PossibleDrinks(Drink) VALUES('Rode Wijn');
+INSERT INTO PossibleDrinks(Drink) VALUES('Witte Wijn');
+INSERT INTO PossibleDrinks(Drink) VALUES('Rosé');
+INSERT INTO PossibleDrinks(Drink) VALUES('Frisdrank');
+INSERT INTO PossibleDrinks(Drink) VALUES('Water');
+INSERT INTO PossibleDrinks(Drink) VALUES('Port');
+INSERT INTO PossibleDrinks(Drink) VALUES('Champagne');
+INSERT INTO PossibleDrinks(Drink) VALUES('Jenever');
+INSERT INTO PossibleDrinks(Drink) VALUES('Radler');
+INSERT INTO PossibleDrinks(Drink) VALUES('Advocaat');
+INSERT INTO PossibleDrinks(Drink) VALUES('Beerenburg');
+INSERT INTO PossibleDrinks(Drink) VALUES('Baileys');
+INSERT INTO PossibleDrinks(Drink) VALUES('Cider');
+INSERT INTO PossibleDrinks(Drink) VALUES('Cognac');
+INSERT INTO PossibleDrinks(Drink) VALUES('Gin');
+INSERT INTO PossibleDrinks(Drink) VALUES('Dropshot');
+INSERT INTO PossibleDrinks(Drink) VALUES('Goldstrike');
+INSERT INTO PossibleDrinks(Drink) VALUES('Jägermeister');
+INSERT INTO PossibleDrinks(Drink) VALUES('Licor 43');
+INSERT INTO PossibleDrinks(Drink) VALUES('Sambuca');
+INSERT INTO PossibleDrinks(Drink) VALUES('Amaretto');
+INSERT INTO PossibleDrinks(Drink) VALUES('Perenwijn');
+INSERT INTO PossibleDrinks(Drink) VALUES('Rum');
+INSERT INTO PossibleDrinks(Drink) VALUES('Sake');
+INSERT INTO PossibleDrinks(Drink) VALUES('Tequila');
+INSERT INTO PossibleDrinks(Drink) VALUES('Koffie met liqour');
+INSERT INTO PossibleDrinks(Drink) VALUES('Chocolademelk met liqour');
+INSERT INTO PossibleDrinks(Drink) VALUES('Vermout');
+INSERT INTO PossibleDrinks(Drink) VALUES('Cocktails');
+INSERT INTO PossibleDrinks(Drink) VALUES('Vruchtenliqour');
+INSERT INTO PossibleDrinks(Drink) VALUES('Whiskey');
+INSERT INTO PossibleDrinks(Drink) VALUES('Glühwein');
+INSERT INTO PossibleDrinks(Drink) VALUES('Wodka');
+INSERT INTO PossibleDrinks(Drink) VALUES('Feestshots');
 
 
 
-INSERT INTO possibleinterests(Interest) VALUES
+INSERT INTO PossibleInterests(Interest) VALUES
 ('Schilderen'),
 ('Tekenen'),
 ('Kalligrafie'),
@@ -167,7 +167,7 @@ INSERT INTO possibleinterests(Interest) VALUES
 ('Minimalisme'),
 ('Ruimtevaart volgen');
 
-INSERT INTO possibleactivities(Activity) VALUES
+INSERT INTO PossibleActivities(Activity) VALUES
     ('Bordspellen spelen'),
     ('Live muziek luisteren'),
     ('Dansen'),

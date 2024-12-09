@@ -37,7 +37,7 @@ namespace BierBuddy.UILib
             _ProfilePicture = new Image();
             _Visitor = new(0, "temp", "temp", 0);
             _FindBussies = findBuddies;
-            _FindBussies._Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
+            _FindBussies.Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
         }
         public WrapPanel GetFindBuddiesPage(Visitor visitor)
         {

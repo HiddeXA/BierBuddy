@@ -93,14 +93,14 @@ namespace BierBuddy.UI
         }
         private void AccountButton_Click(object sender, RoutedEventArgs e)
         {
-            //PagePanel.Children.Clear();
             //todo account aanpassen screen
             //todo aanpassen account switchen en authenticatie enzo
 
             //dit is een tijdelijke oplossing
+            #region
             SwitchAccountDialog switchAccDialog = new SwitchAccountDialog(_Main);
             switchAccDialog.ShowDialog();
-
+            #endregion
 
         }
 

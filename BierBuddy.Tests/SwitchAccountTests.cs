@@ -23,7 +23,7 @@ public class SwitchClientProfileTests
     {
         // Arrange
         long validAccountID = 2;
-        var expectedVisitor = new Visitor(validAccountID, "Jan", "Ik ben Jan", 30);
+        Visitor expectedVisitor = new Visitor(validAccountID, "Jan", "Ik ben Jan", 30);
 
         _dataAccessMock.Setup(x => x.GetAccount(validAccountID)).Returns(expectedVisitor);
 
@@ -53,7 +53,7 @@ public class SwitchClientProfileTests
         _dataAccessMock.Setup(x => x.GetAccount(invalidAccountID)).Returns((Visitor?)null);
 
         // Act & Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => _switchAccount.SwitchClientProfile(invalidAccountID.ToString()));
+        Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => _switchAccount.SwitchClientProfile(invalidAccountID.ToString()));
         Assert.That(ex.GetType(), Is.EqualTo(typeof(ArgumentOutOfRangeException)));
     }
 
@@ -64,7 +64,7 @@ public class SwitchClientProfileTests
         string invalidInput = "invalid_id";
 
         // Act & Assert
-        var ex = Assert.Throws<FormatException>(() => _switchAccount.SwitchClientProfile(invalidInput));
+        Exception ex = Assert.Throws<FormatException>(() => _switchAccount.SwitchClientProfile(invalidInput));
         Assert.That(ex.GetType(), Is.EqualTo(typeof(FormatException)));
     }
 }

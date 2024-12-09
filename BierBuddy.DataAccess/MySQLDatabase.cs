@@ -172,8 +172,8 @@ namespace BierBuddy.DataAccess
                 "AND V.VisitorID NOT IN (" +
                     "SELECT dislikedID " +
                     "FROM dislikes " +
-                    "WHERE dislikerID = @ID " +
-                "AND NOT V.VisitorID = @ID);";
+                    "WHERE dislikerID = @ID) " +
+                "AND NOT V.VisitorID = @ID;";
             cmd.Parameters.AddWithValue("@ID", clientID);
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();

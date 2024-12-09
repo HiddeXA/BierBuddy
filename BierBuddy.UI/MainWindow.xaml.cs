@@ -123,9 +123,9 @@ namespace BierBuddy.UI
         {
             List<Visitor> buddyList = new List<Visitor>
         {
-             new Visitor(1, "Buddy 1", "Test", 25),
-             new Visitor(2, "Buddy 2", "Test", 30),
-             new Visitor(3, "Buddy 3", "Test", 28),
+             new Visitor(1, "Rick", "Test", 25),
+             new Visitor(2, "Martijn", "Test", 30),
+             new Visitor(3, "Yannick", "Test", 28),
 
         };
             this.WindowStatus = 2;

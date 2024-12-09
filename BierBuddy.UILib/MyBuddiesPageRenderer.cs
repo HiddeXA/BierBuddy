@@ -42,7 +42,6 @@ namespace BierBuddy.UILib
         public MyBuddiesPageRenderer(MyBuddies myBuddies)
         {
             _buddyPanel = new Canvas();
-            _Visitor = new(0, "dummy", "dummy", 0);
 
             _MyBuddies = myBuddies;
         }
@@ -176,7 +175,7 @@ namespace BierBuddy.UILib
 
         private void AppointmentAcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            List<Appointment> appointments = _MyBuddies.GetAppointments(_Visitor);
+            List<Appointment> appointments = _MyBuddies.GetAppointments(_Visitor).Where(app => !app.Accepted).ToList();
             if (appointments.Count == 0)
             {
                 return;

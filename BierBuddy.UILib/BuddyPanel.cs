@@ -12,15 +12,17 @@ namespace BierBuddy.UILib
 {
     public class BuddyPanel : Border
     {
-        private Visitor _visitor;
-        private double _width;
-        private double _height;
+        private Visitor _Visitor;
+        private double _Width;
+        private double _Height;
+        private MyBuddies _MyBuddies { get; set; }
 
-        public BuddyPanel(Visitor visitor, double width, double height)
+        public BuddyPanel(Visitor visitor, double width, double height, MyBuddies myBuddies)
         {
-            _visitor = visitor;
-            _width = width;
-            _height = height;
+            _Visitor = visitor;
+            _Width = width;
+            _Height = height;
+            _MyBuddies = myBuddies;
 
             InitializePanel();
         }
@@ -29,8 +31,8 @@ namespace BierBuddy.UILib
         {
             // Stel de grid en layout in
             Grid buddyGrid = new Grid();
-            buddyGrid.Width = _width;
-            buddyGrid.Height = _height;
+            buddyGrid.Width = _Width;
+            buddyGrid.Height = _Height;
 
             // Definieer de kolommen en rijen
             buddyGrid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -43,13 +45,15 @@ namespace BierBuddy.UILib
             Grid.SetColumn(appointmentButton, 1);
             Grid.SetRow(appointmentButton, 0);
             appointmentButton.HorizontalAlignment = HorizontalAlignment.Right;
+            appointmentButton.Click += AppointmentButton_Click;
 
             Button appointmentAcceptButton = CreateButton("Afspraak goedkeuren", 300, 40);
             Grid.SetColumn(appointmentAcceptButton, 1);
             Grid.SetRow(appointmentAcceptButton, 1);
             appointmentAcceptButton.HorizontalAlignment = HorizontalAlignment.Right;
+            appointmentAcceptButton.Click += AppointmentAcceptButton_Click;
 
-            Button buddyNameButton = CreateNameButton(_visitor.Name, 300, 40);
+            Button buddyNameButton = CreateNameButton(_Visitor.Name, 300, 40);
             Grid.SetColumn(buddyNameButton, 0);
             Grid.SetRow(buddyNameButton, 0);
             buddyNameButton.HorizontalAlignment = HorizontalAlignment.Center;
@@ -131,6 +135,39 @@ namespace BierBuddy.UILib
 
             template.VisualTree = gridFactory;
             return template;
+        }
+
+        private void AppointmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            DateTimePlannerDialog dialog = new DateTimePlannerDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                _MyBuddies.AddAppointments(_Visitor, dialog.SelectedDateTimes);
+            }
+        }
+
+        private void AppointmentAcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<Appointment> appointments = _MyBuddies.GetAppointments(_Visitor).Where(app => !app.Accepted).ToList();
+            if (appointments.Count == 0)
+            {
+                return;
+            }
+            List<List<DateTime>> dateTimes = new List<List<DateTime>>();
+            foreach (Appointment appointment in appointments)
+            {
+                List<DateTime> dateTime = new List<DateTime> { appointment.From, appointment.To };
+                dateTimes.Add(dateTime);
+            }
+            DateTimeAccepterDialog dialog = new DateTimeAccepterDialog(dateTimes);
+            if (dialog.ShowDialog() == true)
+            {
+                List<bool> result = dialog.AcceptedNotAcceptedDateTimes;
+                for (int i = 0; i < result.Count; i++)
+                {
+                    _MyBuddies.HandleAppointment(appointments[i], result[i]);
+                }
+            }
         }
     }
 }

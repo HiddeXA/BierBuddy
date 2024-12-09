@@ -1,5 +1,6 @@
 ﻿using BierBuddy.Core;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
 
 namespace BierBuddy.DataAccess
 {
@@ -354,6 +355,81 @@ namespace BierBuddy.DataAccess
                 cmd2.ExecuteNonQuery();
             }
             transaction.Commit();
+        }
+
+        public void AddAppointment(long clientID, long visitorID, DateTime from, DateTime to)
+        {
+            MySqlTransaction transaction = _conn.BeginTransaction();
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "INSERT INTO appointments (Visitor_VisitorID1, Visitor_VisitorID2, Start, End) Values (@clientID, @visitorID, @from, @to)";
+            cmd.Parameters.AddWithValue("@clientID", clientID);
+            cmd.Parameters.AddWithValue("@visitorID", visitorID);
+            cmd.Parameters.AddWithValue("@from", from);
+            cmd.Parameters.AddWithValue("@to", to);
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+        }
+
+        public void ApproveAppointment(long appointmentID)
+        {
+            MySqlTransaction transaction = _conn.BeginTransaction();
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "UPDATE appointments SET Accepted = 1 WHERE AppointmentID = @ID";
+            cmd.Parameters.AddWithValue("@ID", appointmentID);
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+        }
+
+        public void DeclineAppointment(long appointmentID)
+        {
+            MySqlTransaction transaction = _conn.BeginTransaction();
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "DELETE FROM appointments WHERE AppointmentID = @ID";
+            cmd.Parameters.AddWithValue("@ID", appointmentID);
+            int rows = cmd.ExecuteNonQuery();
+            if(rows > 1)
+            {
+                transaction.Rollback();
+                throw new Exception("Meer dan 1 rij verwijderd. Transactie niet uitgevoerd.");
+            } else
+            {
+                transaction.Commit();
+            }
+        }
+
+        public List<Appointment> GetAppointmentsFromUser(long clientID)
+        {
+            MySqlTransaction transaction = _conn.BeginTransaction();
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "SELECT * FROM appointments WHERE Visitor_VisitorID1 = @ID OR Visitor_VisitorID2 = @ID";
+            cmd.Parameters.AddWithValue("@ID", clientID);
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<Appointment> appointments = new List<Appointment>();
+            while(reader.Read()) {
+                appointments.Add(new Appointment(reader.GetInt64(0), reader.GetInt64(1), reader.GetInt64(2), reader.GetDateTime(3), reader.GetDateTime(4), reader.GetBoolean(5)));
+            }
+            reader.Close();
+            transaction.Commit();
+            return appointments;
+        }
+
+        public List<Appointment> GetAppointmentsWithUser(long clientID, long visitorID)
+        {
+            MySqlTransaction transaction = _conn.BeginTransaction();
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "SELECT * FROM appointments WHERE (Visitor_VisitorID1 = @clientID AND Visitor_VisitorID2 = @visitorID) OR (Visitor_VisitorID1 = @visitorID AND Visitor_VisitorID2 = @clientID)";
+            cmd.Parameters.AddWithValue("@clientID", clientID);
+            cmd.Parameters.AddWithValue("@visitorID", visitorID);
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<Appointment> appointments = new List<Appointment>();
+            while(reader.Read()) {
+                appointments.Add(new Appointment(reader.GetInt64(0), reader.GetInt64(1), reader.GetInt64(2), reader.GetDateTime(3), reader.GetDateTime(4), reader.GetBoolean(5)));
+            }
+            reader.Close();
+            transaction.Commit();
+            return appointments;
         }
     }
 }

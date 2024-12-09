@@ -36,6 +36,8 @@ namespace BierBuddy.UI
         private Main _Main { get; }
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
         private FindBuddies _FindBuddies { get; }
+
+        private MyBuddies _MyBuddies { get; }
         private IDataAccess _DataAccess { get; }
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
@@ -50,7 +52,7 @@ namespace BierBuddy.UI
             //initialize main
             _Main = new Main(_DataAccess);
             //initialize page renderers
-            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(); 
+            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies); 
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
             //initialize page renderers

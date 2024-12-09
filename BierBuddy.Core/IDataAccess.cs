@@ -20,7 +20,7 @@ namespace BierBuddy.Core
         /// </summary>
         /// <param name="maxAmount"></param>
         /// <returns></returns>
-        public List<Visitor> GetAccounts(int maxAmount); 
+        public List<Visitor> GetAccounts(int maxAmount);
         /// <summary>
         /// geeft een lijst van accounts terug die de bezoeker nog niet heeft gezien
         /// </summary>
@@ -92,5 +92,29 @@ namespace BierBuddy.Core
         /// </summary>
         /// <returns>een Dictionary met alle mogelijke interesses met hun bijbehorende index</returns>
         public Dictionary<long, String> GetPossibleInterests();
+        /// <summary>
+        /// voeg een afspraak toe aan de database, deze is dan nog niet geaccepteerd
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="visitorID"></param>
+        /// <param name="from"></param>
+        /// <param name="till"></param>
+        public void AddAppointment(long clientID, long visitorID, DateTime from, DateTime to);
+        /// <summary>
+        /// zet een afspraak op geaccepteerd
+        /// </summary>
+        public void ApproveAppointment(long appointmentID);
+        /// <summary>
+        /// verwijderd de afspraak uit de database
+        /// </summary>
+        public void DeclineAppointment(long appointmentID);
+        /// <summary>
+        /// haal alle afspraken op van de bezoeker
+        /// </summary>
+        public List<Appointment> GetAppointmentsFromUser(long clientID);
+        /// <summary>
+        /// haal alle afspraken op van de bezoeker met een andere bezoeker
+        /// </summary>
+        public List<Appointment> GetAppointmentsWithUser(long clientID, long visitorID);
     }
 }

@@ -26,10 +26,12 @@ namespace BierBuddy.UILib
         private int BigFontSize = 28;
         private int GeneralFontSize = 16;
         private Visitor _Visitor { get; set; }
+        private MyBuddies _MyBuddies { get; set; }
 
-        public MyBuddiesPageRenderer()
+        public MyBuddiesPageRenderer(MyBuddies myBuddies)
         {
             _Visitor = new Visitor(0, "dummy", "dummy", 0);
+            _MyBuddies = myBuddies;
         }
 
         public WrapPanel GetMyBuddiesPage(List<Visitor> buddies)
@@ -58,7 +60,7 @@ namespace BierBuddy.UILib
             double panelWidth = _MainWindowSize.Width - _NavBarWidth - 100;
             foreach (var buddy in buddies)
             {
-                BuddyPanel buddyPanel = new BuddyPanel(buddy, _MainWindowSize.Width - _NavBarWidth - 75, 100);
+                BuddyPanel buddyPanel = new BuddyPanel(buddy, _MainWindowSize.Width - _NavBarWidth - 75, 100, _MyBuddies);
                 mainPanel.Children.Add(buddyPanel);
             }
 

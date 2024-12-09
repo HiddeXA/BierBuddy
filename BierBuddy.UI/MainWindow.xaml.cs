@@ -118,9 +118,16 @@ namespace BierBuddy.UI
 
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
+            List<Visitor> buddyList = new List<Visitor>
+        {
+             new Visitor(1, "Buddy 1", "Test", 25),
+             new Visitor(2, "Buddy 2", "Test", 30),
+             new Visitor(3, "Buddy 3", "Test", 28),
+             
+        };
             this.WindowStatus = 2;
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_AlgoritmePlaceHolder.GetVisitor()));
+            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(buddyList));
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

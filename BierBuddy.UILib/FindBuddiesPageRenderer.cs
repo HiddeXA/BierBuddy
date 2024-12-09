@@ -29,9 +29,7 @@ namespace BierBuddy.UILib
         private int _CurrentPhotoIndex = 0;
         private Image _ProfilePicture;
         private Visitor _Visitor { get; set; }
-        private FindBuddies _FindBussies;
-
-        public FindBuddiesPageRenderer(FindBuddies findBuddies)
+        private FindBuddies _FindBuddies;
 
         private int BigFontSize = 28;
         private int GeneralFontSize = 16;
@@ -39,12 +37,12 @@ namespace BierBuddy.UILib
         private readonly int _MinFontSizeBig = 20;
         private readonly int _MinFontSizeGeneral = 12;
 
-        {
+        public FindBuddiesPageRenderer(FindBuddies findBuddies){
             _profilePanel = new Canvas();
             _ProfilePicture = new Image();
             _Visitor = new(0, "temp", "temp", 0);
-            _FindBussies = findBuddies;
-            _FindBussies._Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
+            _FindBuddies = findBuddies;
+            _FindBuddies.Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
         }
         public WrapPanel GetFindBuddiesPage(Visitor visitor)
         {
@@ -93,7 +91,7 @@ namespace BierBuddy.UILib
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
-            _FindBussies.DislikeVisitor(_Visitor);
+            _FindBuddies.DislikeVisitor(_Visitor);
             RefreshPage();
         }
 
@@ -122,7 +120,7 @@ namespace BierBuddy.UILib
 
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
-            _FindBussies.LikeVisitor(_Visitor);
+            _FindBuddies.LikeVisitor(_Visitor);
             RefreshPage();
         }
 
@@ -584,7 +582,7 @@ namespace BierBuddy.UILib
         public void RefreshPage()
         {
             double panelWidth = _MainWindowSize.Width - _NavBarWidth;
-            _Visitor = _FindBussies.GetPotentialMatch();
+            _Visitor = _FindBuddies.GetPotentialMatch();
             SetProfilePanel(panelWidth / 2, _MainWindowSize.Height);
 
         }

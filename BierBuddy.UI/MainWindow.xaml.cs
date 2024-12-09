@@ -136,11 +136,12 @@ namespace BierBuddy.UI
             //todo aanpassen account switchen en authenticatie enzo
 
             //dit is een tijdelijke oplossing
+            #region
             SwitchAccountDialog switchAccDialog = new SwitchAccountDialog(_Main);
             switchAccDialog.ShowDialog();
 
             PagePanel.Children.Clear();
-
+            #endregion
         }
 
         private int CalculateNavBarFontSize()

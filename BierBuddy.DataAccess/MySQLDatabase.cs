@@ -5,9 +5,9 @@ namespace BierBuddy.DataAccess
 {
     public class MySQLDatabase : IDataAccess
     {
-        public Dictionary<long, string> PossibleInterests { get; }
-        public Dictionary<long, string> PossibleDrinkPref { get; }
-        public Dictionary<long, string> PossibleActivities { get; }
+        public Dictionary<long, string> PossibleInterests { get; set; }
+        public Dictionary<long, string> PossibleDrinkPref { get; set; }
+        public Dictionary<long, string> PossibleActivities { get; set; }
 
         private MySqlConnection _conn;
         /// <summary>

@@ -9,15 +9,15 @@ namespace BierBuddy.Core
     public class FindBuddies
     {
         private IDataAccess _DataAccess;
-        public Main _Main;
+        public Main Main;
         private List<Visitor> _PotentialMatches;
 
         public event EventHandler<MatchedEventArgs>? OnMatched;
         public FindBuddies(IDataAccess dataAccess, Main main) 
         { 
             _DataAccess = dataAccess;
-            _Main = main;
-            _Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
+            Main = main;
+            Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
             _PotentialMatches = GetPotentialMatches();
         }
         public Visitor GetPotentialMatch()
@@ -36,7 +36,7 @@ namespace BierBuddy.Core
 
             #region Temporary algorithem implementation
 
-            List<Visitor> potentialMatches = _DataAccess.GetNotSeenAccounts(_Main.ClientVisitor.ID, 5);
+            List<Visitor> potentialMatches = _DataAccess.GetNotSeenAccounts(Main.ClientVisitor.ID, 5);
             //potentialMatches.AddRange(_DataAccess.GetLikedNotSeenAccounts(visitor.ID, 5));
 
             potentialMatches.OrderBy(x => Random.Shared.Next()).ToList();
@@ -53,18 +53,18 @@ namespace BierBuddy.Core
 
         public void LikeVisitor(Visitor visitor)
         {
-            _DataAccess.SetLike(_Main.ClientVisitor.ID, visitor.ID);
+            _DataAccess.SetLike(Main.ClientVisitor.ID, visitor.ID);
             _PotentialMatches.Remove(visitor);
 
-            if (_DataAccess.CheckIfMatch(_Main.ClientVisitor.ID, visitor.ID))
+            if (_DataAccess.CheckIfMatch(Main.ClientVisitor.ID, visitor.ID))
             {
-                OnMatched?.Invoke(this, new MatchedEventArgs(_Main.ClientVisitor.ID, visitor.ID));
+                OnMatched?.Invoke(this, new MatchedEventArgs(Main.ClientVisitor.ID, visitor.ID));
             }
         }
 
         public void DislikeVisitor(Visitor visitor)
         {
-            _DataAccess.SetDislike(_Main.ClientVisitor.ID, visitor.ID);
+            _DataAccess.SetDislike(Main.ClientVisitor.ID, visitor.ID);
             _PotentialMatches.Remove(visitor);
         }
 

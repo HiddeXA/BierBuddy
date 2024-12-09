@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
@@ -279,6 +280,10 @@ namespace BierBuddy.UILib
 
         private UIElement GetProfileContentPanel(double width)
         {
+            if (_Visitor == null)
+            {
+                return new TextBlock { Text = "Geen matches meer"};
+            }
             // Create the Grid
             Grid profileGrid = new Grid();
             profileGrid.Width = width;
@@ -582,11 +587,10 @@ namespace BierBuddy.UILib
             return bio;
         }
         public void RefreshPage()
-        {
-            double panelWidth = _MainWindowSize.Width - _NavBarWidth;
-            _Visitor = _FindBuddies.GetPotentialMatch();
-            SetProfilePanel(panelWidth / 2, _MainWindowSize.Height);
-
+        {          
+                double panelWidth = _MainWindowSize.Width - _NavBarWidth;
+                _Visitor = _FindBuddies.GetPotentialMatch();
+                SetProfilePanel(panelWidth / 2, _MainWindowSize.Height);                          
         }
         public void UpdatePageSize(double newNavBarWidth, Size newScreenSize)
         {

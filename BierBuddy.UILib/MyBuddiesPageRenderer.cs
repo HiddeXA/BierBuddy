@@ -29,7 +29,7 @@ namespace BierBuddy.UILib
         private int BigFontSize = 28;
         private int GeneralFontSize = 16;
 
-                private readonly int _MinFontSizeBig = 20;
+        private readonly int _MinFontSizeBig = 20;
         private readonly int _MinFontSizeGeneral = 12;
 
         private Visitor _Visitor { get; set; }
@@ -55,10 +55,9 @@ namespace BierBuddy.UILib
                 Margin = new Thickness(0, 10, 0, 10),
             };
 
-            
+
             buttonPanel.Children.Add(GetMijnBuddiesButton(300, 50));
             buttonPanel.Children.Add(GetMijnAfsprakenButton(300, 50));
-
             
             SetBuddyPanel(1000, 100); 
             Border buddyBorder = (Border)GetBuddyBorder();
@@ -74,7 +73,8 @@ namespace BierBuddy.UILib
 
             
             mainPanel.Children.Add(buttonPanel);  
-            mainPanel.Children.Add(buddyBorder); 
+            mainPanel.Children.Add(buddyBorder);
+
 
             MyBuddiesPanel.Children.Add(mainPanel);  
 
@@ -203,20 +203,22 @@ namespace BierBuddy.UILib
 
         private UIElement GetBuddyNameButton(double width, double height)
         {
-            ProfileContentLabel nameLabel = new ProfileContentLabel(_Visitor.Name)
-            {
-                FontFamily = new FontFamily("Bayon"), 
-                FontSize = 20,                       
-                Foreground = new SolidColorBrush(Colors.Black), 
-                FontWeight = FontWeights.Bold,
-            };
 
             Button BuddyNameButton = new();
             BuddyNameButton.Template = GetButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32)), HorizontalAlignment.Left);
-            BuddyNameButton.Content = nameLabel;
+
+            ProfileContentLabel nameLabel = new ProfileContentLabel(_Visitor.Name, BigFontSize)
+            {
+                FontFamily = new FontFamily("Bayon"),
+                FontSize = 20,
+                Foreground = new SolidColorBrush(Colors.Black),
+                FontWeight = FontWeights.Bold,
+            };
 
             BuddyNameButton.Width = width;
             BuddyNameButton.Height = height;
+
+            BuddyNameButton.Content = nameLabel;
 
             //TO DO:
             //BuddyNameButton.Click += BuddyNameButton_Click;
@@ -342,6 +344,8 @@ namespace BierBuddy.UILib
                 GeneralFontSize = 16;
             }
         }
+
+
  
 
     }

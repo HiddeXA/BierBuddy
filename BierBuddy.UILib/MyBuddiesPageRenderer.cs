@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Xml;
 using BierBuddy.Core;
+using BierBuddy.DataAccess;
 using Material.Icons;
 using Material.Icons.WPF;
 
@@ -33,12 +34,17 @@ namespace BierBuddy.UILib
         private readonly int _MinFontSizeGeneral = 12;
 
         private Visitor _Visitor { get; set; }
-        
 
-        public MyBuddiesPageRenderer()
+        private MyBuddies _MyBuddies { get; set; }
+        private MySQLDatabase _MySQLDatabase;
+
+
+        public MyBuddiesPageRenderer(MyBuddies myBuddies)
         {
             _buddyPanel = new Canvas();
             _Visitor = new(0, "dummy", "dummy", 0);
+
+            _MyBuddies = myBuddies;
         }
 
         public WrapPanel GetMyBuddiesPage(Visitor visitor)
@@ -134,10 +140,18 @@ namespace BierBuddy.UILib
             AppointmentButton.Width = width;
             AppointmentButton.Height = height;
 
-            //TO DO:
-            //AppointmentButton.Click += AppointmentButton_Click;
+            AppointmentButton.Click += AppointmentButton_Click;
             
             return AppointmentButton;
+        }
+
+        private void AppointmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            DateTimePlannerDialog dialog = new DateTimePlannerDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                _MyBuddies.AddAppointments(_Visitor, dialog.SelectedDateTimes);
+            }
         }
 
         private UIElement GetAppointmentAcceptButton(double width, double height)

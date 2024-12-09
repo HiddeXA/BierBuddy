@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BierBuddy.Core\BierBuddy.Core.csproj" />
+    <ProjectReference Include="..\BierBuddy.DataAccess\BierBuddy.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

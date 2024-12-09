@@ -282,8 +282,11 @@ namespace BierBuddy.UILib
         {
             if (_Visitor == null)
             {
-                return new TextBlock { Text = "Geen matches meer"};
+
+                return new TextBlock { Text = "Geen matches meer" };
             }
+
+
             // Create the Grid
             Grid profileGrid = new Grid();
             profileGrid.Width = width;

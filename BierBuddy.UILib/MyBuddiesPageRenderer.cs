@@ -177,6 +177,10 @@ namespace BierBuddy.UILib
         private void AppointmentAcceptButton_Click(object sender, RoutedEventArgs e)
         {
             List<Appointment> appointments = _MyBuddies.GetAppointments(_Visitor);
+            if (appointments.Count == 0)
+            {
+                return;
+            }
             List<List<DateTime>> dateTimes = new List<List<DateTime>>();
             foreach (Appointment appointment in appointments)
             {

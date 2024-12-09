@@ -222,8 +222,7 @@ namespace BierBuddy.DataAccess
 
         public bool CheckIfMatch(long ID1, long ID2)
         {
-            //throw new NotImplementedException();
-            return false;
+            throw new NotImplementedException();
         }
 
         public List<long> GetGivenLikes(long ID)

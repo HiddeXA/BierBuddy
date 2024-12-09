@@ -169,10 +169,29 @@ namespace BierBuddy.UILib
             AppointmentAcceptButton.Width = width;
             AppointmentAcceptButton.Height = height; 
             
-            //TO DO:
-            //AppointmentAcceptButton.Click += AppointmentAcceptButton_Click;
+            AppointmentAcceptButton.Click += AppointmentAcceptButton_Click;
            
             return AppointmentAcceptButton;
+        }
+
+        private void AppointmentAcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<Appointment> appointments = _MyBuddies.GetAppointments(_Visitor);
+            List<List<DateTime>> dateTimes = new List<List<DateTime>>();
+            foreach (Appointment appointment in appointments)
+            {
+                List<DateTime> dateTime = new List<DateTime> { appointment.From, appointment.To };
+                dateTimes.Add(dateTime);
+            }
+            DateTimeAccepterDialog dialog = new DateTimeAccepterDialog(dateTimes);
+            if (dialog.ShowDialog() == true)
+            {
+                List<bool> result = dialog.AcceptedNotAcceptedDateTimes;
+                for (int i = 0; i < result.Count; i++)
+                {
+                    _MyBuddies.HandleAppointment(appointments[i], result[i]);
+                }
+            }
         }
 
         private UIElement GetMijnBuddiesButton(double width, double height)

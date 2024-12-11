@@ -147,10 +147,10 @@ namespace BierBuddy.UI
 
             //dit is een tijdelijke oplossing
             #region
-            SwitchAccountDialog switchAccDialog = new SwitchAccountDialog(_Main);
-            switchAccDialog.ShowDialog();
-
             PagePanel.Children.Clear();
+
+            ProfilePageRenderer profilePage = new ProfilePageRenderer();
+            PagePanel.Children.Add(profilePage.GetProfilePage(_Main.ClientVisitor, false));
             #endregion
         }
 

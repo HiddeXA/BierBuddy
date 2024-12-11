@@ -619,7 +619,7 @@ namespace BierBuddy.UILib
     }
     
 
-    internal class ProfileContentBorder : Border
+    public class ProfileContentBorder : Border
     {
         public int FatherFont;
         public Label ProfileContentLabel { get; set; }
@@ -643,7 +643,7 @@ namespace BierBuddy.UILib
         }
 
     }
-    internal class ProfileContentLabel : Label
+    public class ProfileContentLabel : Label
     {
 
 

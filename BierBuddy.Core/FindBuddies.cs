@@ -69,5 +69,45 @@ namespace BierBuddy.Core
             UpdatePotentialMatches();
         }
 
+        public int GetInterestsPoints(Visitor ClientVisitor, Visitor PotentialMatchVisitor)
+        {
+            int points = 0;
+            if (ClientVisitor == null || PotentialMatchVisitor == null)
+            {
+                return 0;
+            }
+            if (ClientVisitor.DrinkPreference.Count != 0)
+            {
+                foreach (string drinkPreference in ClientVisitor.DrinkPreference)
+                {
+                    if (PotentialMatchVisitor.DrinkPreference.Count != 0 && PotentialMatchVisitor.DrinkPreference.Contains(drinkPreference))
+                    {
+                        points++;
+                    }
+                }
+            }
+            if(ClientVisitor.Interests.Count != 0)
+            {
+                foreach (string interesse in ClientVisitor.Interests)
+                {
+                    if (PotentialMatchVisitor.DrinkPreference.Count != 0 && PotentialMatchVisitor.DrinkPreference.Contains(interesse))
+                    {
+                        points++;
+                    }
+                }
+            }
+            if(ClientVisitor.ActivityPreference.Count != 0)
+            {
+                foreach (string activityPreference in ClientVisitor.ActivityPreference)
+                {
+                    if (PotentialMatchVisitor.DrinkPreference.Count != 0 && PotentialMatchVisitor.DrinkPreference.Contains(activityPreference))
+                    {
+                        points++;
+                    }
+                }
+            }
+            return points;
+        }
+
     }
 }

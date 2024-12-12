@@ -10,6 +10,7 @@ public class SwitchClientProfileTests
     private Main _main;
     private SwitchAccount _switchAccount;
 
+
     [SetUp]
     public void SetUp()
     {
@@ -67,5 +68,10 @@ public class SwitchClientProfileTests
         Exception ex = Assert.Throws<FormatException>(() => _switchAccount.SwitchClientProfile(invalidInput));
         Assert.That(ex.GetType(), Is.EqualTo(typeof(FormatException)));
     }
+    
+
+
+
+
 }
 

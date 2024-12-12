@@ -40,6 +40,7 @@ namespace BierBuddy.UI
         private MyBuddies _MyBuddies { get; }
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
+        private ProfilePageRenderer _ProfilePageRenderer { get; }
 
         public MainWindow()
         {
@@ -58,6 +59,8 @@ namespace BierBuddy.UI
             //initialize page renderers
             _FindBuddies = new FindBuddies(_DataAccess, _Main);
             _FindBuddiesPageRenderer = new FindBuddiesPageRenderer(_FindBuddies);
+
+            _ProfilePageRenderer = new ProfilePageRenderer();
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
@@ -87,6 +90,7 @@ namespace BierBuddy.UI
             MoveBeerFoam(e);
             _FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
             _MyBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
+            _ProfilePageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
 
             if (WindowStatus == 1)
             {
@@ -149,8 +153,7 @@ namespace BierBuddy.UI
             #region
             PagePanel.Children.Clear();
 
-            ProfilePageRenderer profilePage = new ProfilePageRenderer();
-            PagePanel.Children.Add(profilePage.GetProfilePage(_Main.ClientVisitor, false));
+            PagePanel.Children.Add(_ProfilePageRenderer.GetProfilePage(_Main.ClientVisitor, false));
             #endregion
         }
 

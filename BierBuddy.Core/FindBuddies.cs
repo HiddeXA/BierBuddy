@@ -90,7 +90,7 @@ namespace BierBuddy.Core
             {
                 foreach (string interesse in ClientVisitor.Interests)
                 {
-                    if (PotentialMatchVisitor.DrinkPreference.Count != 0 && PotentialMatchVisitor.DrinkPreference.Contains(interesse))
+                    if (PotentialMatchVisitor.Interests.Count != 0 && PotentialMatchVisitor.Interests.Contains(interesse))
                     {
                         points++;
                     }
@@ -100,7 +100,7 @@ namespace BierBuddy.Core
             {
                 foreach (string activityPreference in ClientVisitor.ActivityPreference)
                 {
-                    if (PotentialMatchVisitor.DrinkPreference.Count != 0 && PotentialMatchVisitor.DrinkPreference.Contains(activityPreference))
+                    if (PotentialMatchVisitor.ActivityPreference.Count != 0 && PotentialMatchVisitor.ActivityPreference.Contains(activityPreference))
                     {
                         points++;
                     }

@@ -72,10 +72,6 @@ namespace BierBuddy.Core
         public int GetInterestsPoints(Visitor ClientVisitor, Visitor PotentialMatchVisitor)
         {
             int points = 0;
-            if (ClientVisitor == null || PotentialMatchVisitor == null)
-            {
-                return 0;
-            }
             if (ClientVisitor.DrinkPreference.Count != 0)
             {
                 foreach (string drinkPreference in ClientVisitor.DrinkPreference)

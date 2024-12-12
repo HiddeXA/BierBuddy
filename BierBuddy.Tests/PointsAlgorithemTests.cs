@@ -15,36 +15,30 @@ namespace BierBuddy.Tests
         private Visitor _clientVisitor;
         private Visitor _potentialMatchVisitor;
         private FindBuddies _findBuddies;
-
+ 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
             _dataAccessMock = new Mock<IDataAccess>();
-            _main = new Main(_dataAccessMock.Object);
-            _clientVisitor = new Visitor(1, "Client", "Test Bio", 25);
+
+            // Stel een dummy Visitor in voor de mock van _DataAccess
+            _dataAccessMock.Setup(x => x.GetAccount(It.IsAny<long>()))
+                           .Returns(new Visitor(1, "Client", "Test Bio", 25));
+
             _potentialMatchVisitor = new Visitor(2, "Match", "Test Bio", 27);
+            List<Visitor> potentialMatches = new List<Visitor> { _potentialMatchVisitor };
+            _dataAccessMock.Setup(x => x.GetNotSeenAccounts(It.IsAny<long>(), It.IsAny<int>()))
+                           .Returns(potentialMatches);
+
+            // Maak een concrete instantie van Main met de mock
+            _main = new Main(_dataAccessMock.Object);
+
             _findBuddies = new FindBuddies(_dataAccessMock.Object, _main);
+
+            _clientVisitor = _main.ClientVisitor;
+
         }
 
-        [Test]
-        public void GetInterestsPoints_NullClientVisitor_ReturnsZero()
-        {
-            // Act
-            int points = _findBuddies.GetInterestsPoints(null, _potentialMatchVisitor);
-
-            // Assert
-            Assert.That(points, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void GetInterestsPoints_NullPotentialMatchVisitor_ReturnsZero()
-        {
-            // Act
-            int points = _findBuddies.GetInterestsPoints(_clientVisitor, null);
-
-            // Assert
-            Assert.That(points, Is.EqualTo(0));
-        }
 
         [Test]
         public void GetInterestsPoints_MatchingDrinkPreferences_ReturnsCorrectPoints()

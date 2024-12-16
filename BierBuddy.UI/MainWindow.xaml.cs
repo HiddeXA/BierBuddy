@@ -124,11 +124,11 @@ namespace BierBuddy.UI
         
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
-            ClientVisitor = _DataAccess.GetAccount(1);
+           
 
             this.WindowStatus = 2;
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_DataAccess.GetBuddies(ClientVisitor.ID)));
+            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_DataAccess.GetBuddies(_Main.ClientVisitor.ID)));
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

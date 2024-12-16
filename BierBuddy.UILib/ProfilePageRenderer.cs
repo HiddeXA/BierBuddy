@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Xml.Linq;
 
 namespace BierBuddy.UILib
@@ -34,14 +35,14 @@ namespace BierBuddy.UILib
             _ProfilePanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             _ProfilePanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-            _Visitor = new AlgoritmePlaceHolder().GetVisitor();
+            _Visitor = visitor;
 
             StackPanel profile = GetProfile(readOnly);
             profile.Margin = new Thickness(0, 0, 20, 0);
             Grid.SetColumn(profile, 0);
             _ProfilePanel.Children.Add(profile);
 
-            Grid photos = GetPhotos(_Visitor.Photos, readOnly);
+            Border photos = GetPhotos(_Visitor.Photos, readOnly);
             photos.Margin = new Thickness(0, 0, 60, 0);
             Grid.SetColumn(photos, 1);
             _ProfilePanel.Children.Add(photos);
@@ -108,7 +109,7 @@ namespace BierBuddy.UILib
         public ProfileContentBorder GetBioLabel(bool readOnly)
         {
             ProfileContentBorder bio = new(UIUtils.BabyPoeder);
-            bio.Height = _MainWindowSize.Height / 5;
+            bio.Height = _MainWindowSize.Height / 6;
             bio.Child = new TextBlock { Text = _Visitor.Bio, TextWrapping = TextWrapping.Wrap, FontSize = GeneralFontSize, Foreground = Brushes.Black, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left, Padding = new Thickness(20, 10, 0, 10) };
 
             return bio;
@@ -176,10 +177,10 @@ namespace BierBuddy.UILib
             throw new NotImplementedException();
         }
 
-        public Grid GetPhotos(List<string> photos, bool readOnly)
+        public Border GetPhotos(List<string> photos, bool readOnly)
         {
+            Border BGborder = new ProfileContentBorder(UIUtils.Outer_Space);
             Grid grid = new Grid();
-            grid.Background = UIUtils.Outer_Space;
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
             for (int i = 0; i < photos.Count; i++) {
@@ -200,8 +201,10 @@ namespace BierBuddy.UILib
                     grid.Children.Add(border);
                 }
             }
-            
-            return grid;
+
+            BGborder.Child = grid;
+
+            return BGborder;
         }
 
         public Border GetPhoto(string photo)
@@ -209,6 +212,22 @@ namespace BierBuddy.UILib
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
             Image image = new Image();
             image.Source = new BitmapImage(new Uri(photo));
+            image.HorizontalAlignment = HorizontalAlignment.Center;
+            image.VerticalAlignment = VerticalAlignment.Center;
+
+            profileContentBorder.SizeChanged += (s, e) =>
+            {
+                double borderWidth = profileContentBorder.ActualWidth;
+                double borderHeight = profileContentBorder.ActualHeight;
+
+                // Clip the image to the border's shape
+                profileContentBorder.Clip = new RectangleGeometry(
+                    new Rect(0, 0, borderWidth, borderHeight),
+                    profileContentBorder.CornerRadius.TopLeft,
+                    profileContentBorder.CornerRadius.TopLeft
+                );
+            };
+
             profileContentBorder.Child = image;
             return profileContentBorder;
         }

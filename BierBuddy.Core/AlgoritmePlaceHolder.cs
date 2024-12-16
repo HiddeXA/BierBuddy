@@ -26,6 +26,7 @@ namespace BierBuddy.Core
             Dummy.Photos.Add("https://i.imgur.com/DLrIGSX.png");
             Dummy.Photos.Add("https://i.imgur.com/twGSMk7.png");
             Dummy.Photos.Add("https://i.imgur.com/27n3fNV.png");
+            Dummy.Photos.Add("https://g1.img-dpreview.com/3ACBE6D011274856888F900E563D7A85.jpg");
             return Dummy;
         }
     }

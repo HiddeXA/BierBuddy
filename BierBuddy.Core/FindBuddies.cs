@@ -35,6 +35,7 @@ namespace BierBuddy.Core
             //TODO: algorithm implementation
 
             #region Temporary algorithem implementation
+            
 
             List<Visitor> potentialMatches = _DataAccess.GetNotSeenAccounts(Main.ClientVisitor.ID, 5);
             //potentialMatches.AddRange(_DataAccess.GetLikedNotSeenAccounts(visitor.ID, 5));

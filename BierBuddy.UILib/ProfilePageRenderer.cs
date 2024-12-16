@@ -3,8 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Xml.Linq;
 
 namespace BierBuddy.UILib
 {
@@ -18,20 +16,19 @@ namespace BierBuddy.UILib
         private int BigFontSize = 28;
         private int GeneralFontSize = 16;
 
-        private readonly int _MinFontSizeBig = 20;
-        private readonly int _MinFontSizeGeneral = 12;
-
         public ProfilePageRenderer()
         {
             _ProfilePanel = new ();
             _Visitor = new(0, "temp", "temp", 0);
         }
+
         public Grid GetProfilePage(Visitor visitor, bool readOnly)
         {
             _ProfilePanel = new();
             _ProfilePanel.Margin = new Thickness(20);
             _ProfilePanel.Width = _MainWindowSize.Width - _NavBarWidth;
             _ProfilePanel.Height = _MainWindowSize.Height - 130;
+            //kolommen voor automatische layout en resizen
             _ProfilePanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             _ProfilePanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
@@ -82,20 +79,23 @@ namespace BierBuddy.UILib
         public Grid GetNameAndAgeLabels(bool readOnly)
         {
             Grid grid = new ();
+            //kolommen en rijen voor layout en automatisch resizen
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
             ProfileContentBorder name = new ProfileContentBorder(_Visitor.Name, UIUtils.BabyPoeder, GeneralFontSize);
-            ProfileContentBorder age = new ProfileContentBorder(_Visitor.Age.ToString(), new SolidColorBrush(Color.FromRgb(190, 194, 188)), GeneralFontSize);
             name.ProfileContentLabel.Foreground = Brushes.Black;
-            age.ProfileContentLabel.Foreground = Brushes.Black;
             name.Margin = new Thickness(0, 0, 20, 0);
             name.ProfileContentLabel.HorizontalAlignment = HorizontalAlignment.Left;
             name.ProfileContentLabel.Padding = new Thickness(20, 10, 0, 10);
-            age.ProfileContentLabel.Padding = new Thickness(0, 10, 0, 10);
             name.VerticalAlignment = VerticalAlignment.Center;
+
+            ProfileContentBorder age = new ProfileContentBorder(_Visitor.Age.ToString(), new SolidColorBrush(Color.FromRgb(190, 194, 188)), GeneralFontSize);
+            age.ProfileContentLabel.Foreground = Brushes.Black;
+            age.ProfileContentLabel.Padding = new Thickness(0, 10, 0, 10);
             age.VerticalAlignment = VerticalAlignment.Center;
+
             Grid.SetColumn(name, 0);
             Grid.SetColumn(age, 1);
             grid.Children.Add(name);
@@ -157,9 +157,8 @@ namespace BierBuddy.UILib
             WrapPanel wrapPanel = new ();
             wrapPanel.Orientation = Orientation.Horizontal;
             wrapPanel.VerticalAlignment = VerticalAlignment.Center;
-            //wrap stackpanel items
 
-
+            //voeg alle items toe aan de wrapPanel
             foreach (string item in items)
             {
                 ProfileContentBorder profileContentBorder = new ProfileContentBorder(item, UIUtils.Onyx, GeneralFontSize);
@@ -185,15 +184,15 @@ namespace BierBuddy.UILib
 
             for (int i = 0; i < photos.Count; i++) {
                 string photo = photos[i];
-                if (i < 2)
+                if (i < 2) // 2 foto's per rij
                 {
                     grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
                 }
-                else if (i == 2)
+                else if (i == 2) // 2 kolommen
                 {
                     grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
                 }
-                if (!photo.Equals("Geen URL gevonden"))
+                if (!photo.Equals("Geen URL gevonden")) // als er echt een foto is
                 {
                     Border border = GetPhoto(photo);
                     Grid.SetColumn(border, i % 2);
@@ -212,15 +211,16 @@ namespace BierBuddy.UILib
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
             Image image = new Image();
             image.Source = new BitmapImage(new Uri(photo));
+            //afbeelding centreren in de border
             image.HorizontalAlignment = HorizontalAlignment.Center;
             image.VerticalAlignment = VerticalAlignment.Center;
 
+            //afbeelding clippen zodat het in de border past, zelfs na het resizen
             profileContentBorder.SizeChanged += (s, e) =>
             {
                 double borderWidth = profileContentBorder.ActualWidth;
                 double borderHeight = profileContentBorder.ActualHeight;
 
-                // Clip the image to the border's shape
                 profileContentBorder.Clip = new RectangleGeometry(
                     new Rect(0, 0, borderWidth, borderHeight),
                     profileContentBorder.CornerRadius.TopLeft,
@@ -238,18 +238,6 @@ namespace BierBuddy.UILib
             _MainWindowSize = newScreenSize;
             _ProfilePanel.Width = _MainWindowSize.Width - _NavBarWidth;
             _ProfilePanel.Height = _MainWindowSize.Height - 80;
-
-            // Fontsize aanpassen
-            if (_MainWindowSize.Width < 1500)
-            {
-                BigFontSize = _MinFontSizeBig;
-                GeneralFontSize = _MinFontSizeGeneral;
-            }
-            else
-            {
-                BigFontSize = 28;
-                GeneralFontSize = 16;
-            }
         }
     }
 }

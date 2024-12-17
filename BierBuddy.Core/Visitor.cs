@@ -13,7 +13,6 @@ namespace BierBuddy.Core
         public string Name { get; set; }
         public string Bio { get; set; }
         public int Age { get; private set; }
-        public double CompatibilityPoints { get; private set; } 
 
         // Voorkeuren interesses enz.
         public List<string> DrinkPreference = new List<string>();

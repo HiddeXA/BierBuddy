@@ -70,34 +70,34 @@ namespace BierBuddy.Core
             UpdatePotentialMatches();
         }
 
-        public int GetInterestsPoints(Visitor ClientVisitor, Visitor PotentialMatchVisitor)
+        public int GetInterestsPoints(Visitor clientVisitor, Visitor potentialMatchVisitor)
         {
             int points = 0;
-            if (ClientVisitor.DrinkPreference.Count != 0)
+            if (clientVisitor.DrinkPreference.Count != 0)
             {
-                foreach (string drinkPreference in ClientVisitor.DrinkPreference)
+                foreach (string drinkPreference in clientVisitor.DrinkPreference)
                 {
-                    if (PotentialMatchVisitor.DrinkPreference.Count != 0 && PotentialMatchVisitor.DrinkPreference.Contains(drinkPreference))
+                    if (potentialMatchVisitor.DrinkPreference.Count != 0 && potentialMatchVisitor.DrinkPreference.Contains(drinkPreference))
                     {
                         points++;
                     }
                 }
             }
-            if(ClientVisitor.Interests.Count != 0)
+            if(clientVisitor.Interests.Count != 0)
             {
-                foreach (string interesse in ClientVisitor.Interests)
+                foreach (string interesse in clientVisitor.Interests)
                 {
-                    if (PotentialMatchVisitor.Interests.Count != 0 && PotentialMatchVisitor.Interests.Contains(interesse))
+                    if (potentialMatchVisitor.Interests.Count != 0 && potentialMatchVisitor.Interests.Contains(interesse))
                     {
                         points++;
                     }
                 }
             }
-            if(ClientVisitor.ActivityPreference.Count != 0)
+            if(clientVisitor.ActivityPreference.Count != 0)
             {
-                foreach (string activityPreference in ClientVisitor.ActivityPreference)
+                foreach (string activityPreference in clientVisitor.ActivityPreference)
                 {
-                    if (PotentialMatchVisitor.ActivityPreference.Count != 0 && PotentialMatchVisitor.ActivityPreference.Contains(activityPreference))
+                    if (potentialMatchVisitor.ActivityPreference.Count != 0 && potentialMatchVisitor.ActivityPreference.Contains(activityPreference))
                     {
                         points++;
                     }
@@ -106,22 +106,15 @@ namespace BierBuddy.Core
             return points;
         }
 
-        public int GetAgeDelta(Visitor ClientVisitor, Visitor PotentialMatchVisitor)
+        public int GetAgeDelta(Visitor clientVisitor, Visitor potentialMatchVisitor)
         {
             int ageDelta;
-            //zorg er voor dar ageDelta niet negatief of 0 kan zijn
-            if (ClientVisitor.Age == PotentialMatchVisitor.Age)
+            //zorg er voor dat ageDelta niet negatief of 0 kan zijn
+            if (clientVisitor.Age == potentialMatchVisitor.Age)
             {
-                ageDelta = 1;
+                return 1;
             }
-            else if (ClientVisitor.Age > PotentialMatchVisitor.Age)
-            {
-                ageDelta = ClientVisitor.Age - PotentialMatchVisitor.Age;
-            }
-            else
-            {
-                ageDelta = PotentialMatchVisitor.Age - ClientVisitor.Age;
-            }
+            ageDelta = Math.Abs(clientVisitor.Age - potentialMatchVisitor.Age);
             return ageDelta;
         }
 

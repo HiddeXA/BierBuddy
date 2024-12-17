@@ -159,9 +159,9 @@ namespace BierBuddy.Tests
             _clientVisitor.AddToDrinkPreference("Beer");
 
             _potentialMatchVisitor = new Visitor(2, "Match", "Test Bio", 25);
-            _potentialMatchVisitor.AddToDrinkPreference("Beer"); // 1 matching interest
+            _potentialMatchVisitor.AddToDrinkPreference("Beer");
 
-            double expectedPoints = 1 / (0.2 * 5 / 30); // Based on the formula
+            double expectedPoints = 1 / (0.2 * 5 / 30);
 
             // Act
             double points = _findBuddies.GetVisitorPoints(_clientVisitor, _potentialMatchVisitor);
@@ -175,7 +175,7 @@ namespace BierBuddy.Tests
         {
             // Arrange
             _clientVisitor.AddToDrinkPreference("Beer");
-            _potentialMatchVisitor.AddToDrinkPreference("Wine"); // No matching interest
+            _potentialMatchVisitor.AddToDrinkPreference("Wine");
 
             // Act
             double points = _findBuddies.GetVisitorPoints(_clientVisitor, _potentialMatchVisitor);

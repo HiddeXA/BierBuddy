@@ -51,7 +51,6 @@ namespace BierBuddy.UILib
                 Margin = new Thickness(0, 10, 0, 10),
             };
             buttonPanel.Children.Add(GetMijnBuddiesButton(300, 50));
-            buttonPanel.Children.Add(GetMijnAfsprakenButton(300, 50));
 
             // Hoofdpanel
             StackPanel mainPanel = new StackPanel
@@ -96,25 +95,6 @@ namespace BierBuddy.UILib
             return MijnBuddiesButton;
         }
 
-        private UIElement GetMijnAfsprakenButton(double width, double height)
-        {
-            Button MijnAfsprakenButton = new()
-            {
-                Template = GetTitleButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32)), HorizontalAlignment.Center),
-                Content = new TextBlock
-                {
-                    Text = "Mijn afspraken",
-                    FontFamily = new FontFamily("Bayon"),
-                    FontWeight = FontWeights.Bold,
-                    FontSize = 34,
-                    Foreground = UIUtils.BabyPoeder,
-                },
-                Width = width,
-                Height = height
-            };
-
-            return MijnAfsprakenButton;
-        }
 
         private ControlTemplate GetTitleButtonTemplate(Brush brush, HorizontalAlignment contentAlignment)
         {

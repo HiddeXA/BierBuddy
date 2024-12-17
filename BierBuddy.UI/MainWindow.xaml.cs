@@ -23,7 +23,7 @@ namespace BierBuddy.UI
     {
         //deel dat dat de navBar opneemt
         private readonly double _SizeModifierNavBar = 0.25;
-        private readonly int _NavBarMinSize = 290;
+        private readonly int _NavBarMinSize = 320;
 
         private readonly int _MinFontSize = 24;
         private readonly int _FontSizeIncrement = 30;
@@ -78,6 +78,7 @@ namespace BierBuddy.UI
                 int fontSize = CalculateNavBarFontSize();
                 FindBuddiesLabel.FontSize = fontSize;
                 MyBuddiesLabel.FontSize = fontSize;
+                MyAppointmentsLabel.FontSize = fontSize;
             }
             else
             {
@@ -85,6 +86,7 @@ namespace BierBuddy.UI
                 int fontSize = CalculateNavBarFontSize();
                 FindBuddiesLabel.FontSize = fontSize;
                 MyBuddiesLabel.FontSize = fontSize;
+                MyAppointmentsLabel.FontSize = fontSize;
                 NavBar.Width = _NavBarMinSize;
             }
 
@@ -109,7 +111,10 @@ namespace BierBuddy.UI
             {
                 AccountButton_Click(sender, e);
             }
-            else { }
+            else if(WindowStatus == 5)
+            { 
+                MyAppointmentsButton_Click(sender, e);
+            }
 
             
 
@@ -132,12 +137,21 @@ namespace BierBuddy.UI
             PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_DataAccess.GetBuddies(_Main.ClientVisitor.ID)));
         }
 
+        private void MyAppointmentsButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowStatus = 5;
+            PagePanel.Children.Clear();
+            PagePanel.Children.Add(_MyAppointmentsPagerenderer.GetMyAppointmentsPage());
+        }
+
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             this.WindowStatus = 3;
             PagePanel.Children.Clear();
             //todo wanneer er settings komen
         }
+
+
         private void AccountButton_Click(object sender, RoutedEventArgs e)
         {
 

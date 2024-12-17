@@ -1,6 +1,7 @@
 ﻿using BierBuddy.Core;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -47,10 +48,10 @@ namespace BierBuddy.UILib
             return _ProfilePanel;
         }
 
-        public StackPanel GetProfile(bool readOnly)
+        private StackPanel GetProfile(bool readOnly)
         {
             StackPanel stackPanel = new StackPanel();
-            TextBlock pageTitle = new TextBlock { Text = "ACCOUNT", FontSize = BigFontSize, Margin = new Thickness(10, 0, 0, 20), Foreground = UIUtils.BabyPoeder };
+            TextBlock pageTitle = new TextBlock { Text = "ACCOUNT", FontSize = BigFontSize, Margin = new Thickness(10, 0, 0, 20), Foreground = UIUtils.BabyPoeder, FontWeight = FontWeights.Bold };
             stackPanel.Children.Add(pageTitle);
 
             //naam en leeftijd
@@ -76,7 +77,7 @@ namespace BierBuddy.UILib
             return stackPanel;
         }
 
-        public Grid GetNameAndAgeLabels(bool readOnly)
+        private Grid GetNameAndAgeLabels(bool readOnly)
         {
             Grid grid = new ();
             //kolommen en rijen voor layout en automatisch resizen
@@ -106,7 +107,7 @@ namespace BierBuddy.UILib
             return grid;
         }
 
-        public ProfileContentBorder GetBioLabel(bool readOnly)
+        private ProfileContentBorder GetBioLabel(bool readOnly)
         {
             ProfileContentBorder bio = new(UIUtils.BabyPoeder);
             bio.Height = _MainWindowSize.Height / 6;
@@ -115,9 +116,9 @@ namespace BierBuddy.UILib
             return bio;
         }
 
-        public Border GetDrinks(bool readOnly)
+        private Border GetDrinks(bool readOnly)
         {
-            if (!readOnly)
+            if (readOnly)
             {
                 return GetItemList(_Visitor.DrinkPreference.ToArray());
             }
@@ -127,9 +128,9 @@ namespace BierBuddy.UILib
             }
         }
 
-        public Border GetActivities(bool readOnly)
+        private Border GetActivities(bool readOnly)
         {
-            if (!readOnly)
+            if (readOnly)
             {
                 return GetItemList(_Visitor.ActivityPreference.ToArray());
             }
@@ -139,9 +140,9 @@ namespace BierBuddy.UILib
             }
         }
 
-        public Border GetInterests(bool readOnly)
+        private Border GetInterests(bool readOnly)
         {
-            if (!readOnly)
+            if (readOnly)
             {
                 return GetItemList(_Visitor.Interests.ToArray());
             }
@@ -151,7 +152,7 @@ namespace BierBuddy.UILib
             }
         }
 
-        public Border GetItemList(string[] items)
+        private Border GetItemList(string[] items)
         {
             ProfileContentBorder border = new ProfileContentBorder(UIUtils.BabyPoeder);
             WrapPanel wrapPanel = new ();
@@ -161,7 +162,7 @@ namespace BierBuddy.UILib
             //voeg alle items toe aan de wrapPanel
             foreach (string item in items)
             {
-                ProfileContentBorder profileContentBorder = new ProfileContentBorder(item, UIUtils.Onyx, GeneralFontSize);
+                ProfileContentBorder profileContentBorder = new ProfileContentBorder(item, new SolidColorBrush(Color.FromRgb(108, 114, 109)), GeneralFontSize);
                 profileContentBorder.VerticalAlignment = VerticalAlignment.Center;
                 profileContentBorder.ProfileContentLabel.Padding = new Thickness(20, 10, 20, 10);
                 wrapPanel.Children.Add(profileContentBorder);
@@ -171,12 +172,12 @@ namespace BierBuddy.UILib
             return border;
         }
 
-        public Border GetCustomItemList(string[] items, Dictionary<long, string> options)
+        private Border GetCustomItemList(string[] items, Dictionary<long, string> options)
         {
             throw new NotImplementedException();
         }
 
-        public Border GetPhotos(List<string> photos, bool readOnly)
+        private Border GetPhotos(List<string> photos, bool readOnly)
         {
             Border BGborder = new ProfileContentBorder(UIUtils.Outer_Space);
             Grid grid = new Grid();
@@ -206,7 +207,7 @@ namespace BierBuddy.UILib
             return BGborder;
         }
 
-        public Border GetPhoto(string photo)
+        private Border GetPhoto(string photo)
         {
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
             Image image = new Image();

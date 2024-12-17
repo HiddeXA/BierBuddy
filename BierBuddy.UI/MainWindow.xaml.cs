@@ -53,7 +53,8 @@ namespace BierBuddy.UI
             _Main = new Main(_DataAccess);
             //initialize page renderers
             _MyBuddies = new MyBuddies(_DataAccess, _Main);
-            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies); 
+            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies);
+            _MyBuddiesPageRenderer.ProfileRequested += _MyBuddiesPageRenderer_ProfileRequested;
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
             //initialize page renderers
@@ -64,6 +65,17 @@ namespace BierBuddy.UI
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
+
+        private void _MyBuddiesPageRenderer_ProfileRequested(object? sender, EventArgs e)
+        {
+            if (sender is BuddyPanel panel)
+            {
+                PagePanel.Children.Clear();
+
+                PagePanel.Children.Add(_ProfilePageRenderer.GetProfilePage(panel.Visitor, true));
+            }
+        }
+
         private void BierBuddyMainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             //pas alleen de navBar size aan als deze niet kleiner zal zijn dan de minimum size

@@ -108,14 +108,12 @@ namespace BierBuddy.Core
 
         public int GetAgeDelta(Visitor clientVisitor, Visitor potentialMatchVisitor)
         {
-            int ageDelta;
             //zorg er voor dat ageDelta niet negatief of 0 kan zijn
             if (clientVisitor.Age == potentialMatchVisitor.Age)
             {
                 return 1;
             }
-            ageDelta = Math.Abs(clientVisitor.Age - potentialMatchVisitor.Age);
-            return ageDelta;
+            return Math.Abs(clientVisitor.Age - potentialMatchVisitor.Age);
         }
 
         public double GetVisitorPoints(Visitor ClientVisitor, Visitor PotentialMatchVisitor)

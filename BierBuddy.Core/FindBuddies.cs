@@ -106,5 +106,36 @@ namespace BierBuddy.Core
             return points;
         }
 
+        public int GetAgeDelta(Visitor ClientVisitor, Visitor PotentialMatchVisitor)
+        {
+            int ageDelta;
+            //zorg er voor dar ageDelta niet negatief of 0 kan zijn
+            if (ClientVisitor.Age == PotentialMatchVisitor.Age)
+            {
+                ageDelta = 1;
+            }
+            else if (ClientVisitor.Age > PotentialMatchVisitor.Age)
+            {
+                ageDelta = ClientVisitor.Age - PotentialMatchVisitor.Age;
+            }
+            else
+            {
+                ageDelta = PotentialMatchVisitor.Age - ClientVisitor.Age;
+            }
+            return ageDelta;
+        }
+
+        public double GetVisitorPoints(Visitor ClientVisitor, Visitor PotentialMatchVisitor)
+        {
+            double ageModifier = 0.2;
+            int pointsInterestsMatch = GetInterestsPoints(ClientVisitor, PotentialMatchVisitor);
+            int ageDelta = GetAgeDelta(ClientVisitor, PotentialMatchVisitor);
+
+            double points = pointsInterestsMatch / (ageModifier * ageDelta / ClientVisitor.Age);
+
+            return points;
+        }
+
+
     }
 }

@@ -122,5 +122,66 @@ namespace BierBuddy.Tests
             // Assert
             Assert.That(points, Is.EqualTo(0));
         }
+
+        [Test]
+        public void GetAgeDelta_PotentialMatchOlderThanClient_ReturnsCorrectDelta()
+        {
+            // Arrange
+            _clientVisitor = new Visitor(1, "Client", "Test Bio", 25);
+            _potentialMatchVisitor = new Visitor(2, "Match", "Test Bio", 30);
+
+            // Act
+            int ageDelta = _findBuddies.GetAgeDelta(_clientVisitor, _potentialMatchVisitor);
+
+            // Assert
+            Assert.That(ageDelta, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void GetAgeDelta_SameAge_ReturnsOne()
+        {
+            // Arrange
+            _clientVisitor = new Visitor(1, "Client", "Test Bio", 30);
+            _potentialMatchVisitor = new Visitor(2, "Match", "Test Bio", 30);
+
+            // Act
+            int ageDelta = _findBuddies.GetAgeDelta(_clientVisitor, _potentialMatchVisitor);
+
+            // Assert
+            Assert.That(ageDelta, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GetVisitorPoints_ValidInputs_ReturnsCorrectPoints()
+        {
+            // Arrange
+            _clientVisitor = new Visitor(1, "Client", "Test Bio", 30);
+            _clientVisitor.AddToDrinkPreference("Beer");
+
+            _potentialMatchVisitor = new Visitor(2, "Match", "Test Bio", 25);
+            _potentialMatchVisitor.AddToDrinkPreference("Beer"); // 1 matching interest
+
+            double expectedPoints = 1 / (0.2 * 5 / 30); // Based on the formula
+
+            // Act
+            double points = _findBuddies.GetVisitorPoints(_clientVisitor, _potentialMatchVisitor);
+
+            // Assert
+            Assert.That(points, Is.EqualTo(expectedPoints).Within(0.01));
+        }
+
+        [Test]
+        public void GetVisitorPoints_NoMatchingInterests_ReturnsZeroPoints()
+        {
+            // Arrange
+            _clientVisitor.AddToDrinkPreference("Beer");
+            _potentialMatchVisitor.AddToDrinkPreference("Wine"); // No matching interest
+
+            // Act
+            double points = _findBuddies.GetVisitorPoints(_clientVisitor, _potentialMatchVisitor);
+
+            // Assert
+            Assert.That(points, Is.EqualTo(0));
+        }
     }
 }

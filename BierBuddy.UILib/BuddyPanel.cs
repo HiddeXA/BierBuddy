@@ -100,7 +100,8 @@ namespace BierBuddy.UILib
                     FontFamily = new FontFamily("Bayon"),
                     FontWeight = FontWeights.Bold,
                     FontSize = 20,
-                    Foreground = Brushes.Black
+                    Foreground = Brushes.Black, 
+                    Margin = new Thickness(10, 0, 0, 0)
                 },
                 Width = width,
                 Height = height,

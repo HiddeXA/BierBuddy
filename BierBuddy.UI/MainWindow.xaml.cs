@@ -41,6 +41,7 @@ namespace BierBuddy.UI
         private IDataAccess _DataAccess { get; }
         private MyBuddies _MyBuddies { get; }
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
+        private MyAppointmentsPageRenderer _MyAppointmentsPagerenderer { get; }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
 
         public MainWindow()
@@ -54,7 +55,8 @@ namespace BierBuddy.UI
             _Main = new Main(_DataAccess);
             //initialize page renderers
             _MyBuddies = new MyBuddies(_DataAccess, _Main);
-            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies); 
+            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies);
+            _MyAppointmentsPagerenderer = new MyAppointmentsPageRenderer();
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
             //initialize page renderers
@@ -89,6 +91,7 @@ namespace BierBuddy.UI
             MoveBeerFoam(e);
             _FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
             _MyBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
+            _MyAppointmentsPagerenderer.UpdatePageSize(NavBar.Width, e.NewSize);
 
             if (WindowStatus == 1)
             {
@@ -124,8 +127,6 @@ namespace BierBuddy.UI
         
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
-           
-
             this.WindowStatus = 2;
             PagePanel.Children.Clear();
             PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_DataAccess.GetBuddies(_Main.ClientVisitor.ID)));

@@ -1,6 +1,8 @@
 ﻿using BierBuddy.Core;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace BierBuddy.DataAccess
 {
@@ -31,6 +33,7 @@ namespace BierBuddy.DataAccess
 
         public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string psw)
         {
+            psw = ComputeSHA512(psw);
             if (activities.Count < 1 || activities.Count > 4)
             {
                 throw new ArgumentException("Er moeten minimaal 1 en maximaal 4 activiteiten worden meegegeven.");
@@ -432,6 +435,25 @@ namespace BierBuddy.DataAccess
             reader.Close();
             transaction.Commit();
             return appointments;
+        }
+
+        // Encrypts password using SHA512
+        static string ComputeSHA512(string input)
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+
+            using (SHA512 sha512 = SHA512.Create())
+            {
+                byte[] hashBytes = sha512.ComputeHash(inputBytes);
+
+                StringBuilder hashString = new StringBuilder();
+                foreach (byte b in hashBytes)
+                {
+                    hashString.Append(b.ToString("x2"));
+                }
+
+                return hashString.ToString();
+            }
         }
     }
 }

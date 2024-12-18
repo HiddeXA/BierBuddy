@@ -107,9 +107,6 @@ namespace BierBuddy.UI
                 AccountButton_Click(sender, e);
             }
             else { }
-
-            
-
         }
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
@@ -120,12 +117,8 @@ namespace BierBuddy.UI
             
         }
 
-
-        
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
-           
-
             this.WindowStatus = 2;
             PagePanel.Children.Clear();
             PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_DataAccess.GetBuddies(_Main.ClientVisitor.ID)));

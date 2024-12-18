@@ -126,7 +126,5 @@ namespace BierBuddy.Core
 
             return points;
         }
-
-
     }
 }

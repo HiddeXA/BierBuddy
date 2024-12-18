@@ -487,6 +487,7 @@ namespace BierBuddy.DataAccess
             long interestID = -1;
             List<string> photos = visitor.Photos;
             long photosID = -1;
+            //ids ophalen van de voorkeuren lijsten
             MySqlTransaction transaction = _conn.BeginTransaction();
             MySqlCommand GetIDs = _conn.CreateCommand();
             GetIDs.CommandText = "SELECT DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, Photo_PhotoID FROM visitor WHERE VisitorID = @ID";
@@ -505,6 +506,8 @@ namespace BierBuddy.DataAccess
             {
                 throw new ArgumentNullException("Deze bezoeker bestaat waarschijnlijk niet in de database");
             }
+
+            //alles updaten
             MySqlCommand activitiesCommand = _conn.CreateCommand();
             activitiesCommand.CommandText = "UPDATE activitypreferences SET Activities_ActivityID1 = @ActivityID1, Activities_ActivityID2 = @ActivityID2, Activities_ActivityID3 = @ActivityID3, Activities_ActivityID4 = @ActivityID4 WHERE ActivityPreferencesID = @ActivityPreferencesID";
             activitiesCommand.Parameters.AddWithValue("@ActivityID1", activities[0]);

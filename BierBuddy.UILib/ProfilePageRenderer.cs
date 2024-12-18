@@ -190,19 +190,17 @@ namespace BierBuddy.UILib
 
         private Border GetCustomItemList(Border border, string[] items, List<string> options, string type)
         {
-            WrapPanel? wrapPanel = border.Child as WrapPanel;  // Cast to WrapPanel
+            //maak een wrapPanel aan als die er nog niet is, zo wel passen we hem aan
+            WrapPanel? wrapPanel = border.Child as WrapPanel;  
 
             if (wrapPanel == null)
             {
-                // If wrapPanel is null (initial case), create a new one
                 wrapPanel = new WrapPanel();
                 wrapPanel.Orientation = Orientation.Horizontal;
                 wrapPanel.VerticalAlignment = VerticalAlignment.Center;
-                border.Child = wrapPanel; // Set the child of the border only if it was null
             }
             else
             {
-                // Clear existing items if the wrapPanel already exists
                 wrapPanel.Children.Clear();
             }
 
@@ -217,6 +215,7 @@ namespace BierBuddy.UILib
                 stackPanel.Orientation = Orientation.Horizontal;
                 profileContentBorder.Child = stackPanel;
                 stackPanel.Children.Add(profileContentBorder.ProfileContentLabel);
+                //voeg een delete knop toe als er meer dan 1 item is, je mag namelijk nooit minder dan 1 item hebben
                 if (items.Length > 1)
                 {
                     Button delete = GetDeleteButton(20, 20);
@@ -225,6 +224,7 @@ namespace BierBuddy.UILib
                 wrapPanel.Children.Add(profileContentBorder);
             }
 
+            //voeg een add knop toe als er minder dan 4 items zijn, je mag namelijk nooit meer dan 4 items hebben
             if (items.Length < 4)
             {
                 ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Transparent);
@@ -331,12 +331,17 @@ namespace BierBuddy.UILib
             {
                 if (button.Parent is ProfileContentBorder border)
                 {
-                    border.Background = UIUtils.BabyPoeder;
+                    border.Background = button.Background;
                     CustomComboBox customComboBox = new CustomComboBox();
                     customComboBox.ItemsSource = options;
                     customComboBox.IsTextSearchEnabled = true;
                     customComboBox.VerticalAlignment = VerticalAlignment.Center;
                     customComboBox.HorizontalAlignment = HorizontalAlignment.Center;
+                    customComboBox.IsDropDownOpen = true;
+                    customComboBox.DropDownClosed += (s, e) =>
+                    {
+                        border.Child = button;
+                    };
                     if (border.Tag.Equals("Drinks"))
                     {
                         customComboBox.SelectionChanged += (s, e) =>

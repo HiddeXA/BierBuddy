@@ -38,6 +38,7 @@ namespace BierBuddy.Core
             }
 
             List<string> preferences = possiblePreferences.Values.ToList();
+            //voorkeuren die de visitor al heeft kunnen niet opnieuw worden gekozen
             foreach (string exception in exceptions)
             {
                 preferences.Remove(exception);
@@ -47,6 +48,7 @@ namespace BierBuddy.Core
 
         public void UpdateProfile(Visitor visitor)
         {
+            //alle voorkeuren omzetten naar id's
             List<long> drinks = new List<long>();
             List<long> interests = new List<long>();
             List<long> activities = new List<long>();

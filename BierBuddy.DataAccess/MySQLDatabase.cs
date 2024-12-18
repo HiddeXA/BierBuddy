@@ -156,6 +156,63 @@ namespace BierBuddy.DataAccess
             return visitor;
         }
 
+        public Visitor? GetAccount(string mail, string passkey)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText =
+                "SELECT V.VisitorID, V.Name, V.BIO, V.Age, P.Photo1URL, P.Photo2URL, P.Photo3URL, P.Photo4URL, D.Drinks_DrinkID1, D.Drinks_DrinkID2, D.Drinks_DrinkID3, D.Drinks_DrinkID4, A.Activities_ActivityID1, A.Activities_ActivityID2, A.Activities_ActivityID3, A.Activities_ActivityID4, I.PossibleInterests_InterestID1, I.PossibleInterests_InterestID2, I.PossibleInterests_InterestID3, I.PossibleInterests_InterestID4 " +
+                "FROM visitor V " +
+                "JOIN photo P ON V.Photo_PhotoID = P.PhotoID " +
+                "JOIN drinkpreferences D ON V.DrinkPreferences_DrinkPreferencesID = D.DrinkPreferencesID " +
+                "JOIN activitypreferences A ON V.ActivityPreferences_ActivityPreferencesID = A.ActivityPreferencesID " +
+                "JOIN interests I ON V.Interests_InterestsID = I.interestsID " +
+                "WHERE V.Email = @mail AND V.Passkey = @passkey";
+            cmd.Parameters.AddWithValue("@mail", mail);
+            cmd.Parameters.AddWithValue("@passkey", ComputeSHA512(passkey));
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            Visitor? visitor = null;
+            while (reader.Read())
+            {
+                visitor = new Visitor(reader.GetInt64(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3));
+                for (int i = 4; i < 8; i++)
+                {
+                    if (!reader.IsDBNull(i))
+                    {
+                        visitor.AddToPhotos(reader.GetString(i));
+                    }
+                }
+                for (int i = 8; i < 12; i++)
+                {
+                    string? drinkPref = PossibleDrinkPref.GetValueOrDefault(reader.GetInt64(i));
+                    if (drinkPref != null)
+                    {
+                        visitor.AddToDrinkPreference(drinkPref);
+                    }
+                }
+                for (int i = 12; i < 16; i++)
+                {
+                    string? activityPref = PossibleActivities.GetValueOrDefault(reader.GetInt64(i));
+                    if (activityPref != null)
+                    {
+                        visitor.AddToActivityPreference(activityPref);
+                    }
+                }
+                for (int i = 16; i < 20; i++)
+                {
+                    string? interests = PossibleInterests.GetValueOrDefault(reader.GetInt64(i));
+                    if (interests != null)
+                    {
+                        visitor.AddToInterests(interests);
+                    }
+                }
+            }
+            reader.Close();
+
+            return visitor;
+        }
+
         public List<Visitor> GetAccounts(int maxAmount)
         {
             throw new NotImplementedException();

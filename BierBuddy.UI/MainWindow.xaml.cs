@@ -168,5 +168,29 @@ namespace BierBuddy.UI
             Canvas.SetLeft(EllipseFoam3, NavBar.Width - 365);
             Canvas.SetLeft(EllipseFoam4, NavBar.Width - 412);
         }
+
+        private void Loginclick(object sender, RoutedEventArgs e)
+        {
+            string passkey = PasskeyInput.Password;
+            string mail = EmailInput.Text;
+            try
+            {
+                Visitor client = _DataAccess.GetAccount(mail, passkey);
+                _Main.ClientVisitor = client;
+                if (client == null)
+                {
+                    MessageBox.Show("Gebruikersnaam of wachtwoord incorrect");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Login failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void RegitreerClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

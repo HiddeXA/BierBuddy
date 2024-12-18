@@ -74,7 +74,40 @@
             </DockPanel>
         </Border>
         <!--PagePanel-->
-        <Canvas x:Name="PagePanel"/>
+        <Canvas x:Name="PagePanel">
+
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="30" Canvas.Top="30" Height="647" Width="504">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="104*"/>
+                    <ColumnDefinition Width="17*"/>
+                    <ColumnDefinition Width="87*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border CornerRadius="30" BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="3" Background="#FCFFF7">
+                    <StackPanel>
+                        <Label Name="Title" FontSize="48" HorizontalAlignment="Center" Margin="0,20">Inloggen</Label>
+                        <StackPanel>
+                            <Border CornerRadius="20" BorderBrush="Black" BorderThickness="2" Margin="20" Background="#FCFFF7">
+                                <TextBox Name="EmailInput" Height="60" Margin="20" FontSize="40" Background="#FCFFF7" BorderBrush="Transparent"/>
+                            </Border>
+                            <Border CornerRadius="20" BorderBrush="Black" BorderThickness="2" Margin="20" Background="#FCFFF7">
+                                <PasswordBox Name="PasskeyInput" Height="60" Margin="20" FontSize="40" Background="#FCFFF7" BorderBrush="Transparent"/>
+                            </Border>
+                        </StackPanel>
+                        <Button Height="75" Margin="20" Click="Loginclick">
+                            <WrapPanel VerticalAlignment="Center">
+                                <Label Name="Loggin" FontSize="32" VerticalAlignment="Center">Log in</Label>
+                            </WrapPanel>
+                        </Button>
+                        <Button Height="75" Margin="20" Click="RegitreerClick">
+                            <WrapPanel VerticalAlignment="Center">
+                                <Label Name="Registreer" FontSize="32" VerticalAlignment="Center">Registreer</Label>
+                            </WrapPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Canvas>
     </DockPanel>
 
 </Window>

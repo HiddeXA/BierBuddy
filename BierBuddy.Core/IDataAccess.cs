@@ -15,6 +15,16 @@ namespace BierBuddy.Core
         /// <param name="ID"></param>
         /// <returns></returns>
         public Visitor? GetAccount(long ID);
+
+        /// <summary>
+        /// haalt een account op op basis van een mail en een wachtwoord
+        /// </summary>
+        /// 
+
+        /// <param name="mail"></param>
+        /// <param name="passkey"></param>
+        /// <returns></returns>
+        public Visitor? GetAccount(string mail, string passkey);
         /// <summary>
         /// geeft een lijst van accounts terug
         /// </summary>

@@ -204,6 +204,31 @@ namespace BierBuddy.DataAccess
             throw new NotImplementedException();
         }
 
+        public List<Visitor> GetBuddies(long clientID)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText =
+                "SELECT V.VisitorID, V.Name, V.BIO, V.Age " +
+                "FROM matches m " +
+                "JOIN Visitor V " +
+                "ON (m.Visitor_VisitorID1 = v.VisitorID AND m.Visitor_VisitorID2 = @ID) " +
+                "OR (m.Visitor_VisitorID2 = v.VisitorID AND m.Visitor_VisitorID1 = @ID) " +
+                "WHERE v.VisitorID != @ID; ";
+            cmd.Parameters.AddWithValue("@ID", clientID);
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            List<Visitor> buddyList = new();
+            while (reader.Read())
+            {
+                Visitor visitor = new Visitor(reader.GetInt64(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3));
+
+                buddyList.Add(visitor);
+            }
+            reader.Close();
+            return buddyList;
+        }
+
         public List<Visitor> GetNotSeenAccounts(long clientID, int maxAmount = 10)
         {
             MySqlCommand cmd = _conn.CreateCommand();

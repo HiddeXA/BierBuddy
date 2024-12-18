@@ -32,6 +32,8 @@ namespace BierBuddy.UI
         // Gebruikt voor het dynamisch resizen van de app met de gerenderde pagina.
         private int WindowStatus { get; set; } = 0;
 
+        public Visitor ClientVisitor { get; set; }
+
         //definitie pageRenderers
         private Main _Main { get; }
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
@@ -136,19 +138,15 @@ namespace BierBuddy.UI
             
         }
 
+
         
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
-            List<Visitor> buddyList = new List<Visitor>
-        {
-             new Visitor(1, "Rick", "Test", 25),
-             new Visitor(2, "Martijn", "Test", 30),
-             new Visitor(3, "Yannick", "Test", 28),
+           
 
-        };
             this.WindowStatus = 2;
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(buddyList));
+            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_DataAccess.GetBuddies(_Main.ClientVisitor.ID)));
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

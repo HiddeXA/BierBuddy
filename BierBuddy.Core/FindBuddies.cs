@@ -11,6 +11,7 @@ namespace BierBuddy.Core
         private IDataAccess _DataAccess;
         public Main Main;
         private List<Visitor> _PotentialMatches;
+        private readonly int _PotentialMatchesTotalListSize = 10;
 
         public event EventHandler<MatchedEventArgs>? OnMatched;
         public FindBuddies(IDataAccess dataAccess, Main main) 
@@ -20,38 +21,7 @@ namespace BierBuddy.Core
             Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
             _PotentialMatches = GetPotentialMatches();
         }
-        public Visitor GetPotentialMatch()
-        {
-            if (_PotentialMatches.Count != 0)
-            {
-                Visitor potentialMatch = _PotentialMatches.First();
-                return potentialMatch;
-            }
-            return null;
-        }
         
-        public List<Visitor> GetPotentialMatches()
-        {
-            //TODO: algorithm implementation
-
-            #region Temporary algorithem implementation
-            
-
-            List<Visitor> potentialMatches = _DataAccess.GetNotSeenAccounts(Main.ClientVisitor.ID, 5);
-            //potentialMatches.AddRange(_DataAccess.GetLikedNotSeenAccounts(visitor.ID, 5));
-
-            potentialMatches.OrderBy(x => Random.Shared.Next()).ToList();
-
-            #endregion
-
-            return potentialMatches;
-
-        }
-        public void UpdatePotentialMatches()
-        {
-            _PotentialMatches = GetPotentialMatches();
-        }
-
         public void LikeVisitor(Visitor visitor)
         {
             _DataAccess.SetLike(Main.ClientVisitor.ID, visitor.ID);
@@ -64,10 +34,54 @@ namespace BierBuddy.Core
             _DataAccess.SetDislike(Main.ClientVisitor.ID, visitor.ID);
             _PotentialMatches.Remove(visitor);
         }
+        public Visitor GetPotentialMatch()
+        {
+            if (_PotentialMatches.Count != 0)
+            {
+                Visitor potentialMatch = _PotentialMatches.First();
+                return potentialMatch;
+            }
+            return null;
+        }
 
+        public List<Visitor> GetPotentialMatches()
+        {
+            List<long> idSelection = _DataAccess.GetNotSeenAccountIDs(Main.ClientVisitor.ID);
+            return GetPotentialMatchesByID(idSelection);
+        }
+        public List<long> GetRandomAccountSelection(List<long> ids)
+        {
+            //
+        }
+        public void UpdatePotentialMatches()
+        {
+            _PotentialMatches = GetPotentialMatches();
+        }
         private void OnClientProfileChanged(object sender, ClientProfileChangedEventArgs args)
         {
             UpdatePotentialMatches();
+        }
+
+        public List<Visitor> GetPotentialMatchesByID(List<long> ids)
+        {
+            //knip list
+
+        }
+        public List<long> GetIDsSelection(List<long> ids)
+        {
+            List<long> idSelection = new List<long>();
+
+            int potentialMatchesHighscoreListSize = 10;
+            
+            for (int i = 0; idSelection.Count < potentialMatchesHighscoreListSize; i++)
+            {
+
+            }
+            for (int i = potentialMatchesHighscoreListSize; idSelection.Count < _PotentialMatchesTotalListSize is ++)
+            {
+
+            }
+            return idSelection;
         }
 
         public int GetInterestsPoints(Visitor clientVisitor, Visitor potentialMatchVisitor)
@@ -126,5 +140,8 @@ namespace BierBuddy.Core
 
             return points;
         }
+
+
+        
     }
 }

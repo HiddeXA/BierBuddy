@@ -128,7 +128,7 @@ namespace BierBuddy.UILib
                 textBox.Margin = new Thickness(20, 10, 0, 10);
                 textBox.TextChanged += (s, e) =>
                 {
-                    _Visitor.Name = textBox.Text;
+                    _Visitor.SetName(textBox.Text);
                     _ProfilePage.UpdateProfile(_Visitor);
                 };
                 textBox.MaxLength = 45;
@@ -170,7 +170,7 @@ namespace BierBuddy.UILib
                 {
                     if (!textBox.IsKeyboardFocused)
                     {
-                        _Visitor.Bio = textBox.Text;
+                        _Visitor.SetBio(textBox.Text);
                         _ProfilePage.UpdateProfile(_Visitor);
                     }
                 };

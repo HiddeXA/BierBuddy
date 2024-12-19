@@ -10,8 +10,8 @@ namespace BierBuddy.Core
     {
         // Basis atributen van de gebruiker.
         public long ID { get; private set; }
-        public string Name { get; set; }
-        public string Bio { get; set; }
+        public string Name { get; private set; }
+        public string Bio { get; private set; }
         public int Age { get; private set; }
 
         // Voorkeuren interesses enz.
@@ -29,6 +29,18 @@ namespace BierBuddy.Core
             Name = name;
             Bio = bio;
             Age = age;
+        }
+
+        public void SetName(string name)
+        {
+            if(name.Length > 45) throw new ArgumentException("Naam is te lang");
+            Name = name;
+        }
+
+        public void SetBio(string bio)
+        {
+            if (bio.Length > 400) throw new ArgumentException("Bio is te lang");
+            Bio = bio;
         }
 
         // Methodes voor het toevoegen van voorkeuren en interesses.

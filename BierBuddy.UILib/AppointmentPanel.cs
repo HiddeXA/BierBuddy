@@ -43,7 +43,7 @@ namespace BierBuddy.UILib
             AppointmentGrid.RowDefinitions.Add(new RowDefinition());
 
             // Voeg knoppen toe
-            Button appointmentButton = CreateButton("DATUM KOMT HIER", 412, 40);
+            Button appointmentButton = CreateButton(_Appointment.AppointmentID.ToString(), 412, 40);
             Grid.SetColumn(appointmentButton, 0);
             Grid.SetRow(appointmentButton, 0);
             appointmentButton.HorizontalAlignment = HorizontalAlignment.Left;

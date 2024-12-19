@@ -101,12 +101,34 @@ namespace BierBuddy.UILib
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
-            ProfileContentBorder name = new ProfileContentBorder(_Visitor.Name, UIUtils.BabyPoeder, GeneralFontSize);
-            name.ProfileContentLabel.Foreground = Brushes.Black;
-            name.Margin = new Thickness(0, 0, 20, 0);
-            name.ProfileContentLabel.HorizontalAlignment = HorizontalAlignment.Left;
-            name.ProfileContentLabel.Padding = new Thickness(20, 10, 0, 10);
-            name.VerticalAlignment = VerticalAlignment.Center;
+            ProfileContentBorder name;
+            if (_ReadOnly)
+            {
+                name = new ProfileContentBorder(_Visitor.Name, UIUtils.BabyPoeder, GeneralFontSize);
+                name.ProfileContentLabel.Foreground = Brushes.Black;
+                name.Margin = new Thickness(0, 0, 20, 0);
+                name.ProfileContentLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                name.ProfileContentLabel.Padding = new Thickness(20, 10, 0, 10);
+                name.VerticalAlignment = VerticalAlignment.Center;
+            } else
+            {
+                name = new ProfileContentBorder(UIUtils.BabyPoeder);
+                name.Margin = new Thickness(0, 0, 20, 0);
+                name.VerticalAlignment = VerticalAlignment.Center;
+                TextBox textBox = GetTransparentTextBox();
+                textBox.Text = _Visitor.Name;
+                textBox.Margin = new Thickness(20, 10, 0, 10);
+                textBox.TextChanged += (s, e) =>
+                {
+                    _Visitor.Name = textBox.Text;
+                    _ProfilePage.UpdateProfile(_Visitor);
+                };
+                textBox.MaxLength = 45;
+                textBox.Width = name.Width - 40;
+                textBox.TextWrapping = TextWrapping.Wrap;
+
+                name.Child = textBox;
+            }
 
             ProfileContentBorder age = new ProfileContentBorder(_Visitor.Age.ToString(), new SolidColorBrush(Color.FromRgb(190, 194, 188)), GeneralFontSize);
             age.ProfileContentLabel.Foreground = Brushes.Black;
@@ -126,8 +148,29 @@ namespace BierBuddy.UILib
         private ProfileContentBorder GetBioLabel()
         {
             ProfileContentBorder bio = new(UIUtils.BabyPoeder);
-            bio.Height = _MainWindowSize.Height / 6;
-            bio.Child = new TextBlock { Text = _Visitor.Bio, TextWrapping = TextWrapping.Wrap, FontSize = GeneralFontSize, Foreground = Brushes.Black, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left, Padding = new Thickness(20, 10, 0, 10) };
+            if (_ReadOnly)
+            {
+                bio.Child = new TextBlock { Text = _Visitor.Bio, TextWrapping = TextWrapping.Wrap, FontSize = GeneralFontSize, Foreground = Brushes.Black, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left, Padding = new Thickness(20, 10, 0, 10) };
+            }
+            else
+            {
+                TextBox textBox = GetTransparentTextBox();
+                textBox.Text = _Visitor.Bio;
+                textBox.Margin = new Thickness(20, 10, 0, 10);
+                textBox.TextWrapping = TextWrapping.Wrap;
+                textBox.IsKeyboardFocusedChanged += (s, e) =>
+                {
+                    if (!textBox.IsKeyboardFocused)
+                    {
+                        _Visitor.Bio = textBox.Text;
+                        _ProfilePage.UpdateProfile(_Visitor);
+                    }
+                };
+                textBox.MaxLength = 400;
+                textBox.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+
+                bio.Child = textBox;
+            }
 
             return bio;
         }
@@ -291,6 +334,19 @@ namespace BierBuddy.UILib
 
             profileContentBorder.Child = image;
             return profileContentBorder;
+        }
+
+        private TextBox GetTransparentTextBox()
+        {
+            TextBox textBox = new TextBox();
+            textBox.Foreground = Brushes.Black;
+            textBox.Background = UIUtils.Transparent;
+            textBox.BorderBrush = UIUtils.Transparent;
+            textBox.FontSize = GeneralFontSize;
+            textBox.VerticalAlignment = VerticalAlignment.Top;
+            textBox.HorizontalAlignment = HorizontalAlignment.Left;
+
+            return textBox;
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)

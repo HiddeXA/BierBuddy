@@ -11,7 +11,8 @@ namespace BierBuddy.Core
         private IDataAccess _DataAccess;
         public Main Main;
         private List<Visitor> _PotentialMatches;
-        private readonly int _PotentialMatchesTotalListSize = 10;
+        private readonly int _PotentialMatchesTotalListSize = 25;
+
 
         public event EventHandler<MatchedEventArgs>? OnMatched;
         public FindBuddies(IDataAccess dataAccess, Main main) 
@@ -43,16 +44,6 @@ namespace BierBuddy.Core
             }
             return null;
         }
-
-        public List<Visitor> GetPotentialMatches()
-        {
-            List<long> idSelection = _DataAccess.GetNotSeenAccountIDs(Main.ClientVisitor.ID);
-            return GetPotentialMatchesByID(idSelection);
-        }
-        public List<long> GetRandomAccountSelection(List<long> ids)
-        {
-            //
-        }
         public void UpdatePotentialMatches()
         {
             _PotentialMatches = GetPotentialMatches();
@@ -61,10 +52,54 @@ namespace BierBuddy.Core
         {
             UpdatePotentialMatches();
         }
-
-        public List<Visitor> GetPotentialMatchesByID(List<long> ids)
+        public List<Visitor> GetPotentialMatches()
         {
-            //knip list
+            List<long> idSelection = _DataAccess.GetNotSeenAccountIDs(Main.ClientVisitor.ID);
+            List<Visitor> VisitorSelection = GetVisitorSelectionByID(GetRandomAccountSelection(idSelection));
+            SortVisitorSelectionByPoints(VisitorSelection);
+            //split de lijst
+            //voeg randoms toe
+            return VisitorSelection;
+        }
+        private List<Visitor> SortVisitorSelectionByPoints(List<Visitor> VisitorSelection)
+        {
+            //punten toekennen
+            foreach (Visitor Visitor in VisitorSelection)
+            {
+                Visitor.Points = GetVisitorPoints(Main.ClientVisitor, Visitor);
+            }
+
+            //sorteren obv punten
+            for (int i = VisitorSelection.Count; i > 0; i--)
+            {
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (VisitorSelection[j].Points < VisitorSelection[j + 1].Points)
+                    {
+                        Visitor x = VisitorSelection[j];
+                        VisitorSelection[j] = VisitorSelection[j + 1];
+                        VisitorSelection[j + 1] = x;
+                    }
+                }
+            }
+            return VisitorSelection;
+        }
+
+        public List<long> GetRandomAccountSelection(List<long> ids)
+        {
+            List<long> idSelection = new List<long>();
+            for (int i = 0; i < _PotentialMatchesTotalListSize; i++)
+            {
+                int randID = new Random().Next(ids.Count);
+                idSelection.Add(ids[randID]);
+                ids.RemoveAt(randID);
+            }
+            return idSelection;
+        }
+        
+        public List<Visitor> GetVisitorSelectionByID(List<long> ids)
+        {
+            return _DataAccess.GetAccountsFromList(ids);
 
         }
         public List<long> GetIDsSelection(List<long> ids)
@@ -140,8 +175,5 @@ namespace BierBuddy.Core
 
             return points;
         }
-
-
-        
     }
 }

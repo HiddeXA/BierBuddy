@@ -37,7 +37,7 @@ namespace BierBuddy.UILib
             //_Appointment = appointment;
         }
 
-        public WrapPanel GetMyAppointmentsPage()
+        public WrapPanel GetMyAppointmentsPage(List<Appointment> appointments)
         {
             WrapPanel myAppointmentsPanel = new WrapPanel();
 
@@ -67,8 +67,11 @@ namespace BierBuddy.UILib
             //    mainPanel.Children.Add(buddyPanel);
             //}
 
-            AppointmentPanel appointmentPanel = new AppointmentPanel(_Visitor, _MainWindowSize.Width - _NavBarWidth - 75, 100, _Appointment);
-            mainPanel.Children.Add(appointmentPanel);
+            foreach (Appointment appointment in appointments)
+            {
+                AppointmentPanel appointmentPanel = new AppointmentPanel(_Visitor, _MainWindowSize.Width - _NavBarWidth - 75, 100, _Appointment);
+                mainPanel.Children.Add(appointmentPanel);
+            }
 
             myAppointmentsPanel.Children.Add(mainPanel);
             myAppointmentsPanel.VerticalAlignment = VerticalAlignment.Center;

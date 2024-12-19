@@ -29,6 +29,8 @@ namespace BierBuddy.UILib
 
         private void InitializePanel()
         {
+            String status = "test";
+
             // Stel de grid en layout in
             Grid AppointmentGrid = new Grid();
             AppointmentGrid.Width = _Width;
@@ -46,13 +48,10 @@ namespace BierBuddy.UILib
             Grid.SetRow(appointmentButton, 0);
             appointmentButton.HorizontalAlignment = HorizontalAlignment.Left;
 
-
-            Button appointmentAcceptButton = CreateButton("STATUS", 300, 40);
+            Button appointmentAcceptButton = CreateButton(status, 300, 40);
             Grid.SetColumn(appointmentAcceptButton, 1);
             Grid.SetRow(appointmentAcceptButton, 0);
             appointmentAcceptButton.HorizontalAlignment = HorizontalAlignment.Right;
-
-
 
             Button buddyNameButton = CreateNameButton(_Visitor.Name, 300, 40);
             Grid.SetColumn(buddyNameButton, 0);

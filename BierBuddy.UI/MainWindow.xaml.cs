@@ -40,6 +40,7 @@ namespace BierBuddy.UI
         private FindBuddies _FindBuddies { get; }
         private IDataAccess _DataAccess { get; }
         private MyBuddies _MyBuddies { get; }
+        private Appointment _Appointment { get; }
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
         private MyAppointmentsPageRenderer _MyAppointmentsPagerenderer { get; }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
@@ -137,7 +138,7 @@ namespace BierBuddy.UI
         {
             this.WindowStatus = 5;
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(_MyAppointmentsPagerenderer.GetMyAppointmentsPage());
+            PagePanel.Children.Add(_MyAppointmentsPagerenderer.GetMyAppointmentsPage(_DataAccess.GetAppointmentsFromUser(_Main.ClientVisitor.ID)));
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

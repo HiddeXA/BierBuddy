@@ -1,4 +1,6 @@
 ﻿using BierBuddy.Core;
+using Material.Icons.WPF;
+using Material.Icons;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -12,15 +14,25 @@ namespace BierBuddy.UILib
         private Grid _ProfilePanel;
         private Size _MainWindowSize;
         private double _NavBarWidth;
-        private Visitor _Visitor { get; set; }
+        private Visitor _Visitor;
+        private bool _ReadOnly;
+        private ProfilePage _ProfilePage;
 
         private int BigFontSize = 28;
         private int GeneralFontSize = 16;
 
-        public ProfilePageRenderer()
+        private Border _Drinks;
+        private Border _Interests;
+        private Border _Activities;
+
+        public ProfilePageRenderer(ProfilePage profilePage)
         {
             _ProfilePanel = new ();
             _Visitor = new(0, "temp", "temp", 0);
+            _Drinks = new ProfileContentBorder(UIUtils.BabyPoeder);
+            _Interests = new ProfileContentBorder(UIUtils.BabyPoeder);
+            _Activities = new ProfileContentBorder(UIUtils.BabyPoeder);
+            _ProfilePage = profilePage;
         }
 
         public Grid GetProfilePage(Visitor visitor, bool readOnly)
@@ -34,13 +46,17 @@ namespace BierBuddy.UILib
             _ProfilePanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
             _Visitor = visitor;
+            _ReadOnly = readOnly;
+            _Drinks = new ProfileContentBorder(UIUtils.BabyPoeder);
+            _Interests = new ProfileContentBorder(UIUtils.BabyPoeder);
+            _Activities = new ProfileContentBorder(UIUtils.BabyPoeder);
 
-            StackPanel profile = GetProfile(readOnly);
+            StackPanel profile = GetProfile();
             profile.Margin = new Thickness(0, 0, 20, 0);
             Grid.SetColumn(profile, 0);
             _ProfilePanel.Children.Add(profile);
 
-            Border photos = GetPhotos(_Visitor.Photos, readOnly);
+            Border photos = GetPhotos(_Visitor.Photos);
             photos.Margin = new Thickness(0, 0, 60, 0);
             Grid.SetColumn(photos, 1);
             _ProfilePanel.Children.Add(photos);
@@ -48,36 +64,36 @@ namespace BierBuddy.UILib
             return _ProfilePanel;
         }
 
-        private StackPanel GetProfile(bool readOnly)
+        private StackPanel GetProfile()
         {
             StackPanel stackPanel = new StackPanel();
             TextBlock pageTitle = new TextBlock { Text = "ACCOUNT", FontSize = BigFontSize, Margin = new Thickness(10, 0, 0, 20), Foreground = UIUtils.BabyPoeder, FontWeight = FontWeights.Bold };
             stackPanel.Children.Add(pageTitle);
 
             //naam en leeftijd
-            Grid nameAndAge = GetNameAndAgeLabels(readOnly);
+            Grid nameAndAge = GetNameAndAgeLabels();
             stackPanel.Children.Add(nameAndAge);
 
             //bio
-            Border bio = GetBioLabel(readOnly);
+            Border bio = GetBioLabel();
             stackPanel.Children.Add(bio);
 
             //drank
-            Border drinks = GetDrinks(readOnly);
-            stackPanel.Children.Add(drinks);
+            SetDrinks();
+            stackPanel.Children.Add(_Drinks);
 
             //activiteit
-            Border activities = GetActivities(readOnly);
-            stackPanel.Children.Add(activities);
+            SetActivities();
+            stackPanel.Children.Add(_Activities);
 
             //interesses
-            Border interests = GetInterests(readOnly);
-            stackPanel.Children.Add(interests);
+            SetInterests();
+            stackPanel.Children.Add(_Interests);
 
             return stackPanel;
         }
 
-        private Grid GetNameAndAgeLabels(bool readOnly)
+        private Grid GetNameAndAgeLabels()
         {
             Grid grid = new ();
             //kolommen en rijen voor layout en automatisch resizen
@@ -107,7 +123,7 @@ namespace BierBuddy.UILib
             return grid;
         }
 
-        private ProfileContentBorder GetBioLabel(bool readOnly)
+        private ProfileContentBorder GetBioLabel()
         {
             ProfileContentBorder bio = new(UIUtils.BabyPoeder);
             bio.Height = _MainWindowSize.Height / 6;
@@ -116,39 +132,39 @@ namespace BierBuddy.UILib
             return bio;
         }
 
-        private Border GetDrinks(bool readOnly)
+        private void SetDrinks()
         {
-            if (readOnly)
+            if (_ReadOnly)
             {
-                return GetItemList(_Visitor.DrinkPreference.ToArray());
+                _Drinks = GetItemList(_Visitor.DrinkPreference.ToArray());
             }
             else
             {
-                return GetCustomItemList(_Visitor.DrinkPreference.ToArray(), new Dictionary<long, string>());
+                _Drinks = GetCustomItemList(_Drinks, _Visitor.DrinkPreference.ToArray(), _ProfilePage.GetPossiblePreferences("Drinks", _Visitor.DrinkPreference), "Drinks");
             }
         }
 
-        private Border GetActivities(bool readOnly)
+        private void SetActivities()
         {
-            if (readOnly)
+            if (_ReadOnly)
             {
-                return GetItemList(_Visitor.ActivityPreference.ToArray());
+                _Activities = GetItemList(_Visitor.ActivityPreference.ToArray());
             }
             else
             {
-                return GetCustomItemList(_Visitor.ActivityPreference.ToArray(), new Dictionary<long, string>());
+                _Activities = GetCustomItemList(_Activities, _Visitor.ActivityPreference.ToArray(), _ProfilePage.GetPossiblePreferences("Activities", _Visitor.ActivityPreference), "Activities");
             }
         }
 
-        private Border GetInterests(bool readOnly)
+        private void SetInterests()
         {
-            if (readOnly)
+            if (_ReadOnly)
             {
-                return GetItemList(_Visitor.Interests.ToArray());
+                _Interests = GetItemList(_Visitor.Interests.ToArray());
             }
             else
             {
-                return GetCustomItemList(_Visitor.Interests.ToArray(), new Dictionary<long, string>());
+                _Interests = GetCustomItemList(_Interests, _Visitor.Interests.ToArray(), _ProfilePage.GetPossiblePreferences("Interests", _Visitor.Interests), "Interests");
             }
         }
 
@@ -172,12 +188,56 @@ namespace BierBuddy.UILib
             return border;
         }
 
-        private Border GetCustomItemList(string[] items, Dictionary<long, string> options)
+        private Border GetCustomItemList(Border border, string[] items, List<string> options, string type)
         {
-            throw new NotImplementedException();
+            //maak een wrapPanel aan als die er nog niet is, zo wel passen we hem aan
+            WrapPanel? wrapPanel = border.Child as WrapPanel;  
+
+            if (wrapPanel == null)
+            {
+                wrapPanel = new WrapPanel();
+                wrapPanel.Orientation = Orientation.Horizontal;
+                wrapPanel.VerticalAlignment = VerticalAlignment.Center;
+            }
+            else
+            {
+                wrapPanel.Children.Clear();
+            }
+
+            //voeg alle items toe aan de wrapPanel
+            foreach (string item in items)
+            {
+                ProfileContentBorder profileContentBorder = new ProfileContentBorder(item, new SolidColorBrush(Color.FromRgb(108, 114, 109)), GeneralFontSize);
+                profileContentBorder.VerticalAlignment = VerticalAlignment.Center;
+                profileContentBorder.ProfileContentLabel.Padding = new Thickness(20, 10, 20, 10);
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Tag = type;
+                stackPanel.Orientation = Orientation.Horizontal;
+                profileContentBorder.Child = stackPanel;
+                stackPanel.Children.Add(profileContentBorder.ProfileContentLabel);
+                //voeg een delete knop toe als er meer dan 1 item is, je mag namelijk nooit minder dan 1 item hebben
+                if (items.Length > 1)
+                {
+                    Button delete = GetDeleteButton(20, 20);
+                    stackPanel.Children.Add(delete);
+                }
+                wrapPanel.Children.Add(profileContentBorder);
+            }
+
+            //voeg een add knop toe als er minder dan 4 items zijn, je mag namelijk nooit meer dan 4 items hebben
+            if (items.Length < 4)
+            {
+                ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Transparent);
+                profileContentBorder.Child = GetAddButton(20, 20, options);
+                profileContentBorder.Tag = type;
+                wrapPanel.Children.Add(profileContentBorder);
+            }
+
+            border.Child = wrapPanel;
+            return border;
         }
 
-        private Border GetPhotos(List<string> photos, bool readOnly)
+        private Border GetPhotos(List<string> photos)
         {
             Border BGborder = new ProfileContentBorder(UIUtils.Outer_Space);
             Grid grid = new Grid();
@@ -231,6 +291,156 @@ namespace BierBuddy.UILib
 
             profileContentBorder.Child = image;
             return profileContentBorder;
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is Button button)
+            {
+                if(button.Parent is StackPanel stackPanel)
+                {
+                    if (stackPanel.Children[0] is Label label)
+                    {
+                        if (label.Content is string String)
+                        {
+                            if (stackPanel.Tag.Equals("Drinks"))
+                            {
+                                _Visitor.RemoveFromDrinkPreference(String);
+                                SetDrinks();
+                            }
+                            else if (stackPanel.Tag.Equals("Interests"))
+                            {
+                                _Visitor.RemoveFromInterests(String);
+                                SetInterests();
+                            }
+                            else if (stackPanel.Tag.Equals("Activities"))
+                            {
+                                _Visitor.RemoveFromActivityPreference(String);
+                                SetActivities();
+                            }
+                            _ProfilePage.UpdateProfile(_Visitor);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AddButton_Click(object sender, List<string> options)
+        {
+            if (sender is Button button)
+            {
+                if (button.Parent is ProfileContentBorder border)
+                {
+                    border.Background = button.Background;
+                    CustomComboBox customComboBox = new CustomComboBox();
+                    customComboBox.ItemsSource = options;
+                    customComboBox.IsTextSearchEnabled = true;
+                    customComboBox.VerticalAlignment = VerticalAlignment.Center;
+                    customComboBox.HorizontalAlignment = HorizontalAlignment.Center;
+                    customComboBox.IsDropDownOpen = true;
+                    customComboBox.DropDownClosed += (s, e) =>
+                    {
+                        border.Child = button;
+                    };
+                    if (border.Tag.Equals("Drinks"))
+                    {
+                        customComboBox.SelectionChanged += (s, e) =>
+                        {
+                            if (customComboBox.SelectedItem is string selected)
+                            {
+                                _Visitor.AddToDrinkPreference(selected);
+                                SetDrinks();
+                                _ProfilePage.UpdateProfile(_Visitor);
+                            }
+                        };
+                    }
+                    else if (border.Tag.Equals("Interests"))
+                    {
+                        customComboBox.SelectionChanged += (s, e) =>
+                        {
+                            if (customComboBox.SelectedItem is string selected)
+                            {
+                                _Visitor.AddToInterests(selected);
+                                SetInterests();
+                                _ProfilePage.UpdateProfile(_Visitor);
+                            }
+                        };
+                    }
+                    else if (border.Tag.Equals("Activities"))
+                    {
+                        customComboBox.SelectionChanged += (s, e) =>
+                        {
+                            if (customComboBox.SelectedItem is string selected)
+                            {
+                                _Visitor.AddToActivityPreference(selected);
+                                SetActivities();
+                                _ProfilePage.UpdateProfile(_Visitor);
+                            }
+                        };
+                    }
+                    border.Child = customComboBox;
+                }
+            }
+        }
+
+        private Button GetDeleteButton(double width, double height)
+        {
+            Button deleteButton = new();
+            deleteButton.Template = GetIconButtonTemplate(UIUtils.DeclineRed);
+            deleteButton.Click += DeleteButton_Click;
+
+            return GenerateIconButton(deleteButton, width, height, MaterialIconKind.Close, "delete");
+        }
+
+        private Button GetAddButton(double width, double height, List<string> options)
+        {
+            Button addButton = new();
+            addButton.Template = GetIconButtonTemplate(UIUtils.AcceptGreen);
+            addButton.Click += (s, e) => AddButton_Click(s, options);
+
+            return GenerateIconButton(addButton, width, height, MaterialIconKind.Add, "add");
+
+        }
+
+        /// <summary>
+        /// zet alle standaard waardes voor de accept en decline buttons
+        /// </summary>
+        private Button GenerateIconButton(Button button, double width, double height, MaterialIconKind iconKind, string name)
+        {
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = iconKind;
+            icon.Foreground = UIUtils.BabyPoeder;
+            button.Width = width;
+            button.Height = height;
+            button.Content = icon;
+            button.VerticalAlignment = VerticalAlignment.Center;
+            button.HorizontalAlignment = HorizontalAlignment.Center;
+            button.Background = UIUtils.Transparent;
+            button.Margin = new Thickness(0, 0, 5, 0);
+            button.Name = name;
+
+            return button;
+        }
+
+        private ControlTemplate GetIconButtonTemplate(Brush brush)
+        {
+            ControlTemplate template = new ControlTemplate(typeof(Button));
+            FrameworkElementFactory gridFactory = new FrameworkElementFactory(typeof(Grid));
+
+            //achtergrond
+            FrameworkElementFactory borderFactory = new FrameworkElementFactory(typeof(Border));
+            borderFactory.SetValue(Border.BackgroundProperty, brush);
+            borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(90));
+            gridFactory.AppendChild(borderFactory);
+
+            //voorgrond
+            FrameworkElementFactory contentPresenterFactory = new FrameworkElementFactory(typeof(ContentPresenter));
+            contentPresenterFactory.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            contentPresenterFactory.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+            gridFactory.AppendChild(contentPresenterFactory);
+
+            template.VisualTree = gridFactory;
+            return template;
         }
 
         public void UpdatePageSize(double newNavBarWidth, Size newScreenSize)

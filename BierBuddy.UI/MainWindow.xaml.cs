@@ -40,6 +40,7 @@ namespace BierBuddy.UI
         private FindBuddies _FindBuddies { get; }
         private IDataAccess _DataAccess { get; }
         private MyBuddies _MyBuddies { get; }
+        private ProfilePage _ProfilePage { get; }
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
         private ProfilePageRenderer _ProfilePageRenderer { get; }
@@ -63,7 +64,8 @@ namespace BierBuddy.UI
             _FindBuddies = new FindBuddies(_DataAccess, _Main);
             _FindBuddiesPageRenderer = new FindBuddiesPageRenderer(_FindBuddies);
 
-            _ProfilePageRenderer = new ProfilePageRenderer();
+            _ProfilePage = new ProfilePage(_DataAccess, _Main);
+            _ProfilePageRenderer = new ProfilePageRenderer(_ProfilePage);
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }

@@ -51,5 +51,20 @@ namespace BierBuddy.Core
         {
             Photos.Add(photoUrl);
         }
+
+        public void RemoveFromDrinkPreference(string drink)
+        {
+            DrinkPreference.Remove(drink);
+        }
+
+        public void RemoveFromInterests(string interest)
+        {
+            Interests.Remove(interest);
+        }
+
+        public void RemoveFromActivityPreference(string activity) 
+        { 
+            ActivityPreference.Remove(activity); 
+        }
     }
 }

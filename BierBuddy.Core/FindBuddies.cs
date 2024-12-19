@@ -11,7 +11,8 @@ namespace BierBuddy.Core
         private IDataAccess _DataAccess;
         public Main Main;
         private List<Visitor> _PotentialMatches;
-        private readonly int _PotentialMatchesTotalListSize = 25;
+        private readonly int _PotentialMatchesTotalListSize = 30;
+        private readonly int _PotentialMatchesHighPointSelectionListSize = 15;
 
 
         public event EventHandler<MatchedEventArgs>? OnMatched;
@@ -57,11 +58,24 @@ namespace BierBuddy.Core
             List<long> idSelection = _DataAccess.GetNotSeenAccountIDs(Main.ClientVisitor.ID);
             List<Visitor> VisitorSelection = GetVisitorSelectionByID(GetRandomAccountSelection(idSelection));
             SortVisitorSelectionByPoints(VisitorSelection);
+            List<Visitor> lowRatedAccounts = SplitVisitorSelection(VisitorSelection);
             //split de lijst
             //voeg randoms toe
             return VisitorSelection;
         }
-        private List<Visitor> SortVisitorSelectionByPoints(List<Visitor> VisitorSelection)
+        public List<Visitor> SplitVisitorSelection(List<Visitor> visitors)
+        {
+            List<Visitor> lowRatedAccounts = new List<Visitor>();
+            while (visitors.Count > _PotentialMatchesHighPointSelectionListSize)
+            {
+                Visitor lowestRated = visitors.Last();
+                lowRatedAccounts.Add(lowestRated);
+                visitors.Remove(lowestRated);
+            }
+            return lowRatedAccounts;
+        }
+
+        public List<Visitor> SortVisitorSelectionByPoints(List<Visitor> VisitorSelection)
         {
             //punten toekennen
             foreach (Visitor Visitor in VisitorSelection)
@@ -108,14 +122,7 @@ namespace BierBuddy.Core
 
             int potentialMatchesHighscoreListSize = 10;
             
-            for (int i = 0; idSelection.Count < potentialMatchesHighscoreListSize; i++)
-            {
-
-            }
-            for (int i = potentialMatchesHighscoreListSize; idSelection.Count < _PotentialMatchesTotalListSize is ++)
-            {
-
-            }
+           
             return idSelection;
         }
 

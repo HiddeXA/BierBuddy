@@ -20,7 +20,7 @@ namespace BierBuddy.Core
         public List<string> ActivityPreference = new List<string>();
 
         // Fotos
-        public List<string> Photos = new List<string>();
+        public List<byte[]> Photos = new List<byte[]>();
 
 
         public Visitor(long id, string name, string bio, int age)
@@ -47,9 +47,11 @@ namespace BierBuddy.Core
             ActivityPreference.Add(activity);
         }
 
-        public void AddToPhotos(string photoUrl)
+        public void AddToPhotos(byte[] photoBlob)
         {
-            Photos.Add(photoUrl);
+            //geen url is geen url, hoort dus niet thuis in de lijst
+            if (Encoding.UTF8.GetString(photoBlob).Equals("Geen URL gevonden")) return;
+            Photos.Add(photoBlob);
         }
 
         public void RemoveFromDrinkPreference(string drink)
@@ -65,6 +67,11 @@ namespace BierBuddy.Core
         public void RemoveFromActivityPreference(string activity) 
         { 
             ActivityPreference.Remove(activity); 
+        }
+
+        public void RemoveFromPhotos(byte[] photoBlob)
+        {
+            Photos.Remove(photoBlob);
         }
     }
 }

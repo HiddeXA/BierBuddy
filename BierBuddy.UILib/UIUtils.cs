@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace BierBuddy.UILib
 {
@@ -25,5 +27,31 @@ namespace BierBuddy.UILib
         internal static readonly FontWeight UniversalFontWeight = new FontWeight();
         internal static readonly CornerRadius UniversalCornerRadius = new CornerRadius(25);
         internal static readonly CornerRadius SquirqilCornerRadius = new CornerRadius(15);
+        public static BitmapImage ConvertByteArrayToImage(byte[] byteArray)
+        {
+            if (byteArray == null || byteArray.Length == 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                using (MemoryStream memoryStream = new MemoryStream(byteArray))
+                {
+                    BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.CacheOption = BitmapCacheOption.OnLoad; // belangrijk voor performance
+                    image.StreamSource = memoryStream;
+                    image.EndInit();
+                    image.Freeze(); // belangrijk voor cross-thread access
+                    return image;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error converting byte array to image: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

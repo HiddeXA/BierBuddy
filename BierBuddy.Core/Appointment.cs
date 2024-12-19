@@ -15,6 +15,9 @@ namespace BierBuddy.Core
         public DateTime To { get; }
         public bool Accepted { get; }
 
+        private IDataAccess _DataAccess;
+        private Main _Main;
+
         public Appointment(long appointmentID, long clientID, long visitorID, DateTime from, DateTime to, bool accepted)
         {
             AppointmentID = appointmentID;
@@ -23,6 +26,8 @@ namespace BierBuddy.Core
             From = from;
             To = to;
             Accepted = accepted;
+
+
         }
     }
 }

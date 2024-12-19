@@ -65,6 +65,7 @@ namespace BierBuddy.UI
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
+
         private void BierBuddyMainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             //pas alleen de navBar size aan als deze niet kleiner zal zijn dan de minimum size
@@ -112,12 +113,9 @@ namespace BierBuddy.UI
                 AccountButton_Click(sender, e);
             }
             else if(WindowStatus == 5)
-            { 
+            {   
                 MyAppointmentsButton_Click(sender, e);
-            }
-
-            
-
+            }   
         }
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
@@ -125,10 +123,8 @@ namespace BierBuddy.UI
             this.WindowStatus = 1;
             PagePanel.Children.Clear();
             PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_FindBuddies.GetPotentialMatch()));
-            
+
         }
-
-
         
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
@@ -151,7 +147,6 @@ namespace BierBuddy.UI
             //todo wanneer er settings komen
         }
 
-
         private void AccountButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -172,6 +167,7 @@ namespace BierBuddy.UI
             int fontSize = (int)(NavBar.Width / _FontSizeIncrement + _FontSizeModifier);
             return fontSize;
         }
+
         private void MoveBeerFoam(SizeChangedEventArgs e)
         {
             //zet het bierschuim vast relatief aan de rechtekant van de NavBar

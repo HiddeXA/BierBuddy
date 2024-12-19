@@ -24,13 +24,17 @@ namespace BierBuddy.UILib
         private int GeneralFontSize = 16;
         private Visitor _Visitor { get; set; }
 
+        private Appointment _Appointment { get; set; }
+
         private MyBuddies _MyBuddies { get; set; }
 
         private MySQLDatabase _MySQLDatabase;
 
         public MyAppointmentsPageRenderer()
         {
+            _Visitor = new Visitor(0, "dummy", "dummy", 0);
 
+            //_Appointment = appointment;
         }
 
         public WrapPanel GetMyAppointmentsPage()
@@ -62,6 +66,9 @@ namespace BierBuddy.UILib
             //    BuddyPanel buddyPanel = new BuddyPanel(buddy, _MainWindowSize.Width - _NavBarWidth - 75, 100, _MyBuddies);
             //    mainPanel.Children.Add(buddyPanel);
             //}
+
+            AppointmentPanel appointmentPanel = new AppointmentPanel(_Visitor, _MainWindowSize.Width - _NavBarWidth - 75, 100, _Appointment);
+            mainPanel.Children.Add(appointmentPanel);
 
             myAppointmentsPanel.Children.Add(mainPanel);
             myAppointmentsPanel.VerticalAlignment = VerticalAlignment.Center;

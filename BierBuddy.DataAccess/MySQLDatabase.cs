@@ -140,7 +140,7 @@ namespace BierBuddy.DataAccess
                 {
                     if (!photoReader.IsDBNull(i))
                     {
-                        visitor.AddToPhotos(photoReader.GetString(i));
+                        visitor.AddToPhotos((byte[])photoReader.GetValue(i));
                     }
                 }
             }
@@ -260,7 +260,7 @@ namespace BierBuddy.DataAccess
                 {
                     if (!reader.IsDBNull(i))
                     {
-                        visitor.AddToPhotos(reader.GetString(i));
+                        visitor.AddToPhotos((byte[])reader.GetValue(i));
                     }
                 }
                 for (int i = 8; i < 12; i++)
@@ -510,7 +510,7 @@ namespace BierBuddy.DataAccess
             long activityID = -1;
             long drinkID = -1;
             long interestID = -1;
-            List<string> photos = visitor.Photos;
+            List<byte[]> photos = visitor.Photos;
             long photosID = -1;
             //ids ophalen van de voorkeuren lijsten
             MySqlTransaction transaction = _conn.BeginTransaction();

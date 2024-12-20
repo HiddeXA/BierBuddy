@@ -6,6 +6,11 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Text;
+using Microsoft.Win32;
+using System.IO;
+using System.Windows.Media.Effects;
+using System.Windows.Shapes;
 
 namespace BierBuddy.UILib
 {
@@ -24,6 +29,7 @@ namespace BierBuddy.UILib
         private Border _Drinks;
         private Border _Interests;
         private Border _Activities;
+        private Border _Photos;
 
         public ProfilePageRenderer(ProfilePage profilePage)
         {
@@ -32,6 +38,7 @@ namespace BierBuddy.UILib
             _Drinks = new ProfileContentBorder(UIUtils.BabyPoeder);
             _Interests = new ProfileContentBorder(UIUtils.BabyPoeder);
             _Activities = new ProfileContentBorder(UIUtils.BabyPoeder);
+            _Photos = new ProfileContentBorder(UIUtils.Outer_Space);
             _ProfilePage = profilePage;
         }
 
@@ -50,16 +57,17 @@ namespace BierBuddy.UILib
             _Drinks = new ProfileContentBorder(UIUtils.BabyPoeder);
             _Interests = new ProfileContentBorder(UIUtils.BabyPoeder);
             _Activities = new ProfileContentBorder(UIUtils.BabyPoeder);
+            _Photos = new ProfileContentBorder(UIUtils.Outer_Space);
 
             StackPanel profile = GetProfile();
             profile.Margin = new Thickness(0, 0, 20, 0);
             Grid.SetColumn(profile, 0);
             _ProfilePanel.Children.Add(profile);
 
-            Border photos = GetPhotos(_Visitor.Photos);
-            photos.Margin = new Thickness(0, 0, 60, 0);
-            Grid.SetColumn(photos, 1);
-            _ProfilePanel.Children.Add(photos);
+            SetPhotos();
+            _Photos.Margin = new Thickness(0, 0, 60, 0);
+            Grid.SetColumn(_Photos, 1);
+            _ProfilePanel.Children.Add(_Photos);
 
             return _ProfilePanel;
         }
@@ -101,12 +109,34 @@ namespace BierBuddy.UILib
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
-            ProfileContentBorder name = new ProfileContentBorder(_Visitor.Name, UIUtils.BabyPoeder, GeneralFontSize);
-            name.ProfileContentLabel.Foreground = Brushes.Black;
-            name.Margin = new Thickness(0, 0, 20, 0);
-            name.ProfileContentLabel.HorizontalAlignment = HorizontalAlignment.Left;
-            name.ProfileContentLabel.Padding = new Thickness(20, 10, 0, 10);
-            name.VerticalAlignment = VerticalAlignment.Center;
+            ProfileContentBorder name;
+            if (_ReadOnly)
+            {
+                name = new ProfileContentBorder(_Visitor.Name, UIUtils.BabyPoeder, GeneralFontSize);
+                name.ProfileContentLabel.Foreground = Brushes.Black;
+                name.Margin = new Thickness(0, 0, 20, 0);
+                name.ProfileContentLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                name.ProfileContentLabel.Padding = new Thickness(20, 10, 0, 10);
+                name.VerticalAlignment = VerticalAlignment.Center;
+            } else
+            {
+                name = new ProfileContentBorder(UIUtils.BabyPoeder);
+                name.Margin = new Thickness(0, 0, 20, 0);
+                name.VerticalAlignment = VerticalAlignment.Center;
+                TextBox textBox = GetTransparentTextBox();
+                textBox.Text = _Visitor.Name;
+                textBox.Margin = new Thickness(20, 10, 0, 10);
+                textBox.TextChanged += (s, e) =>
+                {
+                    _Visitor.SetName(textBox.Text);
+                    _ProfilePage.UpdateProfile(_Visitor);
+                };
+                textBox.MaxLength = 45;
+                textBox.Width = name.Width - 40;
+                textBox.TextWrapping = TextWrapping.Wrap;
+
+                name.Child = textBox;
+            }
 
             ProfileContentBorder age = new ProfileContentBorder(_Visitor.Age.ToString(), new SolidColorBrush(Color.FromRgb(190, 194, 188)), GeneralFontSize);
             age.ProfileContentLabel.Foreground = Brushes.Black;
@@ -126,8 +156,29 @@ namespace BierBuddy.UILib
         private ProfileContentBorder GetBioLabel()
         {
             ProfileContentBorder bio = new(UIUtils.BabyPoeder);
-            bio.Height = _MainWindowSize.Height / 6;
-            bio.Child = new TextBlock { Text = _Visitor.Bio, TextWrapping = TextWrapping.Wrap, FontSize = GeneralFontSize, Foreground = Brushes.Black, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left, Padding = new Thickness(20, 10, 0, 10) };
+            if (_ReadOnly)
+            {
+                bio.Child = new TextBlock { Text = _Visitor.Bio, TextWrapping = TextWrapping.Wrap, FontSize = GeneralFontSize, Foreground = Brushes.Black, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left, Padding = new Thickness(20, 10, 0, 10) };
+            }
+            else
+            {
+                TextBox textBox = GetTransparentTextBox();
+                textBox.Text = _Visitor.Bio;
+                textBox.Margin = new Thickness(20, 10, 0, 10);
+                textBox.TextWrapping = TextWrapping.Wrap;
+                textBox.IsKeyboardFocusedChanged += (s, e) =>
+                {
+                    if (!textBox.IsKeyboardFocused)
+                    {
+                        _Visitor.SetBio(textBox.Text);
+                        _ProfilePage.UpdateProfile(_Visitor);
+                    }
+                };
+                textBox.MaxLength = 400;
+                textBox.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+
+                bio.Child = textBox;
+            }
 
             return bio;
         }
@@ -237,14 +288,22 @@ namespace BierBuddy.UILib
             return border;
         }
 
-        private Border GetPhotos(List<string> photos)
+        private void SetPhotos()
         {
-            Border BGborder = new ProfileContentBorder(UIUtils.Outer_Space);
-            Grid grid = new Grid();
+            List<byte[]> photos = _Visitor.Photos;
+            Grid? grid = _Photos.Child as Grid;
+            if (grid != null) {
+                grid.Children.Clear();
+                grid.ColumnDefinitions.Clear();
+                grid.RowDefinitions.Clear();
+            }
+            else
+            {
+                grid = new Grid();
+            }
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
             for (int i = 0; i < photos.Count; i++) {
-                string photo = photos[i];
                 if (i < 2) // 2 foto's per rij
                 {
                     grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
@@ -253,28 +312,78 @@ namespace BierBuddy.UILib
                 {
                     grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
                 }
-                if (!photo.Equals("Geen URL gevonden")) // als er echt een foto is
-                {
-                    Border border = GetPhoto(photo);
-                    Grid.SetColumn(border, i % 2);
-                    Grid.SetRow(border, i / 2);
-                    grid.Children.Add(border);
-                }
+                Border border = GetPhoto(photos[i], !_ReadOnly && photos.Count > 1);
+                Grid.SetColumn(border, i % 2);
+                Grid.SetRow(border, i / 2);
+                grid.Children.Add(border);
             }
 
-            BGborder.Child = grid;
+            //als er minder dan 4 foto's zijn voeg een add knop toe
+            if (!_ReadOnly && grid.Children.Count < 4)
+            {
+                if (grid.Children.Count < 2)
+                {
+                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                } else if (grid.Children.Count == 2)
+                {
+                    grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                }
+                Border border = new ProfileContentBorder(UIUtils.Onyx70);
+                border.Tag = "Photos";
+                border.Child = GetAddButton(20, 20, new List<string>());
+                Grid.SetColumn(border, grid.Children.Count % 2);
+                Grid.SetRow(border, grid.Children.Count / 2);
+                grid.Children.Add(border);
+            }
 
-            return BGborder;
+            _Photos.Child = grid;
         }
 
-        private Border GetPhoto(string photo)
+        private Border GetPhoto(byte[] photo, bool removable)
         {
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
+            Grid grid = new Grid();
+
+            //rechthoek voor de rode overlay bij hover
+            Rectangle rectangle = new Rectangle();
+            rectangle.Fill = UIUtils.DeclineRed;
+            rectangle.Opacity = 0;
+            rectangle.IsHitTestVisible = false;
+
             Image image = new Image();
-            image.Source = new BitmapImage(new Uri(photo));
+            image.Source = UIUtils.ConvertByteArrayToImage(photo);
             //afbeelding centreren in de border
             image.HorizontalAlignment = HorizontalAlignment.Center;
             image.VerticalAlignment = VerticalAlignment.Center;
+            //events voor het verwijderen van afbeeldingen
+            image.IsMouseDirectlyOverChanged += (s, e) =>
+            {
+                if (image.IsMouseDirectlyOver && removable)
+                {
+                    rectangle.Opacity = 0.5;
+                }
+                else
+                {
+                    rectangle.Opacity = 0;
+                }
+            };
+            image.MouseLeftButtonDown += (s, e) =>
+            {
+                if (removable)
+                {
+                    _Visitor.RemoveFromPhotos(photo);
+                    SetPhotos();
+                    _ProfilePage.UpdateProfile(_Visitor);
+                }
+            };
+
+            //voeg de afbeelding en rechthoek toe aan de grid op dezelfde plek zodat de rechthoek de afbeelding overlayed
+            grid.Children.Add(image);
+            grid.Children.Add(rectangle);
+            Grid.SetColumn(rectangle, 0);
+            Grid.SetRow(rectangle, 0);
+            Grid.SetColumn(image, 0);
+            Grid.SetRow(image, 0);
 
             //afbeelding clippen zodat het in de border past, zelfs na het resizen
             profileContentBorder.SizeChanged += (s, e) =>
@@ -289,8 +398,21 @@ namespace BierBuddy.UILib
                 );
             };
 
-            profileContentBorder.Child = image;
+            profileContentBorder.Child = grid;
             return profileContentBorder;
+        }
+
+        private TextBox GetTransparentTextBox()
+        {
+            TextBox textBox = new TextBox();
+            textBox.Foreground = Brushes.Black;
+            textBox.Background = UIUtils.Transparent;
+            textBox.BorderBrush = UIUtils.Transparent;
+            textBox.FontSize = GeneralFontSize;
+            textBox.VerticalAlignment = VerticalAlignment.Top;
+            textBox.HorizontalAlignment = HorizontalAlignment.Left;
+
+            return textBox;
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -331,6 +453,20 @@ namespace BierBuddy.UILib
             {
                 if (button.Parent is ProfileContentBorder border)
                 {
+                    if (border.Tag.Equals("Photos"))
+                    {
+                        //bestands keuze scherm, alleen afbeeldingen toegestaan
+                        OpenFileDialog openFileDialog = new OpenFileDialog();
+                        openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg";
+                        if (openFileDialog.ShowDialog() == true)
+                        {
+                            byte[] photo = File.ReadAllBytes(openFileDialog.FileName);
+                            _Visitor.AddToPhotos(photo);
+                            SetPhotos();
+                            _ProfilePage.UpdateProfile(_Visitor);
+                        }
+                        return;
+                    }
                     border.Background = button.Background;
                     CustomComboBox customComboBox = new CustomComboBox();
                     customComboBox.ItemsSource = options;

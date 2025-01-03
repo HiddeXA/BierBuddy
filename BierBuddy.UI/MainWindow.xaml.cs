@@ -57,7 +57,7 @@ namespace BierBuddy.UI
             //initialize page renderers
             _MyBuddies = new MyBuddies(_DataAccess, _Main);
             _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies);
-            _MyAppointmentsPagerenderer = new MyAppointmentsPageRenderer();
+            _MyAppointmentsPagerenderer = new MyAppointmentsPageRenderer(_Appointment);
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
             //initialize page renderers

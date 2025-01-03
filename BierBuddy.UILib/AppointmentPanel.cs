@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows;
+
+
 namespace BierBuddy.UILib
 {
     public class AppointmentPanel : Border
     {
-
         private Visitor _Visitor;
         private double _Width;
         private double _Height;
-        private Appointment _Appointment;
+        private Appointment _Appointment { get; set; }
 
         public AppointmentPanel(Visitor visitor, double width, double height, Appointment appointment)
         {
@@ -29,7 +30,10 @@ namespace BierBuddy.UILib
 
         private void InitializePanel()
         {
-            String status = "test";
+            // Gebruik gegevens uit de Appointment om de juiste informatie weer te geven
+            string appointmentDate = _Appointment.To.ToString("dd-MM-yyyy");
+            string appointmentTime = $"{_Appointment.From.ToShortTimeString()} tot {_Appointment.To.ToShortTimeString()}";
+            bool status = _Appointment.Accepted; // Aangenomen dat Appointment een 'Status'-eigenschap heeft
 
             // Stel de grid en layout in
             Grid AppointmentGrid = new Grid();
@@ -43,12 +47,12 @@ namespace BierBuddy.UILib
             AppointmentGrid.RowDefinitions.Add(new RowDefinition());
 
             // Voeg knoppen toe
-            Button appointmentButton = CreateButton(_Appointment.From.ToShortDateString(), 412, 40);
+            Button appointmentButton = CreateNameButton(appointmentDate + " - " + appointmentTime, 300, 40);
             Grid.SetColumn(appointmentButton, 0);
             Grid.SetRow(appointmentButton, 0);
             appointmentButton.HorizontalAlignment = HorizontalAlignment.Left;
 
-            Button appointmentAcceptButton = CreateButton(status, 300, 40);
+            Button appointmentAcceptButton = CreateButton("dummy", 300, 40);
             Grid.SetColumn(appointmentAcceptButton, 1);
             Grid.SetRow(appointmentAcceptButton, 0);
             appointmentAcceptButton.HorizontalAlignment = HorizontalAlignment.Right;
@@ -64,15 +68,13 @@ namespace BierBuddy.UILib
             AppointmentGrid.Children.Add(buddyNameButton);
 
             // Stel de border in
-
             Child = AppointmentGrid;
             Background = UIUtils.Outer_Space;
             CornerRadius = UIUtils.UniversalCornerRadius;
             Margin = new Thickness(10);
-
         }
 
-        private Button CreateButton(string text, double width, double height)
+    private Button CreateButton(string text, double width, double height)
         {
             Button button = new Button
             {
@@ -129,19 +131,9 @@ namespace BierBuddy.UILib
             contentPresenterFactory.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
             gridFactory.AppendChild(contentPresenterFactory);
 
-            Trigger mouseOverTrigger = new Trigger
-            {
-                Property = UIElement.IsMouseOverProperty,
-                Value = true
-            };
-            mouseOverTrigger.Setters.Add(new Setter(Border.BackgroundProperty, new SolidColorBrush(Color.FromArgb(0xB3, 0xFC, 0xFF, 0xF7)), "BorderElement"));
-            template.Triggers.Add(mouseOverTrigger);
-
             template.VisualTree = gridFactory;
             return template;
         }
-
-
     }
 }
 

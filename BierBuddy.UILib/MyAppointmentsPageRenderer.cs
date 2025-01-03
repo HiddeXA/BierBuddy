@@ -30,11 +30,11 @@ namespace BierBuddy.UILib
 
         private MySQLDatabase _MySQLDatabase;
 
-        public MyAppointmentsPageRenderer()
+        public MyAppointmentsPageRenderer(Appointment appointment)
         {
             _Visitor = new Visitor(0, "dummy", "dummy", 0);
 
-            //_Appointment = appointment;
+            _Appointment = appointment;
         }
 
         public WrapPanel GetMyAppointmentsPage(List<Appointment> appointments)
@@ -59,17 +59,12 @@ namespace BierBuddy.UILib
             };
             mainPanel.Children.Add(buttonPanel);
 
-            // Buddy-panels dynamisch toevoegen
+            // Appointment-panels dynamisch toevoegen
             double panelWidth = _MainWindowSize.Width - _NavBarWidth - 100;
-            //foreach (var buddy in buddies)
-            //{
-            //    BuddyPanel buddyPanel = new BuddyPanel(buddy, _MainWindowSize.Width - _NavBarWidth - 75, 100, _MyBuddies);
-            //    mainPanel.Children.Add(buddyPanel);
-            //}
 
             foreach (Appointment appointment in appointments)
             {
-                AppointmentPanel appointmentPanel = new AppointmentPanel(_Visitor, _MainWindowSize.Width - _NavBarWidth - 75, 100, _Appointment);
+                AppointmentPanel appointmentPanel = new AppointmentPanel(_Visitor, _MainWindowSize.Width - _NavBarWidth - 75, 100, appointment);
                 mainPanel.Children.Add(appointmentPanel);
             }
 

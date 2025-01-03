@@ -29,6 +29,7 @@ namespace BierBuddy.UILib
 
         private void InitializePanel()
         {
+
             // Stel de grid en layout in
             Grid buddyGrid = new Grid();
             buddyGrid.Width = _Width;

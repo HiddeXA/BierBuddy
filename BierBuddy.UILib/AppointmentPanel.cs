@@ -30,10 +30,11 @@ namespace BierBuddy.UILib
 
         private void InitializePanel()
         {
-            // Gebruik gegevens uit de Appointment om de juiste informatie weer te geven
+            
             string appointmentDate = _Appointment.To.ToString("dd-MM-yyyy");
-            string appointmentTime = $"{_Appointment.From.ToShortTimeString()} tot {_Appointment.To.ToShortTimeString()}";
-            bool status = _Appointment.Accepted; // Aangenomen dat Appointment een 'Status'-eigenschap heeft
+            //Knip de datum van de DateTime en krijg start-(from) en eindtijd(to)
+            string appointmentTime = $"{_Appointment.From.ToShortTimeString()} tot {_Appointment.To.ToShortTimeString()}"; 
+            bool status = _Appointment.Accepted; 
 
             // Stel de grid en layout in
             Grid AppointmentGrid = new Grid();
@@ -47,24 +48,24 @@ namespace BierBuddy.UILib
             AppointmentGrid.RowDefinitions.Add(new RowDefinition());
 
             // Voeg knoppen toe
-            Button appointmentButton = CreateNameButton(appointmentDate + " - " + appointmentTime, 300, 40);
+            Button appointmentButton = CreateButton(appointmentDate + " - " + appointmentTime, 300, 40);
             Grid.SetColumn(appointmentButton, 0);
             Grid.SetRow(appointmentButton, 0);
             appointmentButton.HorizontalAlignment = HorizontalAlignment.Left;
 
-            Button appointmentAcceptButton = CreateButton("dummy", 300, 40);
-            Grid.SetColumn(appointmentAcceptButton, 1);
-            Grid.SetRow(appointmentAcceptButton, 0);
-            appointmentAcceptButton.HorizontalAlignment = HorizontalAlignment.Right;
+            Button appointmentStatusButton = CreateStatusButton(status, 300, 40);
+            Grid.SetColumn(appointmentStatusButton, 1);
+            Grid.SetRow(appointmentStatusButton, 0);
+            appointmentStatusButton.HorizontalAlignment = HorizontalAlignment.Right;
 
-            Button buddyNameButton = CreateNameButton(_Visitor.Name, 300, 40);
+            Button buddyNameButton = CreateButton(_Visitor.Name, 300, 40);
             Grid.SetColumn(buddyNameButton, 0);
             Grid.SetRow(buddyNameButton, 1);
             buddyNameButton.HorizontalAlignment = HorizontalAlignment.Left;
 
             // Voeg de knoppen toe aan de grid
             AppointmentGrid.Children.Add(appointmentButton);
-            AppointmentGrid.Children.Add(appointmentAcceptButton);
+            AppointmentGrid.Children.Add(appointmentStatusButton);
             AppointmentGrid.Children.Add(buddyNameButton);
 
             // Stel de border in
@@ -74,27 +75,32 @@ namespace BierBuddy.UILib
             Margin = new Thickness(10);
         }
 
-    private Button CreateButton(string text, double width, double height)
+        private Button CreateStatusButton(bool status, double width, double height)
         {
-            Button button = new Button
+            string statusText = status ? "Geaccepteerd" : "Geweigerd";
+            Brush statusColor = status ? new SolidColorBrush(Colors.Green) : new SolidColorBrush(Colors.Red);
+
+            Button statusButton = new Button
             {
                 Content = new TextBlock
                 {
-                    Text = text,
+                    Text = statusText,
                     FontFamily = new FontFamily("Bayon"),
                     FontWeight = FontWeights.Bold,
                     FontSize = 20,
-                    Foreground = Brushes.Black
+                    Foreground = Brushes.Black,
+                    Margin = new Thickness(10, 0, 0, 0)
                 },
                 Width = width,
                 Height = height,
                 Margin = new Thickness(10, 0, 10, 0),
-                Template = ButtonTemplate(new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0x37, 0x32)), HorizontalAlignment.Center),
+                Template = ButtonTemplate(statusColor, HorizontalAlignment.Center),
             };
-            return button;
+
+            return statusButton;
         }
 
-        private Button CreateNameButton(string text, double width, double height)
+        private Button CreateButton(string text, double width, double height)
         {
             Button button = new Button
             {

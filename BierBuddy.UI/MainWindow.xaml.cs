@@ -41,7 +41,7 @@ namespace BierBuddy.UI
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
 
-        public MainWindow()
+        public MainWindow(Visitor acc)
         {
             InitializeComponent();
             //initialize dataAccess
@@ -49,7 +49,7 @@ namespace BierBuddy.UI
             connection.Open();
             _DataAccess = new MySQLDatabase(connection);
             //initialize main
-            _Main = new Main(_DataAccess);
+            _Main = new Main(_DataAccess, acc);
             //initialize page renderers
             _MyBuddies = new MyBuddies(_DataAccess, _Main);
             _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies); 
@@ -169,28 +169,6 @@ namespace BierBuddy.UI
             Canvas.SetLeft(EllipseFoam4, NavBar.Width - 412);
         }
 
-        private void Loginclick(object sender, RoutedEventArgs e)
-        {
-            string passkey = PasskeyInput.Password;
-            string mail = EmailInput.Text;
-            try
-            {
-                Visitor client = _DataAccess.GetAccount(mail, passkey);
-                _Main.ClientVisitor = client;
-                if (client == null)
-                {
-                    MessageBox.Show("Gebruikersnaam of wachtwoord incorrect");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Login failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
 
-        private void RegitreerClick(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

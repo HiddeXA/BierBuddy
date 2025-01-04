@@ -37,14 +37,22 @@ namespace BierBuddy.Core
             _DataAccess.SetDislike(Main.ClientVisitor.ID, visitor.ID);
             _PotentialMatches.Remove(visitor);
         }
-        public Visitor GetPotentialMatch()
+        public Visitor? GetPotentialMatch()
         {
-            if(_PotentialMatches.Count == 0)
+            if(IsUpdatedPotentialMatchesEmpty())
             {
-                UpdatePotentialMatches();
+                return null;
             }
-            Visitor potentialMatch = _PotentialMatches.First();
-            return potentialMatch;
+            return _PotentialMatches.First();
+        }
+        public bool IsUpdatedPotentialMatchesEmpty()
+        {
+            UpdatePotentialMatches();
+            if (_PotentialMatches.Count == 0)
+            {
+                return true;
+            }
+            return false;
         }
         public void UpdatePotentialMatches()
         {

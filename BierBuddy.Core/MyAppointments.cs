@@ -16,6 +16,8 @@ namespace BierBuddy.Core
         {
             _DataAccess = dataAccess;
             _Main = main;
-        }   
+        }
+
+      
     }
 }

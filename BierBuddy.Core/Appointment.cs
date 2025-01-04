@@ -26,8 +26,8 @@ namespace BierBuddy.Core
             From = from;
             To = to;
             Accepted = accepted;
-
-
         }
+
+
     }
 }

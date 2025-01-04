@@ -30,11 +30,12 @@ namespace BierBuddy.UILib
 
         private MySQLDatabase _MySQLDatabase;
 
-        public MyAppointmentsPageRenderer(Appointment appointment)
+        public MyAppointmentsPageRenderer(Appointment appointment, MyBuddies myBuddies)
         {
             _Visitor = new Visitor(0, "dummy", "dummy", 0);
 
             _Appointment = appointment;
+            _MyBuddies = myBuddies;
         }
 
         public WrapPanel GetMyAppointmentsPage(List<Appointment> appointments)
@@ -64,7 +65,7 @@ namespace BierBuddy.UILib
 
             foreach (Appointment appointment in appointments)
             {
-                AppointmentPanel appointmentPanel = new AppointmentPanel(_Visitor, _MainWindowSize.Width - _NavBarWidth - 75, 100, appointment);
+                AppointmentPanel appointmentPanel = new AppointmentPanel(_Visitor, _MainWindowSize.Width - _NavBarWidth - 75, 100, appointment, _MyBuddies);
                 mainPanel.Children.Add(appointmentPanel);
             }
 

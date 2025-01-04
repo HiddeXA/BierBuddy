@@ -119,8 +119,11 @@ namespace BierBuddy.Core
         /// <summary>
         /// Haalt alle Buddies van een persoon op op basis van de huidige ClientID
         /// </summary>
-        /// <param name="clientID"></param>
-        /// <returns></returns>
         public List<Visitor> GetBuddies(long clientID);
+        /// <summary>
+        /// Haalt naam op van een visitor op basis van ID, voor de appointments
+        /// </summary>
+        public string GetVisitorNameByID(long visitorID);
+
     }
 }

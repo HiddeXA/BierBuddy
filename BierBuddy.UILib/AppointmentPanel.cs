@@ -18,12 +18,15 @@ namespace BierBuddy.UILib
         private double _Height;
         private Appointment _Appointment { get; set; }
 
-        public AppointmentPanel(Visitor visitor, double width, double height, Appointment appointment)
+        private MyBuddies _MyBuddies { get; set; }
+
+        public AppointmentPanel(Visitor visitor, double width, double height, Appointment appointment, MyBuddies myBuddies)
         {
             _Visitor = visitor;
             _Width = width;
             _Height = height;
             _Appointment = appointment;
+            _MyBuddies = myBuddies;
 
             InitializePanel();
         }
@@ -58,7 +61,7 @@ namespace BierBuddy.UILib
             Grid.SetRow(appointmentStatusButton, 0);
             appointmentStatusButton.HorizontalAlignment = HorizontalAlignment.Right;
 
-            Button buddyNameButton = CreateButton(_Visitor.Name, 300, 40);
+            Button buddyNameButton = CreateButton(_MyBuddies.visitorName(_Appointment.VisitorID), 300, 40);
             Grid.SetColumn(buddyNameButton, 0);
             Grid.SetRow(buddyNameButton, 1);
             buddyNameButton.HorizontalAlignment = HorizontalAlignment.Left;

@@ -156,6 +156,27 @@ namespace BierBuddy.DataAccess
             throw new NotImplementedException();
         }
 
+        public string GetVisitorNameByID(long visitorID)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText =
+                "SELECT Name " +
+                "FROM Visitor " +
+                "WHERE VisitorID = @ID; ";
+            cmd.Parameters.AddWithValue("@ID", visitorID);
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            string visitorName = null;
+
+            while (reader.Read())
+            {
+                visitorName = reader.GetString(0);
+            }
+            reader.Close();
+            return visitorName;
+        }
+
         public List<Visitor> GetBuddies(long clientID)
         {
             MySqlCommand cmd = _conn.CreateCommand();

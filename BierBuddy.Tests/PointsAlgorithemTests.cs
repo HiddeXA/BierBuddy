@@ -183,5 +183,73 @@ namespace BierBuddy.Tests
             // Assert
             Assert.That(points, Is.EqualTo(0));
         }
+        [Test]
+        public void GetHighRatedVisitorSelection_ReturnsCorrectCount()
+        {
+            // Arrange
+            List<Visitor> visitors = new List<Visitor>();
+            for (int i = 0; i < 20; i++)
+            {
+                visitors.Add(new Visitor(i, $"Visitor {i}", "Bio", 25) { Points = i });
+            }
+
+            // Act
+            List<Visitor> result = _findBuddies.GetHighRatedVisitorSelection(visitors);
+
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(_findBuddies.PotentialMatchesHighPointSelectionListSize));
+        }
+
+        //[Test]
+        //public void GetLowRatedVisitorSelection_ReturnsRemainingVisitors()
+        //{
+        //    // Arrange
+        //    List<Visitor> visitors = new List<Visitor>();
+        //    for (int i = 0; i < 20; i++)
+        //    {
+        //        visitors.Add(new Visitor(i, $"Visitor {i}", "Bio", 25) { Points = i });
+        //    }
+
+        //    // Act
+        //    List<Visitor> result = _findBuddies.GetLowRatedVisitorSelection(visitors);
+
+        //    // Assert
+        //    Assert.That(result.Count, Is.EqualTo(20 - _findBuddies.PotentialMatchesHighPointSelectionListSize));
+        //}
+
+        //[Test]
+        //public void FineTuneVisitorSelection_AddsLowRatedVisitorsCorrectly()
+        //{
+        //    // Arrange
+        //    List<Visitor> highRated = new List<Visitor>() { new Visitor(1, "High", "Bio", 25) { Points = 10 } };
+        //    List<Visitor> lowRated = new List<Visitor>() { new Visitor(2, "Low", "Bio", 25) { Points = 5 } };
+
+        //    // Act
+        //    List<Visitor> result = _findBuddies.FineTuneVisitorSelection(highRated, lowRated);
+
+        //    // Assert
+        //    Assert.That(result.Count, Is.EqualTo(2));
+        //}
+
+        [Test]
+        public void SortVisitorSelectionByPoints_SortsCorrectly()
+        {
+            // Arrange
+            List<Visitor> visitors = new List<Visitor>()
+            {
+                new Visitor(1, "A", "Bio", 25) { Points = 10 },
+                new Visitor(2, "B", "Bio", 25) { Points = 30 },
+                new Visitor(3, "C", "Bio", 25) { Points = 20 }
+            };
+
+            // Act
+            List<Visitor> result = _findBuddies.SortVisitorSelectionByPoints(visitors);
+
+            // Assert
+            Assert.That(result[0].Points, Is.EqualTo(30));
+            Assert.That(result[1].Points, Is.EqualTo(20));
+            Assert.That(result[2].Points, Is.EqualTo(10));
+        }
+
     }
 }

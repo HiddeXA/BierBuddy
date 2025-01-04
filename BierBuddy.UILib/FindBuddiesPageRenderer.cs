@@ -167,6 +167,14 @@ namespace BierBuddy.UILib
             UIElement profileContent = GetProfileContentPanel(width);
             Canvas.SetTop(profileContent, height - UIUtils.ProfileConentHeight - 150);
             _profilePanel.Children.Add(profileContent);
+
+            //test zooi voor punten algoritme
+            TextBox potentialMatches = new TextBox();
+            foreach (Visitor v in _FindBuddies.GetPotentialMatches())
+            {
+                potentialMatches.Text = potentialMatches.Text + " " + v.Name + " " + v.Points;
+            }
+            _profilePanel.Children.Add(potentialMatches);
         }
         
         private UIElement GetProfilePicture(double width, double height)
@@ -376,7 +384,7 @@ namespace BierBuddy.UILib
         }
         private UIElement GetNameLabel()
         {
-            ProfileContentLabel nameLabel = new ProfileContentLabel(_Visitor.Name, BigFontSize);
+            ProfileContentLabel nameLabel = new ProfileContentLabel($"{_Visitor.Name} {_Visitor.Points}", BigFontSize);
             nameLabel.FontSize = BigFontSize;
             return nameLabel;
         }

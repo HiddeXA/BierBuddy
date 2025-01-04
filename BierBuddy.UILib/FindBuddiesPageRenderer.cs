@@ -429,7 +429,7 @@ namespace BierBuddy.UILib
         }
         private UIElement GetNameLabel()
         {
-            ProfileContentLabel nameLabel = new ProfileContentLabel($"{_Visitor.Name} {_Visitor.Points}", BigFontSize);
+            ProfileContentLabel nameLabel = new ProfileContentLabel($"{_Visitor.Name}", BigFontSize);
             nameLabel.FontSize = BigFontSize;
             return nameLabel;
         }

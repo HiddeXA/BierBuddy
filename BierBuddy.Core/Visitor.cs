@@ -12,7 +12,9 @@ namespace BierBuddy.Core
         public long ID { get; private set; }
         public string Name { get; set; }
         public string Bio { get; set; }
-        public int Age { get; private set; }
+        public int Age { get; set; }
+        public String Mail { get; set; }
+        public String Password { get; set; }
 
         // Voorkeuren interesses enz.
         public List<string> DrinkPreference = new List<string>();
@@ -29,6 +31,12 @@ namespace BierBuddy.Core
             Name = name;
             Bio = bio;
             Age = age;
+        }
+
+        //Lege constructor voor het aanmaken van een nieuwe gebruiker. 
+        public Visitor()
+        {
+            
         }
 
         // Methodes voor het toevoegen van voorkeuren en interesses.

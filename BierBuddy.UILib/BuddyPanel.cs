@@ -30,6 +30,7 @@ namespace BierBuddy.UILib
 
         private void InitializePanel()
         {
+
             // Stel de grid en layout in
             Grid buddyGrid = new Grid();
             buddyGrid.Width = _Width;
@@ -107,7 +108,8 @@ namespace BierBuddy.UILib
                     FontFamily = new FontFamily("Bayon"),
                     FontWeight = FontWeights.Bold,
                     FontSize = 20,
-                    Foreground = Brushes.Black
+                    Foreground = Brushes.Black, 
+                    Margin = new Thickness(10, 0, 0, 0)
                 },
                 Width = width,
                 Height = height,

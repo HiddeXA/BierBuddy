@@ -41,5 +41,10 @@ namespace BierBuddy.Core
                 _DataAccess.DeclineAppointment(appointment.AppointmentID);
             }
         }
+
+        public string GetVisitorName(long visitorID)
+        {
+            return _DataAccess.GetVisitorNameByID(visitorID);
+        }
     }
 }

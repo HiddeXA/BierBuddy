@@ -31,6 +31,7 @@ namespace BierBuddy.UILib
         private MyBuddies _MyBuddies { get; set; }
 
         private MySQLDatabase _MySQLDatabase;
+        public event EventHandler? ProfileRequested;
 
         public MyBuddiesPageRenderer(MyBuddies myBuddies)
         {
@@ -66,6 +67,10 @@ namespace BierBuddy.UILib
             foreach (var buddy in buddies)
             {
                 BuddyPanel buddyPanel = new BuddyPanel(buddy, _MainWindowSize.Width - _NavBarWidth - 75, 100, _MyBuddies);
+                buddyPanel.ProfileRequested += (s, e) =>
+                {
+                    ProfileRequested?.Invoke(s, e);
+                };
                 mainPanel.Children.Add(buddyPanel);
             }
 

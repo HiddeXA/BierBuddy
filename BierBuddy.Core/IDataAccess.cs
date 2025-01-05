@@ -121,6 +121,10 @@ namespace BierBuddy.Core
         /// </summary>
         public List<Visitor> GetBuddies(long clientID);
         /// <summary>
+        /// werkt een gebruiker bij met de gegeven gegevens, de lists zijn de ids van de activiteiten, drankjes en interesses
+        /// </summary>
+        public void UpdateAccount(Visitor visitor, List<long> activities, List<long> drinks, List<long> interests);
+        /// <summary>
         /// Haalt naam op van een visitor op basis van ID, voor de appointments
         /// </summary>
         public string GetVisitorNameByID(long visitorID);

@@ -42,15 +42,13 @@ namespace BierBuddy.UILib
         {
             WrapPanel myAppointmentsPanel = new WrapPanel();
 
-            // Panel voor knoppen
-            StackPanel buttonPanel = new StackPanel
+            // Scrollviewer toevoegen
+            ScrollViewer scrollViewer = new ScrollViewer
             {
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Margin = new Thickness(0, 10, 0, 10),
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Height = _MainWindowSize.Height - 100,
+                Margin = new Thickness(10)
             };
-
-            buttonPanel.Children.Add(GetMijnAfsprakenButton(300, 50));
 
             // Hoofdpanel
             StackPanel mainPanel = new StackPanel
@@ -58,6 +56,15 @@ namespace BierBuddy.UILib
                 Orientation = Orientation.Vertical,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
+
+            // Panel voor knoppen
+            StackPanel buttonPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(0, 10, 0, 10),
+            };
+            buttonPanel.Children.Add(GetMijnAfsprakenButton(300, 50));
             mainPanel.Children.Add(buttonPanel);
 
             // Appointment-panels dynamisch toevoegen
@@ -69,7 +76,12 @@ namespace BierBuddy.UILib
                 mainPanel.Children.Add(appointmentPanel);
             }
 
-            myAppointmentsPanel.Children.Add(mainPanel);
+            // Voeg de mainPanel toe aan de ScrollViewer
+            scrollViewer.Content = mainPanel;
+
+            // Voeg de ScrollViewer toe aan het WrapPanel
+            myAppointmentsPanel.Children.Add(scrollViewer);
+
             myAppointmentsPanel.VerticalAlignment = VerticalAlignment.Center;
             myAppointmentsPanel.HorizontalAlignment = HorizontalAlignment.Center;
 

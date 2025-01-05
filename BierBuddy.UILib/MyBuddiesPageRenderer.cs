@@ -43,6 +43,14 @@ namespace BierBuddy.UILib
         {
             WrapPanel myBuddiesPanel = new WrapPanel();
 
+            //Scrolviewer toevoegen
+            ScrollViewer scrollViewer = new ScrollViewer
+            {
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Height = _MainWindowSize.Height - 100,
+                Margin = new Thickness(10)
+            };
+
             // Panel voor knoppen
             StackPanel buttonPanel = new StackPanel
             {
@@ -68,7 +76,13 @@ namespace BierBuddy.UILib
                 mainPanel.Children.Add(buddyPanel);
             }
 
-            myBuddiesPanel.Children.Add(mainPanel);
+            // Voeg de mainPanel toe aan de ScrollViewer
+            scrollViewer.Content = mainPanel;
+
+            // Voeg de ScrollViewer toe aan het WrapPanel
+            myBuddiesPanel.Children.Add(scrollViewer);
+
+
             myBuddiesPanel.VerticalAlignment = VerticalAlignment.Center;
             myBuddiesPanel.HorizontalAlignment = HorizontalAlignment.Center;
 

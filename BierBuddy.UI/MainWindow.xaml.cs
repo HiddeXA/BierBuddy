@@ -23,7 +23,7 @@ namespace BierBuddy.UI
     {
         //deel dat dat de navBar opneemt
         private readonly double _SizeModifierNavBar = 0.25;
-        private readonly int _NavBarMinSize = 290;
+        private readonly int _NavBarMinSize = 320;
 
         private readonly int _MinFontSize = 24;
         private readonly int _FontSizeIncrement = 30;
@@ -40,8 +40,10 @@ namespace BierBuddy.UI
         private FindBuddies _FindBuddies { get; }
         private IDataAccess _DataAccess { get; }
         private MyBuddies _MyBuddies { get; }
+        private Appointment _Appointment { get; }
         private ProfilePage _ProfilePage { get; }
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
+        private MyAppointmentsPageRenderer _MyAppointmentsPagerenderer { get; }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
         private ProfilePageRenderer _ProfilePageRenderer { get; }
 
@@ -57,6 +59,7 @@ namespace BierBuddy.UI
             //initialize page renderers
             _MyBuddies = new MyBuddies(_DataAccess, _Main);
             _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies);
+            _MyAppointmentsPagerenderer = new MyAppointmentsPageRenderer(_Appointment, _MyBuddies);
             _MyBuddiesPageRenderer.ProfileRequested += _MyBuddiesPageRenderer_ProfileRequested;
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
@@ -69,6 +72,7 @@ namespace BierBuddy.UI
 
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
+
 
         private void _MyBuddiesPageRenderer_ProfileRequested(object? sender, EventArgs e)
         {
@@ -93,6 +97,7 @@ namespace BierBuddy.UI
                 int fontSize = CalculateNavBarFontSize();
                 FindBuddiesLabel.FontSize = fontSize;
                 MyBuddiesLabel.FontSize = fontSize;
+                MyAppointmentsLabel.FontSize = fontSize;
             }
             else
             {
@@ -100,12 +105,14 @@ namespace BierBuddy.UI
                 int fontSize = CalculateNavBarFontSize();
                 FindBuddiesLabel.FontSize = fontSize;
                 MyBuddiesLabel.FontSize = fontSize;
+                MyAppointmentsLabel.FontSize = fontSize;
                 NavBar.Width = _NavBarMinSize;
             }
 
             MoveBeerFoam(e);
             _FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
             _MyBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
+            _MyAppointmentsPagerenderer.UpdatePageSize(NavBar.Width, e.NewSize);
             _ProfilePageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
 
             if (WindowStatus == 1)
@@ -124,7 +131,10 @@ namespace BierBuddy.UI
             {
                 AccountButton_Click(sender, e);
             }
-            else { }
+            else if(WindowStatus == 5)
+            {   
+                MyAppointmentsButton_Click(sender, e);
+            }   
         }
 
         private void FindBuddyButton_Click(object sender, RoutedEventArgs e)
@@ -132,7 +142,7 @@ namespace BierBuddy.UI
             this.WindowStatus = 1;
             PagePanel.Children.Clear();
             PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_FindBuddies.GetPotentialMatch()));
-            
+        
         }
 
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
@@ -142,12 +152,20 @@ namespace BierBuddy.UI
             PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_DataAccess.GetBuddies(_Main.ClientVisitor.ID)));
         }
 
+        private void MyAppointmentsButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowStatus = 5;
+            PagePanel.Children.Clear();
+            PagePanel.Children.Add(_MyAppointmentsPagerenderer.GetMyAppointmentsPage(_DataAccess.GetAppointmentsFromUser(_Main.ClientVisitor.ID)));
+        }
+
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             this.WindowStatus = 3;
             PagePanel.Children.Clear();
             //todo wanneer er settings komen
         }
+
         private void AccountButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -167,6 +185,7 @@ namespace BierBuddy.UI
             int fontSize = (int)(NavBar.Width / _FontSizeIncrement + _FontSizeModifier);
             return fontSize;
         }
+
         private void MoveBeerFoam(SizeChangedEventArgs e)
         {
             //zet het bierschuim vast relatief aan de rechtekant van de NavBar

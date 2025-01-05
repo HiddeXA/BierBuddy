@@ -15,6 +15,7 @@ namespace BierBuddy.Core
         public DateTime To { get; }
         public bool Accepted { get; }
 
+
         public Appointment(long appointmentID, long clientID, long visitorID, DateTime from, DateTime to, bool accepted)
         {
             AppointmentID = appointmentID;
@@ -24,5 +25,7 @@ namespace BierBuddy.Core
             To = to;
             Accepted = accepted;
         }
+
+
     }
 }

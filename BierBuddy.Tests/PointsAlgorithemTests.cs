@@ -200,36 +200,19 @@ namespace BierBuddy.Tests
             Assert.That(result.Count, Is.EqualTo(_findBuddies.PotentialMatchesHighPointSelectionListSize));
         }
 
-        //[Test]
-        //public void GetLowRatedVisitorSelection_ReturnsRemainingVisitors()
-        //{
-        //    // Arrange
-        //    List<Visitor> visitors = new List<Visitor>();
-        //    for (int i = 0; i < 20; i++)
-        //    {
-        //        visitors.Add(new Visitor(i, $"Visitor {i}", "Bio", 25) { Points = i });
-        //    }
+        [Test]
+        public void FineTuneVisitorSelection_AddsLowRatedVisitorsCorrectly()
+        {
+            // Arrange
+            List<Visitor> highRated = new List<Visitor>() { new Visitor(1, "High", "Bio", 25) { Points = 10 } };
+            List<Visitor> lowRated = new List<Visitor>() { new Visitor(2, "Low", "Bio", 25) { Points = 5 } };
 
-        //    // Act
-        //    List<Visitor> result = _findBuddies.GetLowRatedVisitorSelection(visitors);
+            // Act
+            List<Visitor> result = _findBuddies.FineTuneVisitorSelection(highRated, lowRated);
 
-        //    // Assert
-        //    Assert.That(result.Count, Is.EqualTo(20 - _findBuddies.PotentialMatchesHighPointSelectionListSize));
-        //}
-
-        //[Test]
-        //public void FineTuneVisitorSelection_AddsLowRatedVisitorsCorrectly()
-        //{
-        //    // Arrange
-        //    List<Visitor> highRated = new List<Visitor>() { new Visitor(1, "High", "Bio", 25) { Points = 10 } };
-        //    List<Visitor> lowRated = new List<Visitor>() { new Visitor(2, "Low", "Bio", 25) { Points = 5 } };
-
-        //    // Act
-        //    List<Visitor> result = _findBuddies.FineTuneVisitorSelection(highRated, lowRated);
-
-        //    // Assert
-        //    Assert.That(result.Count, Is.EqualTo(2));
-        //}
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(2));
+        }
 
         [Test]
         public void SortVisitorSelectionByPoints_SortsCorrectly()

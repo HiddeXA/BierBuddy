@@ -21,5 +21,6 @@ namespace BierBuddy.Core
             _DataAccess = dataAccess;
             AccountSwitcher = new SwitchAccount(_DataAccess, this);
         }
+
     }
 }

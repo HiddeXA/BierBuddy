@@ -24,13 +24,12 @@ namespace BierBuddy.UILib
     {
         private Size _MainWindowSize;
         private double _NavBarWidth;
-        private int BigFontSize = 28;
-        private int GeneralFontSize = 16;
+        private int BigFontSize;
+        private int GeneralFontSize;
         private Visitor _Visitor { get; set; }
 
         private MyBuddies _MyBuddies { get; set; }
 
-        private MySQLDatabase _MySQLDatabase;
         public event EventHandler? ProfileRequested;
 
         public MyBuddiesPageRenderer(MyBuddies myBuddies)

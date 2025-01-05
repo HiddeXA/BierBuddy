@@ -215,13 +215,19 @@ namespace BierBuddy.DataAccess
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
 
-            string visitorName = null;
+            string visitorName = "";
 
             while (reader.Read())
             {
                 visitorName = reader.GetString(0);
             }
             reader.Close();
+
+            if (visitorName == null)
+            {
+                throw new InvalidOperationException("Naam niet gevonden");
+            }
+
             return visitorName;
         }
 

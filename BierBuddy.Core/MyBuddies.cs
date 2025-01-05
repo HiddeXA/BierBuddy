@@ -42,7 +42,7 @@ namespace BierBuddy.Core
             }
         }
 
-        public string visitorName(long visitorID)
+        public string GetVisitorName(long visitorID)
         {
             return _DataAccess.GetVisitorNameByID(visitorID);
         }

@@ -61,7 +61,7 @@ namespace BierBuddy.UILib
             Grid.SetRow(appointmentStatusButton, 0);
             appointmentStatusButton.HorizontalAlignment = HorizontalAlignment.Right;
 
-            Button buddyNameButton = CreateButton(_MyBuddies.visitorName(_Appointment.VisitorID), 300, 40);
+            Button buddyNameButton = CreateButton(_MyBuddies.GetVisitorName(_Appointment.VisitorID), 300, 40);
             Grid.SetColumn(buddyNameButton, 0);
             Grid.SetRow(buddyNameButton, 1);
             buddyNameButton.HorizontalAlignment = HorizontalAlignment.Left;
@@ -80,7 +80,7 @@ namespace BierBuddy.UILib
 
         private Button CreateStatusButton(bool status, double width, double height)
         {
-            string statusText = status ? "Geaccepteerd" : "Geweigerd";
+            string statusText = status ? "Geaccepteerd" : "Afwachtend";
             Brush statusColor = status ? new SolidColorBrush(Colors.Green) : new SolidColorBrush(Colors.Red);
 
             Button statusButton = new Button

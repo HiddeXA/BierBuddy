@@ -39,7 +39,7 @@ namespace BierBuddy.Core
         }
         public Visitor? GetPotentialMatch()
         {
-            if(IsUpdatedPotentialMatchesEmpty())
+            if(_PotentialMatches.Count == 0 && IsUpdatedPotentialMatchesEmpty())
             {
                 return null;
             }

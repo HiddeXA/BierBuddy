@@ -111,9 +111,14 @@ namespace BierBuddy.UILib
             profileNotFoundSubText.Foreground = UIUtils.BabyPoeder;
             profileNotFoundSubText.HorizontalAlignment = HorizontalAlignment.Center;
 
+            Canvas buffer = new Canvas();
+            buffer.Height = 200;
+
+            profileNotFoundPanel.Children.Add(buffer);
             profileNotFoundPanel.Children.Add(icon);
             profileNotFoundPanel.Children.Add(profileNotFoundLabel);
             profileNotFoundPanel.Children.Add(profileNotFoundSubText);
+
             profileNotFoundBorder.Child = profileNotFoundPanel;
 
 

@@ -11,6 +11,10 @@ namespace BierBuddy.Core
         private IDataAccess _DataAccess;
         public Main Main;
         private List<Visitor> _PotentialMatches;
+        public readonly int PotentialMatchesTotalListSize = 12;
+        public readonly int PotentialMatchesHighPointSelectionListSize = 5;
+        public readonly int SelectionTotalsListSize = 7;
+
 
         public event EventHandler<MatchedEventArgs>? OnMatched;
         public FindBuddies(IDataAccess dataAccess, Main main) 
@@ -18,40 +22,9 @@ namespace BierBuddy.Core
             _DataAccess = dataAccess;
             Main = main;
             Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
-            _PotentialMatches = GetPotentialMatches();
-        }
-        public Visitor GetPotentialMatch()
-        {
-            if (_PotentialMatches.Count != 0)
-            {
-                Visitor potentialMatch = _PotentialMatches.First();
-                return potentialMatch;
-            }
-            return null;
+            _PotentialMatches = new List<Visitor>();
         }
         
-        public List<Visitor> GetPotentialMatches()
-        {
-            //TODO: algorithm implementation
-
-            #region Temporary algorithem implementation
-            
-
-            List<Visitor> potentialMatches = _DataAccess.GetNotSeenAccounts(Main.ClientVisitor.ID, 5);
-            //potentialMatches.AddRange(_DataAccess.GetLikedNotSeenAccounts(visitor.ID, 5));
-
-            potentialMatches.OrderBy(x => Random.Shared.Next()).ToList();
-
-            #endregion
-
-            return potentialMatches;
-
-        }
-        public void UpdatePotentialMatches()
-        {
-            _PotentialMatches = GetPotentialMatches();
-        }
-
         public void LikeVisitor(Visitor visitor)
         {
             _DataAccess.SetLike(Main.ClientVisitor.ID, visitor.ID);
@@ -64,12 +37,98 @@ namespace BierBuddy.Core
             _DataAccess.SetDislike(Main.ClientVisitor.ID, visitor.ID);
             _PotentialMatches.Remove(visitor);
         }
-
+        public Visitor? GetPotentialMatch()
+        {
+            if(IsUpdatedPotentialMatchesEmpty())
+            {
+                return null;
+            }
+            return _PotentialMatches.First();
+        }
+        public bool IsUpdatedPotentialMatchesEmpty()
+        {
+            UpdatePotentialMatches();
+            if (_PotentialMatches.Count == 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        public void UpdatePotentialMatches()
+        {
+            _PotentialMatches = GetPotentialMatches();
+        }
         private void OnClientProfileChanged(object sender, ClientProfileChangedEventArgs args)
         {
             UpdatePotentialMatches();
         }
+        public List<Visitor> GetPotentialMatches()
+        {
+            List<long> idSelection = _DataAccess.GetNotSeenAccountIDs(Main.ClientVisitor.ID);
+            List<Visitor> VisitorSelection = GetVisitorSelectionByID(GetRandomAccountSelection(idSelection, PotentialMatchesTotalListSize));
+            VisitorSelection = SortVisitorSelectionByPoints(SetVisitorPoints(VisitorSelection));
+            List<Visitor> highRated = GetHighRatedVisitorSelection(VisitorSelection);
+            List<Visitor> lowRated = GetLowRatedVisitorSelection(VisitorSelection, highRated);
+            return FineTuneVisitorSelection(highRated, lowRated);
+        }
+        public List<Visitor> GetHighRatedVisitorSelection(List<Visitor> visitors)
+        {
+            if(visitors.Count < PotentialMatchesHighPointSelectionListSize)
+            {
+                return visitors;
+            }
+            return visitors.Take(PotentialMatchesHighPointSelectionListSize).ToList();
+        }
+        public List<Visitor> GetLowRatedVisitorSelection(List<Visitor> visitors, List<Visitor> highRated)
+        {
+            List<Visitor> lowRated = new List<Visitor>();
+            foreach (Visitor v in visitors)
+            {
+                if (!highRated.Contains(v))
+                {
+                    lowRated.Add(v);
+                }
+            }
+            return lowRated;
+        }
 
+        public List<Visitor> FineTuneVisitorSelection(List<Visitor> selectedVisitors, List<Visitor> lowRatedVisitors)
+        {
+            Random rnd = new Random();
+            List<Visitor>  lowRatedSelection = lowRatedVisitors.OrderBy(i => rnd.Next()).Take(SelectionTotalsListSize - selectedVisitors.Count).ToList();
+            while (lowRatedSelection.Count > 0)
+            {
+                selectedVisitors.Add(lowRatedSelection.First());
+                lowRatedSelection.Remove(lowRatedSelection.First());
+            }
+            return selectedVisitors;
+        }
+        public List<Visitor> SetVisitorPoints(List<Visitor> visitorSelection)
+        {
+            foreach (Visitor Visitor in visitorSelection)
+            {
+                Visitor.Points = GetVisitorPoints(Main.ClientVisitor, Visitor);
+            }
+            return visitorSelection;
+        }
+
+        public List<Visitor> SortVisitorSelectionByPoints(List<Visitor> visitorSelection)
+        {
+            return [.. visitorSelection.OrderByDescending(i => i.Points)];
+        }
+
+        public List<long> GetRandomAccountSelection(List<long> ids, int count)
+        {
+            Random rnd = new Random();
+            return ids.OrderBy(i => rnd.Next()).Take(count).ToList();
+        }
+        
+        public List<Visitor> GetVisitorSelectionByID(List<long> ids)
+        {
+            return _DataAccess.GetAccountsFromList(ids);
+
+        }
+        
         public int GetInterestsPoints(Visitor clientVisitor, Visitor potentialMatchVisitor)
         {
             int points = 0;
@@ -126,7 +185,5 @@ namespace BierBuddy.Core
 
             return points;
         }
-
-
     }
 }

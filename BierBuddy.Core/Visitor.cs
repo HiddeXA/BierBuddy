@@ -13,7 +13,7 @@ namespace BierBuddy.Core
         public string Name { get; private set; }
         public string Bio { get; private set; }
         public int Age { get; private set; }
-
+        
         // Voorkeuren interesses enz.
         public List<string> DrinkPreference = new List<string>();
         public List<string> Interests = new List<string>();
@@ -22,6 +22,8 @@ namespace BierBuddy.Core
         // Fotos
         public List<byte[]> Photos = new List<byte[]>();
 
+        //punten voor het algoritme
+        public double? Points { get; set; }
 
         public Visitor(long id, string name, string bio, int age)
         {

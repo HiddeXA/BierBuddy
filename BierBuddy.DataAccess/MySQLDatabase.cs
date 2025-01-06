@@ -1,6 +1,8 @@
 ﻿using BierBuddy.Core;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI;
+using System.Collections.Immutable;
+using System.Reflection.PortableExecutable;
 using System.Xml.Linq;
 
 namespace BierBuddy.DataAccess
@@ -98,105 +100,8 @@ namespace BierBuddy.DataAccess
 
         public Visitor? GetAccount(long ID)
         {
-            PossibleInterests = GetPossibleInterests();
-            PossibleDrinkPref = GetPossibleDrinks();
-            PossibleActivities = GetPossibleActivities();
-            MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = 
-                "SELECT VisitorID, Name, Bio, Age, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, ActivityPreferences_ActivityPreferencesID, Interests_InterestsID " +
-                "FROM visitor " +
-                "WHERE VisitorID = @ID";
-            cmd.Parameters.AddWithValue("@ID", ID);
-            cmd.ExecuteNonQuery();
-            MySqlDataReader reader = cmd.ExecuteReader();
-
-            Visitor? visitor = null;
-            long photoID = -1;
-            long drinkID = -1;
-            long activityID = -1;
-            long interestID = -1;
-            while (reader.Read())
-            {
-                visitor = new Visitor(reader.GetInt64(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3));
-                photoID = reader.GetInt64(4);
-                drinkID = reader.GetInt64(5);
-                activityID = reader.GetInt64(6);
-                interestID = reader.GetInt64(7);
-            }
-            reader.Close();
-            if (photoID == -1 || drinkID == -1 || activityID == -1 || interestID == -1 || visitor == null)
-            {
-                throw new ArgumentNullException("Deze bezoeker bestaat waarschijnlijk niet in de database");
-            }
-
-            MySqlCommand photoCmd = _conn.CreateCommand();
-            photoCmd.CommandText = "SELECT Photo1URL, Photo2URL, Photo3URL, Photo4URL FROM photo WHERE PhotoID = @ID";
-            photoCmd.Parameters.AddWithValue("@ID", photoID);
-            photoCmd.ExecuteNonQuery();
-            MySqlDataReader photoReader = photoCmd.ExecuteReader();
-            while (photoReader.Read())
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (!photoReader.IsDBNull(i))
-                    {
-                        visitor.AddToPhotos((byte[])photoReader.GetValue(i));
-                    }
-                }
-            }
-            photoReader.Close();
-
-            MySqlCommand drinkCmd = _conn.CreateCommand();
-            drinkCmd.CommandText = "SELECT Drinks_DrinkID1, Drinks_DrinkID2, Drinks_DrinkID3, Drinks_DrinkID4 FROM drinkpreferences WHERE DrinkPreferencesID = @ID";
-            drinkCmd.Parameters.AddWithValue("@ID", drinkID);
-            drinkCmd.ExecuteNonQuery();
-            MySqlDataReader drinkReader = drinkCmd.ExecuteReader();
-            while (drinkReader.Read()) 
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (!drinkReader.IsDBNull(i))
-                    {
-                        visitor.AddToDrinkPreference(PossibleDrinkPref[drinkReader.GetInt64(i)]);
-                    }
-                }
-            }
-            drinkReader.Close();
-
-            MySqlCommand activityCmd = _conn.CreateCommand();
-            activityCmd.CommandText = "SELECT Activities_ActivityID1, Activities_ActivityID2, Activities_ActivityID3, Activities_ActivityID4 FROM activitypreferences WHERE ActivityPreferencesID = @ID";
-            activityCmd.Parameters.AddWithValue("@ID", activityID);
-            activityCmd.ExecuteNonQuery();
-            MySqlDataReader activityReader = activityCmd.ExecuteReader();
-            while (activityReader.Read())
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (!activityReader.IsDBNull(i))
-                    {
-                        visitor.AddToActivityPreference(PossibleActivities[activityReader.GetInt64(i)]);
-                    }
-                }
-            }
-            activityReader.Close();
-
-            MySqlCommand interestCmd = _conn.CreateCommand();
-            interestCmd.CommandText = "SELECT PossibleInterests_InterestID1, PossibleInterests_InterestID2, PossibleInterests_InterestID3, PossibleInterests_InterestID4 FROM interests WHERE InterestsID = @ID";
-            interestCmd.Parameters.AddWithValue("@ID", interestID);
-            interestCmd.ExecuteNonQuery();
-            MySqlDataReader interestReader = interestCmd.ExecuteReader();
-            while (interestReader.Read()) {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (!interestReader.IsDBNull(i))
-                    {
-                        visitor.AddToInterests(PossibleInterests[interestReader.GetInt64(i)]);
-                    }
-                }
-            }
-            interestReader.Close();
-
-            return visitor;
+            List<Visitor> visitors = GetAccountsFromList(new List<long> { ID });
+            return visitors[0];
         }
 
         public List<Visitor> GetAccounts(int maxAmount)
@@ -319,6 +224,158 @@ namespace BierBuddy.DataAccess
             reader.Close();
 
             return visitors;
+        }
+        public List<long> GetNotSeenAccountIDs(long clientID)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText =
+                "SELECT VisitorID " +
+                "FROM visitor " +
+                "WHERE VisitorID NOT IN (" +
+                    "SELECT likedID " +
+                    "FROM likes " +
+                    "WHERE likerID = @ID)" +
+                "AND VisitorID NOT IN (" +
+                    "SELECT dislikedID " +
+                    "FROM dislikes " +
+                    "WHERE dislikerID = @ID) " +
+                "AND NOT VisitorID = @ID;";
+            ;
+            cmd.Parameters.AddWithValue("@ID", clientID);
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            List<long> potentialMatchIDs = new();
+            while (reader.Read())
+            {
+
+                potentialMatchIDs.Add(reader.GetInt64(0));
+            }
+            reader.Close();
+            return potentialMatchIDs;           
+        }
+
+        public List<Visitor> GetAccountsFromList(List<long> accountIDs)
+        {
+            if (accountIDs == null || accountIDs.Count == 0)
+            {
+                return new List<Visitor>();
+            }
+
+            using (MySqlCommand cmd = _conn.CreateCommand())
+            {
+
+                string[] parameterNames = accountIDs.Select((id, index) => $"@id{index}").ToArray();
+                string inClause = string.Join(", ", parameterNames);
+                PossibleInterests = GetPossibleInterests();
+                PossibleDrinkPref = GetPossibleDrinks();
+                PossibleActivities = GetPossibleActivities();
+                cmd.CommandText =
+                    "SELECT VisitorID, Name, Bio, Age, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, ActivityPreferences_ActivityPreferencesID, Interests_InterestsID " +
+                    "FROM visitor " +
+                    $"WHERE VisitorID IN ({inClause})";
+
+                for (int i = 0; i < accountIDs.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue(parameterNames[i], accountIDs[i]);
+                }
+
+                cmd.ExecuteNonQuery();
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                List<Visitor> visitors = new();
+                List<long> photoIDs = new();
+                List<long> drinkIDs = new();
+                List<long> activityIDs = new();
+                List<long> interestIDs = new();
+                while (reader.Read())
+                {
+                    visitors.Add(new Visitor(reader.GetInt64(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3)));
+                    photoIDs.Add(reader.GetInt64(4));
+                    drinkIDs.Add(reader.GetInt64(5));
+                    activityIDs.Add(reader.GetInt64(6));
+                    interestIDs.Add(reader.GetInt64(7));
+                }
+                reader.Close();
+                if (photoIDs.Count < accountIDs.Count || drinkIDs.Count < accountIDs.Count || activityIDs.Count < accountIDs.Count || interestIDs.Count < accountIDs.Count || visitors.Count < accountIDs.Count)
+                {
+                    throw new ArgumentNullException("Een of meer van de bezoekers bestaan waarschijnlijk niet in de database");
+                }
+
+                for (int i = 0; i < accountIDs.Count; i++)
+                {
+                    Visitor visitor = visitors[i];
+                    MySqlCommand photoCmd = _conn.CreateCommand();
+                    photoCmd.CommandText = "SELECT Photo1URL, Photo2URL, Photo3URL, Photo4URL FROM photo WHERE PhotoID = @ID";
+                    photoCmd.Parameters.AddWithValue("@ID", photoIDs[i]);
+                    photoCmd.ExecuteNonQuery();
+                    MySqlDataReader photoReader = photoCmd.ExecuteReader();
+                    while (photoReader.Read())
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (!photoReader.IsDBNull(j))
+                            {
+                                visitor.AddToPhotos((byte[])photoReader.GetValue(j));
+                            }
+                        }
+                    }
+                    photoReader.Close();
+
+                    MySqlCommand drinkCmd = _conn.CreateCommand();
+                    drinkCmd.CommandText = "SELECT Drinks_DrinkID1, Drinks_DrinkID2, Drinks_DrinkID3, Drinks_DrinkID4 FROM drinkpreferences WHERE DrinkPreferencesID = @ID";
+                    drinkCmd.Parameters.AddWithValue("@ID", drinkIDs[i]);
+                    drinkCmd.ExecuteNonQuery();
+                    MySqlDataReader drinkReader = drinkCmd.ExecuteReader();
+                    while (drinkReader.Read())
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (!drinkReader.IsDBNull(j))
+                            {
+                                visitor.AddToDrinkPreference(PossibleDrinkPref[drinkReader.GetInt64(j)]);
+                            }
+                        }
+                    }
+                    drinkReader.Close();
+
+                    MySqlCommand activityCmd = _conn.CreateCommand();
+                    activityCmd.CommandText = "SELECT Activities_ActivityID1, Activities_ActivityID2, Activities_ActivityID3, Activities_ActivityID4 FROM activitypreferences WHERE ActivityPreferencesID = @ID";
+                    activityCmd.Parameters.AddWithValue("@ID", activityIDs[i]);
+                    activityCmd.ExecuteNonQuery();
+                    MySqlDataReader activityReader = activityCmd.ExecuteReader();
+                    while (activityReader.Read())
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (!activityReader.IsDBNull(j))
+                            {
+                                visitor.AddToActivityPreference(PossibleActivities[activityReader.GetInt64(j)]);
+                            }
+                        }
+                    }
+                    activityReader.Close();
+
+                    MySqlCommand interestCmd = _conn.CreateCommand();
+                    interestCmd.CommandText = "SELECT PossibleInterests_InterestID1, PossibleInterests_InterestID2, PossibleInterests_InterestID3, PossibleInterests_InterestID4 FROM interests WHERE InterestsID = @ID";
+                    interestCmd.Parameters.AddWithValue("@ID", interestIDs[i]);
+                    interestCmd.ExecuteNonQuery();
+                    MySqlDataReader interestReader = interestCmd.ExecuteReader();
+                    while (interestReader.Read())
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (!interestReader.IsDBNull(j))
+                            {
+                                visitor.AddToInterests(PossibleInterests[interestReader.GetInt64(j)]);
+                            }
+                        }
+                    }
+                    interestReader.Close();
+                }
+
+                return visitors;
+            }
         }
 
         public bool CheckIfMatch(long ID1, long ID2)

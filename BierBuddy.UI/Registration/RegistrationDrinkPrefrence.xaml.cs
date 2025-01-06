@@ -25,6 +25,15 @@ public partial class RegistrationDrinkPrefrence : Window
         InitializeComponent();
         
         ListBox.ItemsSource = dataAccess.GetPossibleDrinks().Values.ToList();
+
+        foreach (var item in ListBox.Items)
+        {
+            if (RegistrationVisitor.DrinkPreference.Contains(item.ToString()))
+            {
+                
+                ListBox.SelectedItems.Add(item);
+            }
+        }
     }
 
     private void Next_OnClick(object sender, RoutedEventArgs e)
@@ -52,5 +61,12 @@ public partial class RegistrationDrinkPrefrence : Window
         {
             ListBox.SelectedItems.RemoveAt(4);
         }
+    }
+
+    private void Back_OnClick(object sender, RoutedEventArgs e)
+    {
+        RegistrationBio registrationBio = new RegistrationBio(RegistrationVisitor, DataAccess);
+        registrationBio.Show();
+        this.Close();
     }
 }

@@ -15,6 +15,7 @@
         Foreground="#FCFFF7"
         FontFamily="Bayon"
         FontWeight="Bold"
+        WindowState="Maximized"
 >
       <Window.Resources>
              <Style TargetType="Label">
@@ -88,7 +89,7 @@
                     <Setter Property="VerticalAlignment" Value="Center"/>
              </Style>
          </Grid.Resources>
-         <Border Grid.Column="0"><Button Background="#2E3532" Width="273" Height="87" > <StackPanel Orientation="Horizontal"> <Label Content="{wpf:MaterialIconExt Kind=ArrowLeft, Size=60 }"/> <Label Width="200">TERUG</Label> </StackPanel></Button></Border>
+         <Border Grid.Column="0"><Button Click="Back_OnClick" Background="#2E3532" Width="273" Height="87" > <StackPanel Orientation="Horizontal"> <Label Content="{wpf:MaterialIconExt Kind=ArrowLeft, Size=60 }"/> <Label Width="200">TERUG</Label> </StackPanel></Button></Border>
          <Border Grid.Column="1"><Button Click="Next_OnClick" Background="#F19F2C" Width="273" Height="87"> <StackPanel Orientation="Horizontal"> <Label>VOLGENDE</Label>  <Label Content="{wpf:MaterialIconExt Kind=ArrowRight, Size=60 }"/> </StackPanel></Button></Border>
      </Grid>
         <DockPanel>
@@ -96,7 +97,7 @@
             <Grid Margin="100, 10,100,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60"/>
-                    <RowDefinition Height="320"/>
+                    <RowDefinition Height="280"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>

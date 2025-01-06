@@ -47,13 +47,11 @@ namespace BierBuddy.UI
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
         private ProfilePageRenderer _ProfilePageRenderer { get; }
 
-        public MainWindow(Visitor account)
+        public MainWindow(Visitor account, IDataAccess dataAccess)
         {
             InitializeComponent();
             //initialize dataAccess
-            MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
-            connection.Open();
-            _DataAccess = new MySQLDatabase(connection);
+            _DataAccess = dataAccess;
             //initialize main
             _Main = new Main(_DataAccess, account);
             //initialize page renderers

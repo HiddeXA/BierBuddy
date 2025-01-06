@@ -28,6 +28,15 @@ public partial class RegistrationInterests : Window
         InitializeComponent();
         
         ListBox.ItemsSource = dataAccess.GetPossibleInterests().Values.ToList();
+        
+        foreach (var item in ListBox.Items)
+        {
+            if (RegistrationVisitor.Interests.Contains(item.ToString()))
+            {
+                
+                ListBox.SelectedItems.Add(item);
+            }
+        }
     }
 
 
@@ -56,5 +65,12 @@ public partial class RegistrationInterests : Window
         {
             ListBox.SelectedItems.RemoveAt(4);
         }
+    }
+
+    private void Back_OnClick(object sender, RoutedEventArgs e)
+    {
+        RegistrationDrinkPrefrence registrationDrinkPrefrence = new RegistrationDrinkPrefrence(RegistrationVisitor, DataAccess);
+        registrationDrinkPrefrence.Show();
+        this.Close();
     }
 }

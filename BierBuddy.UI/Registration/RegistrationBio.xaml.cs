@@ -33,4 +33,11 @@ public partial class RegistrationBio : Window
         registrationDrinkPrefrence.Show();
         this.Close();
     }
+
+    private void Back_OnClick(object sender, RoutedEventArgs e)
+    {
+        RegistrationNameAge registrationNameAge = new RegistrationNameAge(RegistrationVisitor, DataAccess);
+        registrationNameAge.Show();
+        this.Close();
+    }
 }

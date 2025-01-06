@@ -45,6 +45,12 @@ public partial class RegistrationMain : Window
             MessageBox.Show("Wachtwoorden komen niet overeen");
             return;
         }
+
+        if (Password.Password.Length < 8)
+        {
+            MessageBox.Show("Wachtwoord moet minstens 8 karakters lang zijn");
+            return;
+        }
         
         RegistrationVisitor.Password = Password.Password;
         
@@ -53,5 +59,12 @@ public partial class RegistrationMain : Window
         registrationNameAge.Show(); 
         this.Close();
         
+    }
+
+    private void Back_OnClick(object sender, RoutedEventArgs e)
+    {
+        LoginScreen loginScreen = new LoginScreen();
+        loginScreen.Show();
+        this.Close();
     }
 }

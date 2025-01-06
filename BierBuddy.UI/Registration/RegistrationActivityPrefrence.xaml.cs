@@ -21,18 +21,20 @@ public partial class RegistrationActivityPrefrence : Window
         this.DataContext = RegistrationVisitor;
         DataAccess = dataAccess;
         
-
-        MySqlConnection connection =
-            new MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
-        connection.Open();
-        
-        dataAccess = new MySQLDatabase(connection);
-        
         Console.WriteLine();
         
         InitializeComponent();
         
         ListBox.ItemsSource = dataAccess.GetPossibleActivities().Values.ToList();
+        
+        foreach (var item in ListBox.Items)
+        {
+            if (RegistrationVisitor.ActivityPreference.Contains(item.ToString()))
+            {
+                
+                ListBox.SelectedItems.Add(item);
+            }
+        }
         
     }
 
@@ -62,5 +64,12 @@ public partial class RegistrationActivityPrefrence : Window
         {
             ListBox.SelectedItems.RemoveAt(4);
         }
+    }
+
+    private void Back_OnClick(object sender, RoutedEventArgs e)
+    {
+        RegistrationInterests registrationInterests = new RegistrationInterests(RegistrationVisitor, DataAccess);
+        registrationInterests.Show();
+        this.Close();
     }
 }

@@ -29,9 +29,22 @@ public partial class RegistrationNameAge : Window
             MessageBox.Show("vergeet niet je naam en leeftijd in te vullen");
             return;
         }
+
+        if (RegistrationVisitor.Age < 18)
+        {
+            MessageBox.Show("Je moet minstens 18 jaar oud zijn om je te registreren");
+            return;
+        }
         
         RegistrationBio registrationBio = new RegistrationBio(RegistrationVisitor, DataAccess);
         registrationBio.Show();
+        this.Close();
+    }
+
+    private void Back_OnClick(object sender, RoutedEventArgs e)
+    {
+        RegistrationMain registrationMain = new RegistrationMain(DataAccess, RegistrationVisitor);
+        registrationMain.Show();
         this.Close();
     }
 }

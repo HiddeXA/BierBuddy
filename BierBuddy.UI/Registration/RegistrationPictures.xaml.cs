@@ -25,6 +25,12 @@ public partial class RegistrationPictures : Window
 
     private void Next_OnClick(object sender, RoutedEventArgs e)
     {
+        if (photo1 == null && photo2 == null && photo3 == null && photo4 == null)
+        {
+            MessageBox.Show("Voeg minstens 1 foto toe");
+            return;
+        }
+        
         if (photo1 != null)
         {
             registrationVisitor.AddToPhotos(photo1);
@@ -58,17 +64,17 @@ public partial class RegistrationPictures : Window
         Image image;
         switch (name)
         {
-            case "Image1":
-               image = image1;
+            case "Img1":
+               image = Image1;
                 break;
-            case "Image2":
-                image = image2;
+            case "Img2":
+                image = Image2;
                 break;
-            case "Image3":
-                image = image3;
+            case "Img3":
+                image = Image3;
                 break;
             default:
-                image = image4;
+                image = Image4;
                 break;
         }
        
@@ -81,13 +87,13 @@ public partial class RegistrationPictures : Window
 
                 switch (name)
                 {
-                    case "Image1":
+                    case "Img1":
                         photo1 = photo;
                         break;
-                    case "Image2":
+                    case "Img2":
                         photo2 = photo;
                         break;
-                    case "Image3":
+                    case "Img3":
                         photo3 = photo;
                         break;
                     default:
@@ -105,5 +111,12 @@ public partial class RegistrationPictures : Window
                 MessageBox.Show($"Failed to load image: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+    }
+
+    private void Back_OnClick(object sender, RoutedEventArgs e)
+    {
+        RegistrationActivityPrefrence registrationActivityPrefrence = new RegistrationActivityPrefrence(registrationVisitor, DataAccess);
+        registrationActivityPrefrence.Show();
+        this.Close();
     }
 }

@@ -39,4 +39,11 @@ public partial class RegistrationComplete : Window
         
         
     }
+
+    private void Next_OnClick(object sender, RoutedEventArgs e)
+    {
+        LoginScreen loginScreen = new LoginScreen();
+        loginScreen.Show();
+        this.Close();
+    }
 }

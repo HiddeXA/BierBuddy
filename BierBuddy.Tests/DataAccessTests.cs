@@ -63,7 +63,7 @@ namespace BierBuddy.Tests
             MySQLDatabase database = new MySQLDatabase(_conn);
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => database.AddAccount("Test", "Bio", 30, new List<long>(), new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" }));
+            Assert.Throws<ArgumentException>(() => database.AddAccount("Test", "Bio", 30, new List<long>(), new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" }, "Test@mail", "768f966ef3f73b7703903e0bf4222dabdc8e5cc910255af2bd10adc5d3032a164aeedb9ba252fe48c028e11cec2d73bf411d90aa88e92af9297d155caebafa28"));
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace BierBuddy.Tests
             MySQLDatabase database = new MySQLDatabase(_conn);
 
             // Act
-            Visitor? account = database.AddAccount("Test", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" });
+            Visitor? account = database.AddAccount("Test", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" }, "Test@mail", "768f966ef3f73b7703903e0bf4222dabdc8e5cc910255af2bd10adc5d3032a164aeedb9ba252fe48c028e11cec2d73bf411d90aa88e92af9297d155caebafa28");
 
             // Assert
             Assert.IsNotNull(account);
@@ -112,7 +112,7 @@ namespace BierBuddy.Tests
             MySQLDatabase database = new MySQLDatabase(_conn);
 
             // Act
-            Visitor? account = database.AddAccount("Test", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" });
+            Visitor? account = database.AddAccount("Test", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" }, "Test@mail", "768f966ef3f73b7703903e0bf4222dabdc8e5cc910255af2bd10adc5d3032a164aeedb9ba252fe48c028e11cec2d73bf411d90aa88e92af9297d155caebafa28");
 
             // Assert
             Assert.IsNotNull(account);

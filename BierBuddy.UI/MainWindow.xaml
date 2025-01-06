@@ -80,7 +80,8 @@
             </DockPanel>
         </Border>
         <!--PagePanel-->
-        <Canvas x:Name="PagePanel"/>
+        <Canvas x:Name="PagePanel">
+        </Canvas>
     </DockPanel>
 
 </Window>

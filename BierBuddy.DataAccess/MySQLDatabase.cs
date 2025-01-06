@@ -1,9 +1,8 @@
 ﻿using BierBuddy.Core;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI;
+using System.Security.Cryptography;
+using System.Text;
 using System.Collections.Immutable;
-using System.Reflection.PortableExecutable;
-using System.Xml.Linq;
 
 namespace BierBuddy.DataAccess
 {
@@ -32,8 +31,9 @@ namespace BierBuddy.DataAccess
             throw new NotImplementedException();
         }
 
-        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos)
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string passkey)
         {
+            string encryptedpasskey = ComputeSHA512(passkey);
             if (activities.Count < 1 || activities.Count > 4)
             {
                 throw new ArgumentException("Er moeten minimaal 1 en maximaal 4 activiteiten worden meegegeven.");
@@ -84,7 +84,7 @@ namespace BierBuddy.DataAccess
             photosCommand.ExecuteNonQuery();
             long photosID = photosCommand.LastInsertedId;
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO visitor (Name, Bio, Age, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID) VALUES (@Name, @Bio, @Age, @Photo_ID, @DrinksID, @InterestsID, @ActivitiesID)";
+            cmd.CommandText = "INSERT INTO visitor (Name, Bio, Age, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, Email, Passkey) VALUES (@Name, @Bio, @Age, @Photo_ID, @DrinksID, @InterestsID, @ActivitiesID, @mail, @passkey)";
             cmd.Parameters.AddWithValue("@Name", name);
             cmd.Parameters.AddWithValue("@Bio", bio);
             cmd.Parameters.AddWithValue("@Age", age);
@@ -92,6 +92,8 @@ namespace BierBuddy.DataAccess
             cmd.Parameters.AddWithValue("@DrinksID", drinksID);
             cmd.Parameters.AddWithValue("@InterestsID", interestsID);
             cmd.Parameters.AddWithValue("@ActivitiesID", activitiesID);
+            cmd.Parameters.AddWithValue("@mail", mail);
+            cmd.Parameters.AddWithValue("@passkey", encryptedpasskey);
             cmd.ExecuteNonQuery();
             long ID = cmd.LastInsertedId;
             transaction.Commit();
@@ -100,8 +102,44 @@ namespace BierBuddy.DataAccess
 
         public Visitor? GetAccount(long ID)
         {
-            List<Visitor> visitors = GetAccountsFromList(new List<long> { ID });
-            return visitors[0];
+            try
+            {
+                List<Visitor> visitors = GetAccountsFromList(new List<long> { ID });
+                return visitors[0];
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Visitor? GetAccount(string mail, string passkey)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText =
+                "SELECT V.VisitorID " +
+                "FROM visitor V " +
+                "WHERE V.Email = @mail AND V.Passkey = @passkey";
+            cmd.Parameters.AddWithValue("@mail", mail);
+            cmd.Parameters.AddWithValue("@passkey", ComputeSHA512(passkey));
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            long id = -1;
+
+            while (reader.Read())
+            {
+               id = (reader.GetInt64(0));
+            }
+
+            reader.Close();
+            if(id == -1)
+            {
+                return null;
+            }
+            Visitor? Account = GetAccount(id);
+
+            return Account;
         }
 
         public List<Visitor> GetAccounts(int maxAmount)
@@ -587,6 +625,25 @@ namespace BierBuddy.DataAccess
             reader.Close();
             transaction.Commit();
             return appointments;
+        }
+
+        // Encrypts passkey using SHA512
+        static string ComputeSHA512(string input)
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+
+            using (SHA512 sha512 = SHA512.Create())
+            {
+                byte[] hashBytes = sha512.ComputeHash(inputBytes);
+
+                StringBuilder hashString = new StringBuilder();
+                foreach (byte b in hashBytes)
+                {
+                    hashString.Append(b.ToString("x2"));
+                }
+
+                return hashString.ToString();
+            }
         }
 
         public void UpdateAccount(Visitor visitor, List<long> activities, List<long> drinks, List<long> interests)

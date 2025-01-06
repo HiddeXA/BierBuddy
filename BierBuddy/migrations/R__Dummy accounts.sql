@@ -211,27 +211,28 @@ VALUES
 (32, 120, 17, 100, 50);
 
 
-INSERT INTO Visitor (Name, Bio, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, VisitorID, Age)
+INSERT INTO Visitor (Name, Bio, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, VisitorID, Age, Email, Passkey)
 
 VALUES
-('Jan de Vries', 'Een open en vriendelijke persoon die altijd in is voor een gezellig gesprek of een leuke activiteit.', 1, 1, 1, 1, 1, 25),
-('Sophie Jansen', 'Een creatieve geest die het fijn vindt om tijd door te brengen met vrienden en nieuwe ideeën te bespreken.', 2, 2, 2, 2, 2, 30),
-('Tom Bakker', 'Altijd in voor avontuur en nieuwe ervaringen, en houdt ervan om op ontdekkingsreis te gaan met anderen.', 3, 3, 3, 3, 3, 28),
-('Maaike van Dijk', 'Houdt van de natuur en zoekt rust in buitenactiviteiten, vaak in goed gezelschap van haar vrienden.', 4, 4, 4, 4, 4, 32),
-('Jeroen de Boer', 'Een relaxte en gemakkelijke persoon die altijd klaar is voor een gezellige tijd met vrienden of familie.', 5, 5, 5, 5, 5, 27),
-('Emma Visser', 'Heeft een warme persoonlijkheid en brengt graag tijd door met vrienden, of het nu voor een avondje uit is of een rustige middag.', 6, 6, 6, 6, 6, 29),
-('Lucas de Groot', 'Een vrolijk persoon die graag nieuwe mensen ontmoet en altijd voor een gezellige tijd zorgt.', 7, 7, 7, 7, 7, 24),
-('Anna de Lange', 'Zoekt altijd naar manieren om het leven te vieren, met een open houding naar nieuwe ervaringen en gezelschap.', 8, 8, 8, 8, 8, 31),
-('Mark Hendriks', 'Een rustig persoon die het fijn vindt om met een klein gezelschap te zijn, genietend van diepe gesprekken.', 9, 9, 9, 9, 9, 35),
-('Kim Smit', 'Houdt van de stad en vindt het leuk om nieuwe plekken te ontdekken, altijd met vrienden aan haar zijde.', 10, 10, 10, 10, 10, 26),
-('Daan Meijer', 'Loyaliteit en gezelligheid staan voor hem voorop, altijd klaar om met vrienden nieuwe momenten te creëren.', 11, 11, 11, 11, 11, 33),
-('Lotte de Wit', 'Creatief en vol ideeën, altijd op zoek naar nieuwe manieren om met anderen leuke momenten te delen.', 12, 12, 12, 12, 12, 27),
-('Olivier de Jonge', 'Een sportieve geest die houdt van een beetje competitie, maar vooral van het plezier van samen dingen doen.', 13, 13, 13, 13, 13, 29),
-('Sarah Bos', 'Houdt van eenvoud en gezelligheid, en heeft altijd tijd voor een goed gesprek met de mensen die ze het meest waardeert.', 14, 14, 14, 14, 14, 28),
-('Fieke de Haan', 'Een sociaal persoon die nooit verlegen is om nieuwe mensen te ontmoeten en het beste uit elke situatie haalt.', 15, 15, 15, 15, 15, 34),
-('Rik Peters', 'Altijd op zoek naar de volgende uitdaging, of het nu een nieuwe activiteit is of een andere manier om te ontspannen.', 16, 16, 16, 16, 16, 31),
-('Lena Jacobs', 'Zoekt balans tussen werk en plezier, en is altijd in voor een gezellige tijd met vrienden en familie.', 17, 17, 17, 17, 17, 30),
-('Joris de Vos', 'Een nuchter persoon die geniet van de kleine dingen in het leven, het liefst met goede vrienden om zich heen.', 18, 18, 18, 18, 18, 36),
-('Ilse de Graaf', 'Houdt van rust en natuur, en zoekt graag de stilte op voor reflectie, maar kan ook genieten van sociale momenten.', 19, 19, 19, 19, 19, 25),
-('Bart de Ruiter', 'Geniet van een goed gesprek en gezellige tijd doorbrengen met zijn vrienden, altijd met een vleugje humor.', 20, 20, 20, 20, 20, 37);
+('Jan de Vries', 'Een open en vriendelijke persoon die altijd in is voor een gezellig gesprek of een leuke activiteit.', 1, 1, 1, 1, 1, 25, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Sophie Jansen', 'Een creatieve geest die het fijn vindt om tijd door te brengen met vrienden en nieuwe ideeën te bespreken.', 2, 2, 2, 2, 2, 30, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Tom Bakker', 'Altijd in voor avontuur en nieuwe ervaringen, en houdt ervan om op ontdekkingsreis te gaan met anderen.', 3, 3, 3, 3, 3, 28, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Maaike van Dijk', 'Houdt van de natuur en zoekt rust in buitenactiviteiten, vaak in goed gezelschap van haar vrienden.', 4, 4, 4, 4, 4, 32, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Jeroen de Boer', 'Een relaxte en gemakkelijke persoon die altijd klaar is voor een gezellige tijd met vrienden of familie.', 5, 5, 5, 5, 5, 27, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Emma Visser', 'Heeft een warme persoonlijkheid en brengt graag tijd door met vrienden, of het nu voor een avondje uit is of een rustige middag.', 6, 6, 6, 6, 6, 29, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Lucas de Groot', 'Een vrolijk persoon die graag nieuwe mensen ontmoet en altijd voor een gezellige tijd zorgt.', 7, 7, 7, 7, 7, 24, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Anna de Lange', 'Zoekt altijd naar manieren om het leven te vieren, met een open houding naar nieuwe ervaringen en gezelschap.', 8, 8, 8, 8, 8, 31, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Mark Hendriks', 'Een rustig persoon die het fijn vindt om met een klein gezelschap te zijn, genietend van diepe gesprekken.', 9, 9, 9, 9, 9, 35, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Kim Smit', 'Houdt van de stad en vindt het leuk om nieuwe plekken te ontdekken, altijd met vrienden aan haar zijde.', 10, 10, 10, 10, 10, 26, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Daan Meijer', 'Loyaliteit en gezelligheid staan voor hem voorop, altijd klaar om met vrienden nieuwe momenten te creëren.', 11, 11, 11, 11, 11, 33, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Lotte de Wit', 'Creatief en vol ideeën, altijd op zoek naar nieuwe manieren om met anderen leuke momenten te delen.', 12, 12, 12, 12, 12, 27, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Olivier de Jonge', 'Een sportieve geest die houdt van een beetje competitie, maar vooral van het plezier van samen dingen doen.', 13, 13, 13, 13, 13, 29, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Sarah Bos', 'Houdt van eenvoud en gezelligheid, en heeft altijd tijd voor een goed gesprek met de mensen die ze het meest waardeert.', 14, 14, 14, 14, 14, 28, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Fieke de Haan', 'Een sociaal persoon die nooit verlegen is om nieuwe mensen te ontmoeten en het beste uit elke situatie haalt.', 15, 15, 15, 15, 15, 34, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Rik Peters', 'Altijd op zoek naar de volgende uitdaging, of het nu een nieuwe activiteit is of een andere manier om te ontspannen.', 16, 16, 16, 16, 16, 31, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Lena Jacobs', 'Zoekt balans tussen werk en plezier, en is altijd in voor een gezellige tijd met vrienden en familie.', 17, 17, 17, 17, 17, 30, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Joris de Vos', 'Een nuchter persoon die geniet van de kleine dingen in het leven, het liefst met goede vrienden om zich heen.', 18, 18, 18, 18, 18, 36, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Ilse de Graaf', 'Houdt van rust en natuur, en zoekt graag de stilte op voor reflectie, maar kan ook genieten van sociale momenten.', 19, 19, 19, 19, 19, 25, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Bart de Ruiter', 'Geniet van een goed gesprek en gezellige tijd doorbrengen met zijn vrienden, altijd met een vleugje humor.', 20, 20, 20, 20, 20, 37, 'generic@mail.test', '6173b17ce1941d01438af6a5c12d301fcbcdbf36ba87fcc0627b7461d4e1ffc9b21e0b1495eec507d27c7f71043eac286576e0373702816a2d37b15b9bd94c2f'),
+('Yannick (Deez) Bouwhuis', 'Vindt het leuk als de C\# werkt', 1, 20, 20, 20, 21, 18, 'bouwhuisyannick@gmail.com', '7e4d9fb1a6b8128c7281a2ee699e20befdf5862cc6e0637ad4518a62502d3f85d40bfff89e99e2d5661f3ed995f9dc0181103a793880a471c532fe50120efead');
 

@@ -216,7 +216,7 @@ namespace BierBuddy.DataAccess
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
 
-            long id = 0;
+            long id = -1;
 
             while (reader.Read())
             {
@@ -224,7 +224,11 @@ namespace BierBuddy.DataAccess
             }
 
             reader.Close();
-            Visitor Account = GetAccount(id);
+            if(id == -1)
+            {
+                return null;
+            }
+            Visitor? Account = GetAccount(id);
 
             return Account;
         }
@@ -552,6 +556,7 @@ namespace BierBuddy.DataAccess
 
                 return hashString.ToString();
             }
+        }
 
         public void UpdateAccount(Visitor visitor, List<long> activities, List<long> drinks, List<long> interests)
         {

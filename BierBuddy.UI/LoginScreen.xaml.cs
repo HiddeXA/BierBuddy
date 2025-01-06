@@ -38,7 +38,7 @@ namespace BierBuddy.UI
         {
             string email = EmailInput.Text;
             string passkey = PasskeyInput.Password;
-            Visitor ?user = _DataAccess.GetAccount(email, passkey);
+            Visitor? user = _DataAccess.GetAccount(email, passkey);
             if (user != null)
             {
                 _Connection.Close();

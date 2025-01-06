@@ -32,14 +32,18 @@ namespace BierBuddy.UI
         // Gebruikt voor het dynamisch resizen van de app met de gerenderde pagina.
         private int WindowStatus { get; set; } = 0;
 
+        public Visitor ClientVisitor { get; set; }
+
         //definitie pageRenderers
         private Main _Main { get; }
         private FindBuddiesPageRenderer _FindBuddiesPageRenderer { get; }
         private FindBuddies _FindBuddies { get; }
         private IDataAccess _DataAccess { get; }
         private MyBuddies _MyBuddies { get; }
+        private ProfilePage _ProfilePage { get; }
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
+        private ProfilePageRenderer _ProfilePageRenderer { get; }
 
         public MainWindow(Visitor account)
         {
@@ -52,15 +56,30 @@ namespace BierBuddy.UI
             _Main = new Main(_DataAccess, account);
             //initialize page renderers
             _MyBuddies = new MyBuddies(_DataAccess, _Main);
-            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies); 
+            _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies);
+            _MyBuddiesPageRenderer.ProfileRequested += _MyBuddiesPageRenderer_ProfileRequested;
             _AlgoritmePlaceHolder = new AlgoritmePlaceHolder();
 
             //initialize page renderers
             _FindBuddies = new FindBuddies(_DataAccess, _Main);
             _FindBuddiesPageRenderer = new FindBuddiesPageRenderer(_FindBuddies);
 
+            _ProfilePage = new ProfilePage(_DataAccess, _Main);
+            _ProfilePageRenderer = new ProfilePageRenderer(_ProfilePage);
+
             _FontSizeModifier = _MinFontSize - _NavBarMinSize / _FontSizeIncrement;
         }
+
+        private void _MyBuddiesPageRenderer_ProfileRequested(object? sender, EventArgs e)
+        {
+            if (sender is BuddyPanel panel)
+            {
+                PagePanel.Children.Clear();
+
+                PagePanel.Children.Add(_ProfilePageRenderer.GetProfilePage(panel.Visitor, true));
+            }
+        }
+
         private void BierBuddyMainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             //pas alleen de navBar size aan als deze niet kleiner zal zijn dan de minimum size
@@ -87,6 +106,7 @@ namespace BierBuddy.UI
             MoveBeerFoam(e);
             _FindBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
             _MyBuddiesPageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
+            _ProfilePageRenderer.UpdatePageSize(NavBar.Width, e.NewSize);
 
             if (WindowStatus == 1)
             {
@@ -118,19 +138,15 @@ namespace BierBuddy.UI
             
         }
 
+
         
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
-            List<Visitor> buddyList = new List<Visitor>
-        {
-             new Visitor(1, "Rick", "Test", 25),
-             new Visitor(2, "Martijn", "Test", 30),
-             new Visitor(3, "Yannick", "Test", 28),
+           
 
-        };
             this.WindowStatus = 2;
             PagePanel.Children.Clear();
-            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(buddyList));
+            PagePanel.Children.Add(_MyBuddiesPageRenderer.GetMyBuddiesPage(_DataAccess.GetBuddies(_Main.ClientVisitor.ID)));
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -147,10 +163,9 @@ namespace BierBuddy.UI
 
             //dit is een tijdelijke oplossing
             #region
-            SwitchAccountDialog switchAccDialog = new SwitchAccountDialog(_Main);
-            switchAccDialog.ShowDialog();
-
             PagePanel.Children.Clear();
+
+            PagePanel.Children.Add(_ProfilePageRenderer.GetProfilePage(_Main.ClientVisitor, false));
             #endregion
         }
 

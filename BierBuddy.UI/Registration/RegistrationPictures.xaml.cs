@@ -10,15 +10,16 @@ namespace BierBuddy.UI.Registration;
 
 public partial class RegistrationPictures : Window
 {
+    IDataAccess DataAccess { get; set; }
     Visitor registrationVisitor;
     Byte[] photo1;
     Byte[] photo2;
     Byte[] photo3;
     Byte[] photo4;
-    public RegistrationPictures(Visitor registrationVisitor)
+    public RegistrationPictures(Visitor registrationVisitor, IDataAccess dataAccess)
     {
         this.registrationVisitor = registrationVisitor;
-        
+        DataAccess = dataAccess;
         InitializeComponent();
     }
 
@@ -41,7 +42,9 @@ public partial class RegistrationPictures : Window
             registrationVisitor.AddToPhotos(photo4);
         }
         
-        RegistrationComplete registrationInterests = new RegistrationComplete(registrationVisitor);
+        RegistrationComplete registrationComplete = new RegistrationComplete(registrationVisitor, DataAccess);
+        registrationComplete.Show();
+        this.Close();
     }
 
     private void ImageClick(object sender, RoutedEventArgs e)

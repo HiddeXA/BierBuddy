@@ -31,7 +31,7 @@ namespace BierBuddy.DataAccess
             throw new NotImplementedException();
         }
 
-        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string passkey)
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<byte[]> photos, string mail, string passkey)
         {
             string encryptedpasskey = ComputeSHA512(passkey);
             if (activities.Count < 1 || activities.Count > 4)
@@ -54,33 +54,33 @@ namespace BierBuddy.DataAccess
             MySqlCommand activitiesCommand = _conn.CreateCommand();
             activitiesCommand.CommandText = "INSERT INTO activitypreferences (Activities_ActivityID1, Activities_ActivityID2, Activities_ActivityID3, Activities_ActivityID4) VALUES (@ActivityID1, @ActivityID2, @ActivityID3, @ActivityID4)";
             activitiesCommand.Parameters.AddWithValue("@ActivityID1", activities[0]);
-            activitiesCommand.Parameters.AddWithValue("@ActivityID2", activities[1]);
-            activitiesCommand.Parameters.AddWithValue("@ActivityID3", activities[2]);
-            activitiesCommand.Parameters.AddWithValue("@ActivityID4", activities[3]);
+            activitiesCommand.Parameters.AddWithValue("@ActivityID2", activities.Count > 1 ? activities[1] : null);
+            activitiesCommand.Parameters.AddWithValue("@ActivityID3", activities.Count > 2 ? activities[2] : null);
+            activitiesCommand.Parameters.AddWithValue("@ActivityID4", activities.Count > 3 ? activities[3] : null);
             activitiesCommand.ExecuteNonQuery();
             long activitiesID = activitiesCommand.LastInsertedId;
             MySqlCommand drinksCommand = _conn.CreateCommand();
             drinksCommand.CommandText = "INSERT INTO drinkpreferences (Drinks_DrinkID1, Drinks_DrinkID2, Drinks_DrinkID3, Drinks_DrinkID4) VALUES (@DrinkID1, @DrinkID2, @DrinkID3, @DrinkID4)";
             drinksCommand.Parameters.AddWithValue("@DrinkID1", drinks[0]);
-            drinksCommand.Parameters.AddWithValue("@DrinkID2", drinks[1]);
-            drinksCommand.Parameters.AddWithValue("@DrinkID3", drinks[2]);
-            drinksCommand.Parameters.AddWithValue("@DrinkID4", drinks[3]);
+            drinksCommand.Parameters.AddWithValue("@DrinkID2", drinks.Count > 1 ? drinks[1] : null);
+            drinksCommand.Parameters.AddWithValue("@DrinkID3", drinks.Count > 2 ? drinks[2] : null);
+            drinksCommand.Parameters.AddWithValue("@DrinkID4", drinks.Count > 3 ? drinks[3] : null);
             drinksCommand.ExecuteNonQuery();
             long drinksID = drinksCommand.LastInsertedId;
             MySqlCommand interestsCommand = _conn.CreateCommand();
             interestsCommand.CommandText = "INSERT INTO interests (PossibleInterests_InterestID1, PossibleInterests_InterestID2, PossibleInterests_InterestID3, PossibleInterests_InterestID4) VALUES (@InterestID1, @InterestID2, @InterestID3, @InterestID4)";
             interestsCommand.Parameters.AddWithValue("@InterestID1", interests[0]);
-            interestsCommand.Parameters.AddWithValue("@InterestID2", interests[1]);
-            interestsCommand.Parameters.AddWithValue("@InterestID3", interests[2]);
-            interestsCommand.Parameters.AddWithValue("@InterestID4", interests[3]);
+            interestsCommand.Parameters.AddWithValue("@InterestID2", interests.Count > 1 ? interests[1] : null);
+            interestsCommand.Parameters.AddWithValue("@InterestID3", interests.Count > 2 ? interests[2] : null);
+            interestsCommand.Parameters.AddWithValue("@InterestID4", interests.Count > 3 ? interests[3] : null);
             interestsCommand.ExecuteNonQuery();
             long interestsID = interestsCommand.LastInsertedId;
             MySqlCommand photosCommand = _conn.CreateCommand();
             photosCommand.CommandText = "INSERT INTO photo (Photo1URL, Photo2URL, Photo3URL, Photo4URL) VALUES (@Photo1, @Photo2, @Photo3, @Photo4)";
             photosCommand.Parameters.AddWithValue("@Photo1", photos[0]);
-            photosCommand.Parameters.AddWithValue("@Photo2", photos[1]);
-            photosCommand.Parameters.AddWithValue("@Photo3", photos[2]);
-            photosCommand.Parameters.AddWithValue("@Photo4", photos[3]);
+            photosCommand.Parameters.AddWithValue("@Photo2", photos.Count > 1 ? photos[1] : null);
+            photosCommand.Parameters.AddWithValue("@Photo3", photos.Count > 2 ? photos[2] : null);
+            photosCommand.Parameters.AddWithValue("@Photo4", photos.Count > 3 ? photos[3] : null);
             photosCommand.ExecuteNonQuery();
             long photosID = photosCommand.LastInsertedId;
             MySqlCommand cmd = _conn.CreateCommand();
@@ -713,6 +713,54 @@ namespace BierBuddy.DataAccess
             cmd.Parameters.AddWithValue("@VisitorID", visitor.ID);
             cmd.ExecuteNonQuery();
             transaction.Commit();
+        }
+        
+        public long GetActivityID(string activity)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "SELECT ActivityID FROM possibleactivities WHERE Activity = @Activity";
+            cmd.Parameters.AddWithValue("@Activity", activity);
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+            long activityID = -1;
+            while (reader.Read())
+            {
+                activityID = reader.GetInt64(0);
+            }
+            reader.Close();
+            return activityID;
+        }
+        
+        public long GetDrinkID(string drink)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "SELECT DrinkID FROM possibledrinks WHERE Drink = @Drink";
+            cmd.Parameters.AddWithValue("@Drink", drink);
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+            long drinkID = -1;
+            while (reader.Read())
+            {
+                drinkID = reader.GetInt64(0);
+            }
+            reader.Close();
+            return drinkID;
+        }
+        
+        public long GetInterestID(string interest)
+        {
+            MySqlCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = "SELECT InterestID FROM possibleinterests WHERE Interest = @Interest";
+            cmd.Parameters.AddWithValue("@Interest", interest);
+            cmd.ExecuteNonQuery();
+            MySqlDataReader reader = cmd.ExecuteReader();
+            long interestID = -1;
+            while (reader.Read())
+            {
+                interestID = reader.GetInt64(0);
+            }
+            reader.Close();
+            return interestID;
         }
     }
 }

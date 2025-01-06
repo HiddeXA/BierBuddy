@@ -10,23 +10,17 @@ public partial class RegistrationDrinkPrefrence : Window
 {
     public Visitor RegistrationVisitor { get; set; }
     
-    public RegistrationDrinkPrefrence() : this(new Visitor())
+    public IDataAccess DataAccess { get; set; }
+    public RegistrationDrinkPrefrence(IDataAccess dataAccess) : this(new Visitor(), dataAccess)
     {
      
     }
     
-    public RegistrationDrinkPrefrence(Visitor registrationVisitor)
+    public RegistrationDrinkPrefrence(Visitor registrationVisitor, IDataAccess dataAccess)
     {
         RegistrationVisitor = registrationVisitor;
         this.DataContext = RegistrationVisitor;
-
-        MySqlConnection connection =
-            new MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
-        connection.Open();
-        
-        MySQLDatabase dataAccess = new MySQLDatabase(connection );
-        
-        Console.WriteLine();
+        DataAccess = dataAccess;
         
         InitializeComponent();
         
@@ -46,7 +40,7 @@ public partial class RegistrationDrinkPrefrence : Window
             RegistrationVisitor.AddToDrinkPreference(drink.ToString());
         }
         
-        RegistrationInterests registrationInterests = new RegistrationInterests(RegistrationVisitor);
+        RegistrationInterests registrationInterests = new RegistrationInterests(RegistrationVisitor, DataAccess);
         registrationInterests.Show();
         this.Close();
     }

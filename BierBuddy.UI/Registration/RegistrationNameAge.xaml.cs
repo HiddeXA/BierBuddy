@@ -7,18 +7,17 @@ public partial class RegistrationNameAge : Window
 {
     public Visitor RegistrationVisitor { get; set; }
     
-    public RegistrationNameAge()
+    public IDataAccess DataAccess { get; set; }
+    
+    public RegistrationNameAge(IDataAccess dataAccess) : this(new Visitor(), dataAccess)
     {
-        RegistrationVisitor = new Visitor();
-        this.DataContext = RegistrationVisitor;
-        
-        InitializeComponent();
     }
-    public RegistrationNameAge(Visitor visitor)
+    public RegistrationNameAge(Visitor visitor, IDataAccess dataAccess)
     {
         RegistrationVisitor = visitor;
         this.DataContext = RegistrationVisitor;
-
+        DataAccess = dataAccess;
+        
         InitializeComponent();
     }
 
@@ -31,7 +30,7 @@ public partial class RegistrationNameAge : Window
             return;
         }
         
-        RegistrationBio registrationBio = new RegistrationBio(RegistrationVisitor);
+        RegistrationBio registrationBio = new RegistrationBio(RegistrationVisitor, DataAccess);
         registrationBio.Show();
         this.Close();
     }

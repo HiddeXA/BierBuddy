@@ -54,7 +54,10 @@ namespace BierBuddy.UI
 
         private void RegitreerClick(object sender, RoutedEventArgs e)
         {
-            // <todo> Aanvullen door Hidde
+            
+            RegistrationMain registrationMain = new RegistrationMain(_DataAccess);
+            registrationMain.Show();
+            this.Close();
         }
     }
 }

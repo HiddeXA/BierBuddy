@@ -8,17 +8,17 @@ namespace BierBuddy.UI;
 public partial class RegistrationMain : Window
 {
     public Visitor RegistrationVisitor { get; set; }
-    public RegistrationMain()
+    public IDataAccess DataAccess { get; set; }
+    public RegistrationMain(IDataAccess dataAccess) : this(dataAccess, new Visitor())
     {
-        RegistrationVisitor = new Visitor();
-        this.DataContext = RegistrationVisitor;
-        InitializeComponent();
+    
     }
     
-    public RegistrationMain(Visitor visitor)
+    public RegistrationMain(IDataAccess dataAccess, Visitor visitor)
     {
         RegistrationVisitor = visitor;
         this.DataContext = RegistrationVisitor;
+        DataAccess = dataAccess;
         InitializeComponent();
     }
 
@@ -49,7 +49,7 @@ public partial class RegistrationMain : Window
         RegistrationVisitor.Password = Password.Password;
         
         
-        RegistrationNameAge registrationNameAge = new RegistrationNameAge(RegistrationVisitor); 
+        RegistrationNameAge registrationNameAge = new RegistrationNameAge(RegistrationVisitor, DataAccess); 
         registrationNameAge.Show(); 
         this.Close();
         

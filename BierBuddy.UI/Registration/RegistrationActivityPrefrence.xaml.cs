@@ -10,20 +10,23 @@ public partial class RegistrationActivityPrefrence : Window
 {
     
     public Visitor RegistrationVisitor { get; set; }
+    public IDataAccess DataAccess { get; set; }
     
-    public RegistrationActivityPrefrence() : this(new Visitor())
+    public RegistrationActivityPrefrence(IDataAccess dataAccess) : this(new Visitor(), dataAccess)
     {
     }
-    public RegistrationActivityPrefrence(Visitor registrationVisitor)
+    public RegistrationActivityPrefrence(Visitor registrationVisitor, IDataAccess dataAccess)
     {
         RegistrationVisitor = registrationVisitor;
         this.DataContext = RegistrationVisitor;
+        DataAccess = dataAccess;
+        
 
         MySqlConnection connection =
             new MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
         connection.Open();
         
-        MySQLDatabase dataAccess = new MySQLDatabase(connection);
+        dataAccess = new MySQLDatabase(connection);
         
         Console.WriteLine();
         
@@ -43,10 +46,10 @@ public partial class RegistrationActivityPrefrence : Window
         
         foreach (var activity in ListBox.SelectedItems)
         {
-            RegistrationVisitor.AddToInterests(activity.ToString());
+            RegistrationVisitor.AddToActivityPreference(activity.ToString());
         }
         
-        RegistrationPictures registrationConfirmation = new RegistrationPictures(RegistrationVisitor);
+        RegistrationPictures registrationConfirmation = new RegistrationPictures(RegistrationVisitor, DataAccess);
         registrationConfirmation.Show();
         this.Close();
      

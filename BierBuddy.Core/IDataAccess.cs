@@ -51,7 +51,7 @@ namespace BierBuddy.Core
         /// <param name="photos">de foto's van de bezoeker, minimaal 1, maximaal 4</param>
         /// <returns>het aangemaakte account</returns>
         /// <exception cref="ArgumentException">als er minder dan 1 of meer dan 4 activiteiten, drankjes, interesses of foto's worden meegegeven</exception>"
-        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string passkey);
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<byte[]> photos, string mail, string passkey);
 
         /// <summary>
         /// geeft een lijst van willekeurige accountIDs terug die de bezoeker nog niet heeft gezien
@@ -151,6 +151,19 @@ namespace BierBuddy.Core
         /// Haalt naam op van een visitor op basis van ID, voor de appointments
         /// </summary>
         public string GetVisitorNameByID(long visitorID);
+        
+        /// <summary>
+        /// Haalt de ID op van een activiteit
+        /// </summary>
+        public long GetActivityID(string activity);
+        /// <summary>
+        /// Haalt de ID op van een drankje
+        /// </summary>
+        public long GetDrinkID(string drink);
+        /// <summary>
+        /// Haalt de ID op van een interesse
+        /// </summary>
+        public long GetInterestID(string interest);
 
     }
 }

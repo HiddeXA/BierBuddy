@@ -6,18 +6,17 @@ namespace BierBuddy.UI.Registration;
 public partial class RegistrationBio : Window
 {
     public Visitor RegistrationVisitor { get; set; }
+    public IDataAccess DataAccess { get; set; }
     
-    public RegistrationBio()
+    public RegistrationBio(IDataAccess dataAccess) : this(new Visitor(), dataAccess)
     {
-        RegistrationVisitor = new Visitor();
-        this.DataContext = RegistrationVisitor;
-        
-        InitializeComponent();
+     
     }
-    public RegistrationBio(Visitor registrationVisitor)
+    public RegistrationBio(Visitor registrationVisitor, IDataAccess dataAccess)
     {
         RegistrationVisitor = registrationVisitor;
         this.DataContext = RegistrationVisitor;
+        DataAccess = dataAccess;
         
         InitializeComponent();
     }
@@ -30,7 +29,7 @@ public partial class RegistrationBio : Window
             return;
         }
         
-        RegistrationDrinkPrefrence registrationDrinkPrefrence = new RegistrationDrinkPrefrence(RegistrationVisitor);
+        RegistrationDrinkPrefrence registrationDrinkPrefrence = new RegistrationDrinkPrefrence(RegistrationVisitor, DataAccess);
         registrationDrinkPrefrence.Show();
         this.Close();
     }

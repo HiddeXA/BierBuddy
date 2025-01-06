@@ -17,9 +17,9 @@ namespace BierBuddy.Core
         public String Password { get; set; }
 
         // Voorkeuren interesses enz.
-        public List<string> DrinkPreference = new List<string>();
-        public List<string> Interests = new List<string>();
-        public List<string> ActivityPreference = new List<string>();
+        public List<string> DrinkPreference {get; set;} = new List<string>();
+        public List<string> Interests {get; set;} = new List<string>();
+        public List<string> ActivityPreference {get; set;} = new List<string>();
 
         // Fotos
         public List<byte[]> Photos = new List<byte[]>();

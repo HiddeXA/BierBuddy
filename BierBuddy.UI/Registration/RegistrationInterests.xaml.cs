@@ -9,22 +9,19 @@ namespace BierBuddy.UI.Registration;
 public partial class RegistrationInterests : Window
 {
     public Visitor RegistrationVisitor { get; set; }
+    
+    public IDataAccess DataAccess { get; set; }
 
-    public RegistrationInterests()
+    public RegistrationInterests(IDataAccess dataAccess) : this(new Visitor(), dataAccess)
     {
-        InitializeComponent();
     }
     
-    public RegistrationInterests(Visitor registrationVisitor)
+    public RegistrationInterests(Visitor registrationVisitor, IDataAccess dataAccess)
     {
         RegistrationVisitor = registrationVisitor;
         this.DataContext = RegistrationVisitor;
-
-        MySqlConnection connection =
-            new MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
-        connection.Open();
         
-        MySQLDatabase dataAccess = new MySQLDatabase(connection );
+        DataAccess = dataAccess;
         
         Console.WriteLine();
         
@@ -47,7 +44,7 @@ public partial class RegistrationInterests : Window
             RegistrationVisitor.AddToInterests(interest.ToString());
         }
         
-        RegistrationActivityPrefrence registrationConfirmation = new RegistrationActivityPrefrence(RegistrationVisitor);
+        RegistrationActivityPrefrence registrationConfirmation = new RegistrationActivityPrefrence(RegistrationVisitor, DataAccess);
         registrationConfirmation.Show();
         this.Close();
     }

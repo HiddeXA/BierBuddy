@@ -43,16 +43,22 @@
                         Canvas.Left="100" Canvas.Top="-83" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 </Canvas>
                 <!--NavButtons-->
-                <Button Height="75" Margin="20" Click="FindBuddyButton_Click" DockPanel.Dock="Top" >
+                <Button Height="75" Margin="10" Click="FindBuddyButton_Click" DockPanel.Dock="Top" >
                     <WrapPanel VerticalAlignment="Center">
                         <Label Name="FindBuddiesIcon" Content="{materialIcons:MaterialIconExt Kind=GestureSwipe, Size=40}" VerticalAlignment="Center"/>
                         <Label Name="FindBuddiesLabel" FontSize="32" VerticalAlignment="Center">VIND BUDDIES</Label>
                     </WrapPanel>
                 </Button>
-                <Button Height="75" Margin="20" Click="MyBuddiesButton_Click" DockPanel.Dock="Top" >
+                <Button Height="75" Margin="10" Click="MyBuddiesButton_Click" DockPanel.Dock="Top" >
                     <WrapPanel VerticalAlignment="Center">
                         <Label Name="MyBuddiesIcon" Content="{materialIcons:MaterialIconExt Kind=handshake, Size=40}" VerticalAlignment="Center"/>
                         <Label Name="MyBuddiesLabel" FontSize="32" VerticalAlignment="Center">MIJN BUDDIES</Label>
+                    </WrapPanel>
+                </Button>
+                <Button Height="75" Margin="10" Click="MyAppointmentsButton_Click" DockPanel.Dock="Top" >
+                    <WrapPanel VerticalAlignment="Center">
+                        <Label Name="MyAppointmentsIcon" Content="{materialIcons:MaterialIconExt Kind=Calendar, Size=40}" VerticalAlignment="Center"/>
+                        <Label Name="MyAppointmentsLabel" FontSize="32" VerticalAlignment="Center">MIJN AFSPRAKEN</Label>
                     </WrapPanel>
                 </Button>
                 <!--SettingsButton-->

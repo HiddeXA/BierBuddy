@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Cache;
 using System.Net.NetworkInformation;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,6 +33,7 @@ namespace BierBuddy.UILib
         private double _NavBarWidth;
         private int _CurrentPhotoIndex = 0;
         private Image _ProfilePicture;
+        private bool _ViewingPreferences = false;
         private Visitor? _Visitor { get; set; }
         private FindBuddies _FindBuddies;
 
@@ -48,13 +50,26 @@ namespace BierBuddy.UILib
             _FindBuddies = findBuddies;
             _FindBuddies.Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
         }
-        public WrapPanel GetFindBuddiesPage(Visitor visitor)
+        public WrapPanel GetFindBuddiesPage(Visitor? visitor)
         {
             _profilePanel.Margin = new Thickness(20);
             _profilePanel.VerticalAlignment = VerticalAlignment.Center;
+            if (_Visitor == null || visitor == null || _Visitor.ID != visitor.ID)
+            {
+                _ViewingPreferences = false;
+            }
             _Visitor = visitor;
 
-            SetFindBuddiesPanel();
+            if (_ViewingPreferences)
+            {
+                SetFindBuddiesPanel();
+                _profilePanel.Children.Clear();
+                SetPreferencesPanel();
+            }
+            else
+            {
+                SetFindBuddiesPanel();
+            }
             return _FindBuddiesPanel;
         }
         private void SetFindBuddiesPanel()
@@ -470,6 +485,7 @@ namespace BierBuddy.UILib
         }
         private void BioButton_Click(object sender, RoutedEventArgs e)
         {
+            _ViewingPreferences = true;
             _profilePanel.Children.Clear();
             SetPreferencesPanel();
             
@@ -537,6 +553,7 @@ namespace BierBuddy.UILib
             preferencesGrid.Children.Add(bioBorder);
 
             ProfileContentBorder bioText = new ProfileContentBorder(_Visitor.Bio, UIUtils.Onyx70, GeneralFontSize);
+            bioText.Child = new TextBlock { TextWrapping = TextWrapping.Wrap, Text = _Visitor.Bio, FontSize = GeneralFontSize, Foreground = Brushes.White, Margin = new Thickness(10, 10, 10, 10) };
             Grid.SetColumnSpan(bioText, 3);
             Grid.SetRow(bioText, 4);
             preferencesGrid.Children.Add(bioText);
@@ -631,22 +648,20 @@ namespace BierBuddy.UILib
         }
         private void BioBackButton_Click(object sender, RoutedEventArgs e)
         {
+            _ViewingPreferences = false;
             _profilePanel.Children.Clear();
             SetProfilePanel((_MainWindowSize.Width - _NavBarWidth)/2, _MainWindowSize.Height);
         }
 
-        
-        private UIElement GetBio()
-        {
-            TextBlock bio = new();
-            bio.FontSize = GeneralFontSize;
-            bio.Text = _Visitor.Bio;
-            return bio;
-        }
         public void RefreshPage()
         { 
+            long oldID = _Visitor?.ID ?? -1;
             _Visitor = _FindBuddies.GetPotentialMatch();
-            SetFindBuddiesPanel();                          
+            if (_Visitor == null || _Visitor.ID != oldID)
+            {
+                _ViewingPreferences = false;
+            }
+            GetFindBuddiesPage(_Visitor);
         }
         public void UpdatePageSize(double newNavBarWidth, Size newScreenSize)
         {

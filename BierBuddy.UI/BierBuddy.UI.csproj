@@ -26,4 +26,11 @@
     </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Registration\Resources\placeholder.jpg" />
+    <Resource Include="Registration\Resources\placeholder.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>

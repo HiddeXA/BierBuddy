@@ -112,7 +112,11 @@
              </Grid.Resources>
                 <DockPanel Grid.Row="1">
                     <Label DockPanel.Dock="Top" FontSize="15" Foreground="#2E3532"  >MIN 1 - MAX 4</Label>
-                    <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Width="130" Click="ImageClick"><Image Name="image1" Source="/Registration/Resources/placeholder.jpg"></Image></Button>
+                        <Button Width="130" Click="ImageClick"><Image Name="image2" Source="/Registration/Resources/placeholder.jpg"></Image></Button>
+                        <Button Width="130" Click="ImageClick"><Image Name="image3" Source="/Registration/Resources/placeholder.jpg"></Image></Button>
+                        <Button Width="130" Click="ImageClick"><Image Name="image4" Source="/Registration/Resources/placeholder.jpg"></Image></Button>
                         
                     </StackPanel>
                 </DockPanel>

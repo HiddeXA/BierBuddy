@@ -28,7 +28,7 @@ namespace BierBuddy.UI
         public LoginScreen()
         {
             InitializeComponent();
-            _Connection = new MySqlConnection("server=localhost;user id=root;database=bierbuddy ;password=;");
+            _Connection = new MySqlConnection("server=mysql-1284b19-bierbuddy.c.aivencloud.com;database=BierBuddyDB;user=avnadmin;port=26316;password=AVNS_IWkNAbagctkfuROBkTX");
             _Connection.Open();
             _DataAccess = new MySQLDatabase(_Connection);
 

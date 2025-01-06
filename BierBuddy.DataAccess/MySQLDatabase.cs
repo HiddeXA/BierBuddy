@@ -102,8 +102,15 @@ namespace BierBuddy.DataAccess
 
         public Visitor? GetAccount(long ID)
         {
-            List<Visitor> visitors = GetAccountsFromList(new List<long> { ID });
-            return visitors[0];
+            try
+            {
+                List<Visitor> visitors = GetAccountsFromList(new List<long> { ID });
+                return visitors[0];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public Visitor? GetAccount(string mail, string passkey)

@@ -19,6 +19,17 @@ namespace BierBuddy.Tests
         [SetUp]
         public void Setup()
         {
+            Visitor Dummy = new Visitor(1, "BierBuddyBram", "De trotse mascotte van BierBuddy. Hij is zo cool, hij kan zelfs 500 bier opdrinken in een uur. Niemand is beter dan deze makker.", 21);
+            Dummy.AddToDrinkPreference("Jägermeister");
+            Dummy.AddToDrinkPreference("Hertog Jan");
+            Dummy.AddToDrinkPreference("Speciaal bier");
+            Dummy.AddToDrinkPreference("Dikke Vette Drank");
+            Dummy.AddToInterests("Bierbrouwen");
+            Dummy.AddToInterests("Jagen");
+            Dummy.AddToInterests("Skiën");
+            Dummy.AddToActivityPreference("Gezellig kletsen");
+            Dummy.AddToActivityPreference("Darten");
+
             _dataAccessMock = new Mock<IDataAccess>();
 
             // Stel een dummy Visitor in voor de mock van _DataAccess
@@ -31,7 +42,7 @@ namespace BierBuddy.Tests
                            .Returns(potentialMatches);
 
             // Maak een concrete instantie van Main met de mock
-            _main = new Main(_dataAccessMock.Object);
+            _main = new Main(_dataAccessMock.Object, Dummy);
 
             _findBuddies = new FindBuddies(_dataAccessMock.Object, _main);
 

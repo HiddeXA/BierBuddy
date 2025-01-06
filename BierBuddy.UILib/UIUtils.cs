@@ -22,6 +22,7 @@ namespace BierBuddy.UILib
         internal static readonly Brush Outer_Space = new SolidColorBrush(Color.FromArgb(0xFF, 0x43, 0x4D, 0x49));
         internal static readonly Brush testMarking = new SolidColorBrush(Color.FromRgb( 255, 255, 0));
         internal static readonly Brush PhantomShip = new SolidColorBrush(Color.FromArgb(255, 46, 53, 50));
+        internal static readonly Brush BeerYellow = new SolidColorBrush(Color.FromArgb(255, 0xF1, 0x9F, 0x2C));
         internal static readonly Brush Transparent = new SolidColorBrush(Colors.Transparent);
         internal static readonly FontFamily UniversalFontFamily = new FontFamily("Bayon");
         internal static readonly FontWeight UniversalFontWeight = new FontWeight();

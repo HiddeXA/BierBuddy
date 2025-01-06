@@ -52,6 +52,22 @@ namespace BierBuddy.Core
         /// <returns>het aangemaakte account</returns>
         /// <exception cref="ArgumentException">als er minder dan 1 of meer dan 4 activiteiten, drankjes, interesses of foto's worden meegegeven</exception>"
         public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string passkey);
+
+        /// <summary>
+        /// geeft een lijst van willekeurige accountIDs terug die de bezoeker nog niet heeft gezien
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        public List<long> GetNotSeenAccountIDs(long clientID);
+
+
+        /// <summary>
+        /// geeft een lijst van accounts terug op basis van een lijst van ID's
+        /// </summary>
+        /// <param name="accountIDs"></param>
+        /// <returns></returns>
+        public List<Visitor> GetAccountsFromList(List<long> accountIDs);
+    
         /// <summary>
         /// zet een like op een bezoeker
         /// </summary>

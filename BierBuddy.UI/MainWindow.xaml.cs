@@ -142,9 +142,9 @@ namespace BierBuddy.UI
             this.WindowStatus = 1;
             PagePanel.Children.Clear();
             PagePanel.Children.Add(_FindBuddiesPageRenderer.GetFindBuddiesPage(_FindBuddies.GetPotentialMatch()));
-
-        }
         
+        }
+
         private void MyBuddiesButton_Click(object sender, RoutedEventArgs e)
         {
             this.WindowStatus = 2;

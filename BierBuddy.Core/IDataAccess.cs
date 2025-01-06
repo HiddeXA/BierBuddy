@@ -15,6 +15,12 @@ namespace BierBuddy.Core
         /// <param name="ID"></param>
         /// <returns></returns>
         public Visitor? GetAccount(long ID);
+
+        /// <summary>
+        /// haalt een account op op basis van een mail en een wachtwoord
+        /// </summary>
+     
+        public Visitor? GetAccount(string mail, string passkey);
         /// <summary>
         /// geeft een lijst van accounts terug
         /// </summary>
@@ -45,19 +51,23 @@ namespace BierBuddy.Core
         /// <param name="photos">de foto's van de bezoeker, minimaal 1, maximaal 4</param>
         /// <returns>het aangemaakte account</returns>
         /// <exception cref="ArgumentException">als er minder dan 1 of meer dan 4 activiteiten, drankjes, interesses of foto's worden meegegeven</exception>"
-        public List<long> GetNotSeenAccountIDs(long clientID);
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string passkey);
+
         /// <summary>
         /// geeft een lijst van willekeurige accountIDs terug die de bezoeker nog niet heeft gezien
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
-        public List<Visitor> GetAccountsFromList(List<long> accountIDs);
+        public List<long> GetNotSeenAccountIDs(long clientID);
+
+
         /// <summary>
         /// geeft een lijst van accounts terug op basis van een lijst van ID's
         /// </summary>
         /// <param name="accountIDs"></param>
         /// <returns></returns>
-        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos);
+        public List<Visitor> GetAccountsFromList(List<long> accountIDs);
+    
         /// <summary>
         /// zet een like op een bezoeker
         /// </summary>
@@ -105,7 +115,8 @@ namespace BierBuddy.Core
         /// <returns>een Dictionary met alle mogelijke interesses met hun bijbehorende index</returns>
         public Dictionary<long, String> GetPossibleInterests();
         /// <summary>
-        /// voeg een afspraak toe aan de database, deze is dan nog niet geaccepteerd
+        /// voeg een afspraak toe aan de database, deze is dan nog niet ge
+        /// epteerd
         /// </summary>
         /// <param name="clientID"></param>
         /// <param name="visitorID"></param>

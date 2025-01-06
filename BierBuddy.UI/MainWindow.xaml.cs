@@ -47,7 +47,7 @@ namespace BierBuddy.UI
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
         private ProfilePageRenderer _ProfilePageRenderer { get; }
 
-        public MainWindow()
+        public MainWindow(Visitor account)
         {
             InitializeComponent();
             //initialize dataAccess
@@ -55,7 +55,7 @@ namespace BierBuddy.UI
             connection.Open();
             _DataAccess = new MySQLDatabase(connection);
             //initialize main
-            _Main = new Main(_DataAccess);
+            _Main = new Main(_DataAccess, account);
             //initialize page renderers
             _MyBuddies = new MyBuddies(_DataAccess, _Main);
             _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies);
@@ -195,5 +195,7 @@ namespace BierBuddy.UI
             Canvas.SetLeft(EllipseFoam3, NavBar.Width - 365);
             Canvas.SetLeft(EllipseFoam4, NavBar.Width - 412);
         }
+
+
     }
 }

@@ -13,10 +13,10 @@ namespace BierBuddy.Core
 
         private IDataAccess _DataAccess { get; }
 
-        public Main(IDataAccess dataAccess, Visitor acc) 
+        public Main(IDataAccess dataAccess, Visitor account) 
         {
             _DataAccess = dataAccess;
-            ClientVisitor = _DataAccess.GetAccount(acc.ID);
+            ClientVisitor = account;
 
             _DataAccess = dataAccess;
             AccountSwitcher = new SwitchAccount(_DataAccess, this);

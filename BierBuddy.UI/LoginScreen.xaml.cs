@@ -16,21 +16,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BierBuddy.Core;
 using BierBuddy.DataAccess;
+using Org.BouncyCastle.Tls;
+using MySql.Data.MySqlClient;
 
 namespace BierBuddy.UI
 {
-    /// <summary>
-    /// Interaction logic for LoginScreen.xaml
-    /// </summary>
     public partial class LoginScreen : Window
     {
         private IDataAccess _DataAccess { get; }
+        private MySqlConnection _Connection { get; }
         public LoginScreen()
         {
             InitializeComponent();
-            MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
-            connection.Open();
-            _DataAccess = new MySQLDatabase(connection);
+            _Connection = new MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
+            _Connection.Open();
+            _DataAccess = new MySQLDatabase(_Connection);
 
         }
 
@@ -41,6 +41,7 @@ namespace BierBuddy.UI
             Visitor ?user = _DataAccess.GetAccount(email, passkey);
             if (user != null)
             {
+                _Connection.Close();
                 MainWindow mainWindow = new MainWindow(user);
                 mainWindow.Show();
                 this.Close();

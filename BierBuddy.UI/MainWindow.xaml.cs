@@ -41,7 +41,7 @@ namespace BierBuddy.UI
         private MyBuddiesPageRenderer _MyBuddiesPageRenderer { get;  }
         private AlgoritmePlaceHolder _AlgoritmePlaceHolder { get; }
 
-        public MainWindow(Visitor acc)
+        public MainWindow(Visitor account)
         {
             InitializeComponent();
             //initialize dataAccess
@@ -49,7 +49,7 @@ namespace BierBuddy.UI
             connection.Open();
             _DataAccess = new MySQLDatabase(connection);
             //initialize main
-            _Main = new Main(_DataAccess, acc);
+            _Main = new Main(_DataAccess, account);
             //initialize page renderers
             _MyBuddies = new MyBuddies(_DataAccess, _Main);
             _MyBuddiesPageRenderer = new MyBuddiesPageRenderer(_MyBuddies); 

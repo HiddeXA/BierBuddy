@@ -31,9 +31,9 @@ namespace BierBuddy.DataAccess
             throw new NotImplementedException();
         }
 
-        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string psw)
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string passkey)
         {
-            psw = ComputeSHA512(psw);
+            string encryptedpasskey = ComputeSHA512(passkey);
             if (activities.Count < 1 || activities.Count > 4)
             {
                 throw new ArgumentException("Er moeten minimaal 1 en maximaal 4 activiteiten worden meegegeven.");
@@ -84,7 +84,7 @@ namespace BierBuddy.DataAccess
             photosCommand.ExecuteNonQuery();
             long photosID = photosCommand.LastInsertedId;
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO visitor (Name, Bio, Age, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, Email, Passkey) VALUES (@Name, @Bio, @Age, @Photo_ID, @DrinksID, @InterestsID, @ActivitiesID, @mail, @psw)";
+            cmd.CommandText = "INSERT INTO visitor (Name, Bio, Age, Photo_PhotoID, DrinkPreferences_DrinkPreferencesID, Interests_InterestsID, ActivityPreferences_ActivityPreferencesID, Email, Passkey) VALUES (@Name, @Bio, @Age, @Photo_ID, @DrinksID, @InterestsID, @ActivitiesID, @mail, @passkey)";
             cmd.Parameters.AddWithValue("@Name", name);
             cmd.Parameters.AddWithValue("@Bio", bio);
             cmd.Parameters.AddWithValue("@Age", age);
@@ -93,7 +93,7 @@ namespace BierBuddy.DataAccess
             cmd.Parameters.AddWithValue("@InterestsID", interestsID);
             cmd.Parameters.AddWithValue("@ActivitiesID", activitiesID);
             cmd.Parameters.AddWithValue("@mail", mail);
-            cmd.Parameters.AddWithValue("@psw", psw);
+            cmd.Parameters.AddWithValue("@passkey", encryptedpasskey);
             cmd.ExecuteNonQuery();
             long ID = cmd.LastInsertedId;
             transaction.Commit();
@@ -160,57 +160,25 @@ namespace BierBuddy.DataAccess
         {
             MySqlCommand cmd = _conn.CreateCommand();
             cmd.CommandText =
-                "SELECT V.VisitorID, V.Name, V.BIO, V.Age, P.Photo1URL, P.Photo2URL, P.Photo3URL, P.Photo4URL, D.Drinks_DrinkID1, D.Drinks_DrinkID2, D.Drinks_DrinkID3, D.Drinks_DrinkID4, A.Activities_ActivityID1, A.Activities_ActivityID2, A.Activities_ActivityID3, A.Activities_ActivityID4, I.PossibleInterests_InterestID1, I.PossibleInterests_InterestID2, I.PossibleInterests_InterestID3, I.PossibleInterests_InterestID4 " +
+                "SELECT V.VisitorID " +
                 "FROM visitor V " +
-                "JOIN photo P ON V.Photo_PhotoID = P.PhotoID " +
-                "JOIN drinkpreferences D ON V.DrinkPreferences_DrinkPreferencesID = D.DrinkPreferencesID " +
-                "JOIN activitypreferences A ON V.ActivityPreferences_ActivityPreferencesID = A.ActivityPreferencesID " +
-                "JOIN interests I ON V.Interests_InterestsID = I.interestsID " +
                 "WHERE V.Email = @mail AND V.Passkey = @passkey";
             cmd.Parameters.AddWithValue("@mail", mail);
             cmd.Parameters.AddWithValue("@passkey", ComputeSHA512(passkey));
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
 
-            Visitor? visitor = null;
+            long id = 0;
+
             while (reader.Read())
             {
-                visitor = new Visitor(reader.GetInt64(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3));
-                for (int i = 4; i < 8; i++)
-                {
-                    if (!reader.IsDBNull(i))
-                    {
-                        visitor.AddToPhotos(reader.GetString(i));
-                    }
-                }
-                for (int i = 8; i < 12; i++)
-                {
-                    string? drinkPref = PossibleDrinkPref.GetValueOrDefault(reader.GetInt64(i));
-                    if (drinkPref != null)
-                    {
-                        visitor.AddToDrinkPreference(drinkPref);
-                    }
-                }
-                for (int i = 12; i < 16; i++)
-                {
-                    string? activityPref = PossibleActivities.GetValueOrDefault(reader.GetInt64(i));
-                    if (activityPref != null)
-                    {
-                        visitor.AddToActivityPreference(activityPref);
-                    }
-                }
-                for (int i = 16; i < 20; i++)
-                {
-                    string? interests = PossibleInterests.GetValueOrDefault(reader.GetInt64(i));
-                    if (interests != null)
-                    {
-                        visitor.AddToInterests(interests);
-                    }
-                }
+               id = (reader.GetInt64(0));
             }
-            reader.Close();
 
-            return visitor;
+            reader.Close();
+            Visitor Account = GetAccount(id);
+
+            return Account;
         }
 
         public List<Visitor> GetAccounts(int maxAmount)
@@ -494,7 +462,7 @@ namespace BierBuddy.DataAccess
             return appointments;
         }
 
-        // Encrypts password using SHA512
+        // Encrypts passkey using SHA512
         static string ComputeSHA512(string input)
         {
             byte[] inputBytes = Encoding.UTF8.GetBytes(input);

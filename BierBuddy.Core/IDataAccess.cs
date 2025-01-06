@@ -19,11 +19,7 @@ namespace BierBuddy.Core
         /// <summary>
         /// haalt een account op op basis van een mail en een wachtwoord
         /// </summary>
-        /// 
-
-        /// <param name="mail"></param>
-        /// <param name="passkey"></param>
-        /// <returns></returns>
+     
         public Visitor? GetAccount(string mail, string passkey);
         /// <summary>
         /// geeft een lijst van accounts terug
@@ -55,7 +51,7 @@ namespace BierBuddy.Core
         /// <param name="photos">de foto's van de bezoeker, minimaal 1, maximaal 4</param>
         /// <returns>het aangemaakte account</returns>
         /// <exception cref="ArgumentException">als er minder dan 1 of meer dan 4 activiteiten, drankjes, interesses of foto's worden meegegeven</exception>"
-        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string psw);
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos, string mail, string passkey);
         /// <summary>
         /// zet een like op een bezoeker
         /// </summary>
@@ -103,7 +99,8 @@ namespace BierBuddy.Core
         /// <returns>een Dictionary met alle mogelijke interesses met hun bijbehorende index</returns>
         public Dictionary<long, String> GetPossibleInterests();
         /// <summary>
-        /// voeg een afspraak toe aan de database, deze is dan nog niet geaccepteerd
+        /// voeg een afspraak toe aan de database, deze is dan nog niet ge
+        /// epteerd
         /// </summary>
         /// <param name="clientID"></param>
         /// <param name="visitorID"></param>

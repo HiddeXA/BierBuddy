@@ -45,6 +45,18 @@ namespace BierBuddy.Core
         /// <param name="photos">de foto's van de bezoeker, minimaal 1, maximaal 4</param>
         /// <returns>het aangemaakte account</returns>
         /// <exception cref="ArgumentException">als er minder dan 1 of meer dan 4 activiteiten, drankjes, interesses of foto's worden meegegeven</exception>"
+        public List<long> GetNotSeenAccountIDs(long clientID);
+        /// <summary>
+        /// geeft een lijst van willekeurige accountIDs terug die de bezoeker nog niet heeft gezien
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        public List<Visitor> GetAccountsFromList(List<long> accountIDs);
+        /// <summary>
+        /// geeft een lijst van accounts terug op basis van een lijst van ID's
+        /// </summary>
+        /// <param name="accountIDs"></param>
+        /// <returns></returns>
         public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos);
         /// <summary>
         /// zet een like op een bezoeker
@@ -116,7 +128,18 @@ namespace BierBuddy.Core
         /// haal alle afspraken op van de bezoeker met een andere bezoeker
         /// </summary>
         public List<Appointment> GetAppointmentsWithUser(long clientID, long visitorID);
-
+        /// <summary>
+        /// Haalt alle Buddies van een persoon op op basis van de huidige ClientID
+        /// </summary>
         public List<Visitor> GetBuddies(long clientID);
+        /// <summary>
+        /// werkt een gebruiker bij met de gegeven gegevens, de lists zijn de ids van de activiteiten, drankjes en interesses
+        /// </summary>
+        public void UpdateAccount(Visitor visitor, List<long> activities, List<long> drinks, List<long> interests);
+        /// <summary>
+        /// Haalt naam op van een visitor op basis van ID, voor de appointments
+        /// </summary>
+        public string GetVisitorNameByID(long visitorID);
+
     }
 }

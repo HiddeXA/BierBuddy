@@ -122,5 +122,117 @@ namespace BierBuddy.Tests
             // Assert
             Assert.That(points, Is.EqualTo(0));
         }
+
+        [Test]
+        public void GetAgeDelta_PotentialMatchOlderThanClient_ReturnsCorrectDelta()
+        {
+            // Arrange
+            _clientVisitor = new Visitor(1, "Client", "Test Bio", 25);
+            _potentialMatchVisitor = new Visitor(2, "Match", "Test Bio", 30);
+
+            // Act
+            int ageDelta = _findBuddies.GetAgeDelta(_clientVisitor, _potentialMatchVisitor);
+
+            // Assert
+            Assert.That(ageDelta, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void GetAgeDelta_SameAge_ReturnsOne()
+        {
+            // Arrange
+            _clientVisitor = new Visitor(1, "Client", "Test Bio", 30);
+            _potentialMatchVisitor = new Visitor(2, "Match", "Test Bio", 30);
+
+            // Act
+            int ageDelta = _findBuddies.GetAgeDelta(_clientVisitor, _potentialMatchVisitor);
+
+            // Assert
+            Assert.That(ageDelta, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GetVisitorPoints_ValidInputs_ReturnsCorrectPoints()
+        {
+            // Arrange
+            _clientVisitor = new Visitor(1, "Client", "Test Bio", 30);
+            _clientVisitor.AddToDrinkPreference("Beer");
+
+            _potentialMatchVisitor = new Visitor(2, "Match", "Test Bio", 25);
+            _potentialMatchVisitor.AddToDrinkPreference("Beer");
+
+            double expectedPoints = 1 / (0.2 * 5 / 30);
+
+            // Act
+            double points = _findBuddies.GetVisitorPoints(_clientVisitor, _potentialMatchVisitor);
+
+            // Assert
+            Assert.That(points, Is.EqualTo(expectedPoints).Within(0.01));
+        }
+
+        [Test]
+        public void GetVisitorPoints_NoMatchingInterests_ReturnsZeroPoints()
+        {
+            // Arrange
+            _clientVisitor.AddToDrinkPreference("Beer");
+            _potentialMatchVisitor.AddToDrinkPreference("Wine");
+
+            // Act
+            double points = _findBuddies.GetVisitorPoints(_clientVisitor, _potentialMatchVisitor);
+
+            // Assert
+            Assert.That(points, Is.EqualTo(0));
+        }
+        [Test]
+        public void GetHighRatedVisitorSelection_ReturnsCorrectCount()
+        {
+            // Arrange
+            List<Visitor> visitors = new List<Visitor>();
+            for (int i = 0; i < 20; i++)
+            {
+                visitors.Add(new Visitor(i, $"Visitor {i}", "Bio", 25) { Points = i });
+            }
+
+            // Act
+            List<Visitor> result = _findBuddies.GetHighRatedVisitorSelection(visitors);
+
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(_findBuddies.PotentialMatchesHighPointSelectionListSize));
+        }
+
+        [Test]
+        public void FineTuneVisitorSelection_AddsLowRatedVisitorsCorrectly()
+        {
+            // Arrange
+            List<Visitor> highRated = new List<Visitor>() { new Visitor(1, "High", "Bio", 25) { Points = 10 } };
+            List<Visitor> lowRated = new List<Visitor>() { new Visitor(2, "Low", "Bio", 25) { Points = 5 } };
+
+            // Act
+            List<Visitor> result = _findBuddies.FineTuneVisitorSelection(highRated, lowRated);
+
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void SortVisitorSelectionByPoints_SortsCorrectly()
+        {
+            // Arrange
+            List<Visitor> visitors = new List<Visitor>()
+            {
+                new Visitor(1, "A", "Bio", 25) { Points = 10 },
+                new Visitor(2, "B", "Bio", 25) { Points = 30 },
+                new Visitor(3, "C", "Bio", 25) { Points = 20 }
+            };
+
+            // Act
+            List<Visitor> result = _findBuddies.SortVisitorSelectionByPoints(visitors);
+
+            // Assert
+            Assert.That(result[0].Points, Is.EqualTo(30));
+            Assert.That(result[1].Points, Is.EqualTo(20));
+            Assert.That(result[2].Points, Is.EqualTo(10));
+        }
+
     }
 }

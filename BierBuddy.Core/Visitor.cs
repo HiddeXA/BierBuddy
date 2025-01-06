@@ -22,8 +22,10 @@ namespace BierBuddy.Core
         public List<string> ActivityPreference = new List<string>();
 
         // Fotos
-        public List<string> Photos = new List<string>();
+        public List<byte[]> Photos = new List<byte[]>();
 
+        //punten voor het algoritme
+        public double? Points { get; set; }
 
         public Visitor(long id, string name, string bio, int age)
         {
@@ -37,6 +39,18 @@ namespace BierBuddy.Core
         public Visitor()
         {
             
+        }
+
+        public void SetName(string name)
+        {
+            if(name.Length > 45) throw new ArgumentException("Naam is te lang");
+            Name = name;
+        }
+
+        public void SetBio(string bio)
+        {
+            if (bio.Length > 400) throw new ArgumentException("Bio is te lang");
+            Bio = bio;
         }
 
         // Methodes voor het toevoegen van voorkeuren en interesses.
@@ -55,9 +69,31 @@ namespace BierBuddy.Core
             ActivityPreference.Add(activity);
         }
 
-        public void AddToPhotos(string photoUrl)
+        public void AddToPhotos(byte[] photoBlob)
         {
-            Photos.Add(photoUrl);
+            //geen url is geen url, hoort dus niet thuis in de lijst
+            if (Encoding.UTF8.GetString(photoBlob).Equals("Geen URL gevonden")) return;
+            Photos.Add(photoBlob);
+        }
+
+        public void RemoveFromDrinkPreference(string drink)
+        {
+            DrinkPreference.Remove(drink);
+        }
+
+        public void RemoveFromInterests(string interest)
+        {
+            Interests.Remove(interest);
+        }
+
+        public void RemoveFromActivityPreference(string activity) 
+        { 
+            ActivityPreference.Remove(activity); 
+        }
+
+        public void RemoveFromPhotos(byte[] photoBlob)
+        {
+            Photos.Remove(photoBlob);
         }
     }
 }

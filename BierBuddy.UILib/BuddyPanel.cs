@@ -12,14 +12,15 @@ namespace BierBuddy.UILib
 {
     public class BuddyPanel : Border
     {
-        private Visitor _Visitor;
+        public Visitor Visitor;
         private double _Width;
         private double _Height;
         private MyBuddies _MyBuddies { get; set; }
+        public event EventHandler? ProfileRequested;
 
         public BuddyPanel(Visitor visitor, double width, double height, MyBuddies myBuddies)
         {
-            _Visitor = visitor;
+            Visitor = visitor;
             _Width = width;
             _Height = height;
             _MyBuddies = myBuddies;
@@ -29,6 +30,7 @@ namespace BierBuddy.UILib
 
         private void InitializePanel()
         {
+
             // Stel de grid en layout in
             Grid buddyGrid = new Grid();
             buddyGrid.Width = _Width;
@@ -53,10 +55,11 @@ namespace BierBuddy.UILib
             appointmentAcceptButton.HorizontalAlignment = HorizontalAlignment.Right;
             appointmentAcceptButton.Click += AppointmentAcceptButton_Click;
 
-            Button buddyNameButton = CreateNameButton(_Visitor.Name, 300, 40);
+            Button buddyNameButton = CreateNameButton(Visitor.Name, 300, 40);
             Grid.SetColumn(buddyNameButton, 0);
             Grid.SetRow(buddyNameButton, 0);
             buddyNameButton.HorizontalAlignment = HorizontalAlignment.Center;
+            buddyNameButton.Click += BuddyNameButton_Click;
 
             // Voeg de knoppen toe aan de grid
             buddyGrid.Children.Add(appointmentButton);
@@ -68,6 +71,11 @@ namespace BierBuddy.UILib
             Background = UIUtils.Outer_Space;
             CornerRadius = UIUtils.UniversalCornerRadius;
             Margin = new Thickness(10);
+        }
+
+        private void BuddyNameButton_Click(object sender, RoutedEventArgs e)
+        {
+            ProfileRequested?.Invoke(this, new EventArgs());            
         }
 
         private Button CreateButton(string text, double width, double height)
@@ -100,7 +108,8 @@ namespace BierBuddy.UILib
                     FontFamily = new FontFamily("Bayon"),
                     FontWeight = FontWeights.Bold,
                     FontSize = 20,
-                    Foreground = Brushes.Black
+                    Foreground = Brushes.Black, 
+                    Margin = new Thickness(10, 0, 0, 0)
                 },
                 Width = width,
                 Height = height,
@@ -142,13 +151,13 @@ namespace BierBuddy.UILib
             DateTimePlannerDialog dialog = new DateTimePlannerDialog();
             if (dialog.ShowDialog() == true)
             {
-                _MyBuddies.AddAppointments(_Visitor, dialog.SelectedDateTimes);
+                _MyBuddies.AddAppointments(Visitor, dialog.SelectedDateTimes);
             }
         }
 
         private void AppointmentAcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            List<Appointment> appointments = _MyBuddies.GetAppointments(_Visitor).Where(app => !app.Accepted).ToList();
+            List<Appointment> appointments = _MyBuddies.GetAppointments(Visitor).Where(app => !app.Accepted).ToList();
             if (appointments.Count == 0)
             {
                 return;

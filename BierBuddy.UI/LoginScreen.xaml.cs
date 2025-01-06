@@ -41,7 +41,6 @@ namespace BierBuddy.UI
             Visitor? user = _DataAccess.GetAccount(email, passkey);
             if (user != null)
             {
-                _Connection.Close();
                 MainWindow mainWindow = new MainWindow(user, _DataAccess);
                 mainWindow.Show();
                 this.Close();

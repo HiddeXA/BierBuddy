@@ -126,10 +126,9 @@ namespace BierBuddy.DataAccess
             MySqlDataReader reader = cmd.ExecuteReader();
 
             long id = -1;
-
             while (reader.Read())
             {
-               id = (reader.GetInt64(0));
+                id = reader.GetInt64(0);
             }
 
             reader.Close();
@@ -181,9 +180,9 @@ namespace BierBuddy.DataAccess
                 "SELECT V.VisitorID, V.Name, V.BIO, V.Age " +
                 "FROM Matches m " +
                 "JOIN Visitor V " +
-                "ON (m.Visitor_VisitorID1 = v.VisitorID AND m.Visitor_VisitorID2 = @ID) " +
-                "OR (m.Visitor_VisitorID2 = v.VisitorID AND m.Visitor_VisitorID1 = @ID) " +
-                "WHERE v.VisitorID != @ID; ";
+                "ON (m.Visitor_VisitorID1 = V.VisitorID AND m.Visitor_VisitorID2 = @ID) " +
+                "OR (m.Visitor_VisitorID2 = V.VisitorID AND m.Visitor_VisitorID1 = @ID) " +
+                "WHERE V.VisitorID != @ID; ";
             cmd.Parameters.AddWithValue("@ID", clientID);
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -203,12 +202,12 @@ namespace BierBuddy.DataAccess
         {
             MySqlCommand cmd = _conn.CreateCommand();
             cmd.CommandText =
-                "SELECT V.VisitorID, V.Name, V.BIO, V.Age, P.Photo1URL, P.Photo2URL, P.Photo3URL, P.Photo4URL, D.Drinks_DrinkID1, D.Drinks_DrinkID2, D.Drinks_DrinkID3, D.Drinks_DrinkID4, A.Activities_ActivityID1, A.Activities_ActivityID2, A.Activities_ActivityID3, A.Activities_ActivityID4, I.PossibleInterests_InterestID1, I.PossibleInterests_InterestID2, I.PossibleInterests_InterestID3, I.PossibleInterests_InterestID4 " +
+                "SELECT V.VisitorID, V.Name, V.Bio, V.Age, P.Photo1URL, P.Photo2URL, P.Photo3URL, P.Photo4URL, D.Drinks_DrinkID1, D.Drinks_DrinkID2, D.Drinks_DrinkID3, D.Drinks_DrinkID4, A.Activities_ActivityID1, A.Activities_ActivityID2, A.Activities_ActivityID3, A.Activities_ActivityID4, I.PossibleInterests_InterestID1, I.PossibleInterests_InterestID2, I.PossibleInterests_InterestID3, I.PossibleInterests_InterestID4 " +
                 "FROM Visitor V " +
                 "JOIN Photo P ON V.Photo_PhotoID = P.PhotoID " +
                 "JOIN DrinkPreferences D ON V.DrinkPreferences_DrinkPreferencesID = D.DrinkPreferencesID " +
                 "JOIN ActivityPreferences A ON V.ActivityPreferences_ActivityPreferencesID = A.ActivityPreferencesID " +
-                "JOIN Interests I ON V.Interests_InterestsID = I.interestsID " +
+                "JOIN Interests I ON V.Interests_InterestsID = I.InterestsID " +
                 "WHERE V.VisitorID NOT IN (" +
                     "SELECT LikedID " +
                     "FROM Likes " +
@@ -344,7 +343,7 @@ namespace BierBuddy.DataAccess
                 {
                     Visitor visitor = visitors[i];
                     MySqlCommand photoCmd = _conn.CreateCommand();
-                    photoCmd.CommandText = "SELECT Photo1URL, Photo2URL, Photo3URL, Photo4URL FROM photo WHERE PhotoID = @ID";
+                    photoCmd.CommandText = "SELECT Photo1URL, Photo2URL, Photo3URL, Photo4URL FROM Photo WHERE PhotoID = @ID";
                     photoCmd.Parameters.AddWithValue("@ID", photoIDs[i]);
                     photoCmd.ExecuteNonQuery();
                     MySqlDataReader photoReader = photoCmd.ExecuteReader();
@@ -424,7 +423,7 @@ namespace BierBuddy.DataAccess
         public List<long> GetGivenLikes(long ID)
         {
             MySqlCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM likes WHERE LikerID = @ID";
+            cmd.CommandText = "SELECT * FROM Likes WHERE LikerID = @ID";
             cmd.Parameters.AddWithValue("@ID", ID);
             cmd.ExecuteNonQuery();
             MySqlDataReader reader = cmd.ExecuteReader();

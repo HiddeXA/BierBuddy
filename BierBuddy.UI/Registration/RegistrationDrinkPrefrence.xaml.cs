@@ -38,6 +38,7 @@ public partial class RegistrationDrinkPrefrence : Window
         if (ListBox.SelectedItems.Count == 0)
         {
             MessageBox.Show("Selecteer minstens 1 drankje");
+            return;
         }
         
         foreach (var drink in ListBox.SelectedItems)

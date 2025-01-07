@@ -35,6 +35,11 @@ public partial class RegistrationNameAge : Window
             MessageBox.Show("Je moet minstens 18 jaar oud zijn om je te registreren");
             return;
         }
+        if (RegistrationVisitor.Age > 125)
+        {
+            MessageBox.Show("Ongeldige leeftijd volgens de bijbel is de maximale leeftijd 125 jaar");
+            return;
+        }
         
         RegistrationBio registrationBio = new RegistrationBio(RegistrationVisitor, DataAccess);
         registrationBio.Show();

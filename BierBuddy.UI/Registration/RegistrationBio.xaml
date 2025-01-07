@@ -112,7 +112,7 @@
                  
              </Grid.Resources>
              <Label Grid.Column="0" Grid.Row="0">BIO</Label>
-             <Border Grid.Column="0" Grid.Row="1"><TextBox AcceptsReturn="True" Height="290" Text="{Binding Bio, Mode=TwoWay}"></TextBox></Border>
+             <Border Grid.Column="0" Grid.Row="1"><TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="290" Text="{Binding Bio, Mode=TwoWay}"></TextBox></Border>
          </Grid>
         </DockPanel>
 

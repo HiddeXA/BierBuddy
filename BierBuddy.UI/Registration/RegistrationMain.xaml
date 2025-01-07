@@ -70,7 +70,7 @@
           </Style>
      
       </Window.Resources>
-    <Border Margin="588,144" CornerRadius="30" BorderBrush="Transparent" BorderThickness="10">
+    <Border Width="700" Height="800"  CornerRadius="30" BorderBrush="Transparent" BorderThickness="10">
     <DockPanel  Background="#434C49">
       
         <Border DockPanel.Dock="Top" Height="114" Background="#F19F2C" BorderBrush="#F19F2C" BorderThickness="10" CornerRadius="10,10,0,0">

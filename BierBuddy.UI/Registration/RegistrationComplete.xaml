@@ -48,7 +48,7 @@
           </Style>
      
       </Window.Resources>
-    <Border Margin="588,144" CornerRadius="30" BorderBrush="Transparent" BorderThickness="10">
+    <Border Width="700" Height="800"  CornerRadius="30" BorderBrush="Transparent" BorderThickness="10">
     <DockPanel  Background="#434C49">
         <DockPanel.Resources>
             <Style TargetType="Button">

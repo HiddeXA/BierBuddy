@@ -10,12 +10,12 @@ namespace BierBuddy.UI.Registration;
 
 public partial class RegistrationPictures : Window
 {
-    IDataAccess DataAccess { get; set; }
-    Visitor registrationVisitor;
-    Byte[] photo1;
-    Byte[] photo2;
-    Byte[] photo3;
-    Byte[] photo4;
+    private IDataAccess DataAccess { get; set; }
+    private Visitor registrationVisitor;
+    private Byte[] photo1;
+    private Byte[] photo2;
+    private Byte[] photo3;
+    private Byte[] photo4;
     public RegistrationPictures(Visitor registrationVisitor, IDataAccess dataAccess)
     {
         this.registrationVisitor = registrationVisitor;

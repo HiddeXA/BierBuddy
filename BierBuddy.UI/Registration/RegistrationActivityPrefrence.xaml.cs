@@ -9,8 +9,8 @@ namespace BierBuddy.UI.Registration;
 public partial class RegistrationActivityPrefrence : Window
 {
     
-    public Visitor RegistrationVisitor { get; set; }
-    public IDataAccess DataAccess { get; set; }
+    private Visitor RegistrationVisitor { get; set; }
+    private IDataAccess DataAccess { get; set; }
     
     public RegistrationActivityPrefrence(IDataAccess dataAccess) : this(new Visitor(), dataAccess)
     {

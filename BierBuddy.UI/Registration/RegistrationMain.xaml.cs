@@ -7,8 +7,8 @@ namespace BierBuddy.UI;
 
 public partial class RegistrationMain : Window
 {
-    public Visitor RegistrationVisitor { get; set; }
-    public IDataAccess DataAccess { get; set; }
+    private Visitor RegistrationVisitor { get; set; }
+    private IDataAccess DataAccess { get; set; }
     public RegistrationMain(IDataAccess dataAccess) : this(dataAccess, new Visitor())
     {
     

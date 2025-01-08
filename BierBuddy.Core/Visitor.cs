@@ -10,14 +10,16 @@ namespace BierBuddy.Core
     {
         // Basis atributen van de gebruiker.
         public long ID { get; private set; }
-        public string Name { get; private set; }
-        public string Bio { get; private set; }
-        public int Age { get; private set; }
-        
+        public string Name { get; set; }
+        public string Bio { get; set; }
+        public int Age { get; set; }
+        public String Mail { get; set; }
+        public String Password { get; set; }
+
         // Voorkeuren interesses enz.
-        public List<string> DrinkPreference = new List<string>();
-        public List<string> Interests = new List<string>();
-        public List<string> ActivityPreference = new List<string>();
+        public List<string> DrinkPreference {get; set;} = new List<string>();
+        public List<string> Interests {get; set;} = new List<string>();
+        public List<string> ActivityPreference {get; set;} = new List<string>();
 
         // Fotos
         public List<byte[]> Photos = new List<byte[]>();
@@ -31,6 +33,12 @@ namespace BierBuddy.Core
             Name = name;
             Bio = bio;
             Age = age;
+        }
+
+        //Lege constructor voor het aanmaken van een nieuwe gebruiker. 
+        public Visitor()
+        {
+            
         }
 
         public void SetName(string name)

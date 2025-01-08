@@ -28,7 +28,7 @@ namespace BierBuddy.UI
         public LoginScreen()
         {
             InitializeComponent();
-            _Connection = new MySqlConnection("server=localhost;database=BierBuddy;user=root;port=3306;password=");
+            _Connection = new MySqlConnection("server=mysql-1284b19-bierbuddy.c.aivencloud.com;database=BierBuddyDB;user=avnadmin;port=26316;password=AVNS_IWkNAbagctkfuROBkTX");
             _Connection.Open();
             _DataAccess = new MySQLDatabase(_Connection);
 
@@ -41,8 +41,7 @@ namespace BierBuddy.UI
             Visitor? user = _DataAccess.GetAccount(email, passkey);
             if (user != null)
             {
-                _Connection.Close();
-                MainWindow mainWindow = new MainWindow(user);
+                MainWindow mainWindow = new MainWindow(user, _DataAccess);
                 mainWindow.Show();
                 this.Close();
             }
@@ -54,7 +53,10 @@ namespace BierBuddy.UI
 
         private void RegitreerClick(object sender, RoutedEventArgs e)
         {
-            // <todo> Aanvullen door Hidde
+            
+            RegistrationMain registrationMain = new RegistrationMain(_DataAccess);
+            registrationMain.Show();
+            this.Close();
         }
     }
 }

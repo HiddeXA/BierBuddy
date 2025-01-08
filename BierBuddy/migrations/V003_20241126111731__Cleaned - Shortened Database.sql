@@ -112,45 +112,45 @@ WHERE InterestID = 124;
 
 
 
-UPDATE possibledrinks
+UPDATE PossibleDrinks
 SET Drink = 'Koffie'
 WHERE DrinkID = 32;
 
-UPDATE possibledrinks
+UPDATE PossibleDrinks
 SET Drink = 'Chocolademelk'
 WHERE DrinkID = 33;
 
 
 
-UPDATE possibleactivities
+UPDATE PossibleActivities
 SET Activity = 'Bordspellen'
 WHERE ActivityID = 1;
 
-UPDATE possibleactivities
+UPDATE PossibleActivities
 SET Activity = 'Live muziek'
 WHERE ActivityID = 2;
 
-UPDATE possibleactivities
+UPDATE PossibleActivities
 SET Activity = 'Kaartspellen'
 WHERE ActivityID = 5;
 
-UPDATE possibleactivities
+UPDATE PossibleActivities
 SET Activity = 'Drankspellen'
 WHERE ActivityID = 9;
 
-UPDATE possibleactivities
+UPDATE PossibleActivities
 SET Activity = 'Sport kijken'
 WHERE ActivityID = 14;
 
-UPDATE possibleactivities
+UPDATE PossibleActivities
 SET Activity = 'Pubquiz'
 WHERE ActivityID = 15;
 
-UPDATE possibleactivities
+UPDATE PossibleActivities
 SET Activity = 'Socializen'
 WHERE ActivityID = 17;
 
-UPDATE possibleactivities
+UPDATE PossibleActivities
 SET Activity = 'Borrelen'
 WHERE ActivityID = 20;
 

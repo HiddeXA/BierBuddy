@@ -1,0 +1,151 @@
+﻿<Window x:Class="BierBuddy.UI.Registration.RegistrationActivityPrefrence"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:BierBuddy.UI.Registration"
+        mc:Ignorable="d"
+        xmlns:wpf="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
+        Title="Registration"
+        Height="1080"
+        Width="1920"
+        MinHeight="800"
+        MinWidth="1200"
+        Background="#2E3532"
+        Foreground="#FCFFF7"
+        FontFamily="Bayon"
+        FontWeight="Bold"
+       WindowState="Maximized"
+>
+      <Window.Resources>
+             <Style TargetType="Label">
+                 <Setter Property="FontSize" Value="30"/>
+                 <Setter Property="Foreground" Value="#FCFFF7"></Setter>
+                 <Setter Property="FontFamily" Value="Bayon"/>
+                 <Setter Property="FontWeight" Value="Bold"/>
+             </Style>
+          <Style TargetType="TextBox">
+              <Setter Property="Template">
+                  <Setter.Value>
+                      <ControlTemplate TargetType="TextBox">
+                          <Border x:Name="Border" BorderBrush="#FCFFF7" BorderThickness="3" CornerRadius="30">
+                              <ScrollViewer x:Name="PART_ContentHost" />
+                          </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Border" Property="Background" Value="#FCFFF7"/>
+                                    <Setter Property="Foreground" Value="#FCFFF7"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                      </ControlTemplate>
+                  </Setter.Value>
+              </Setter>
+              <Setter Property="FontSize" Value="30"/>
+              <Setter Property="Height" Value="60"/>
+              <Setter Property="FontFamily" Value="Bayon"/>
+              <Setter Property="FontWeight" Value="Bold"/>
+              <Setter Property="BorderBrush" Value="Transparent"/>
+          </Style>
+     
+      </Window.Resources>
+    <Border Width="700" Height="800"  CornerRadius="30" BorderBrush="Transparent" BorderThickness="10">
+    <DockPanel  Background="#434C49">
+      
+        <Border DockPanel.Dock="Top" Height="114" Background="#F19F2C" BorderBrush="#F19F2C" BorderThickness="10" CornerRadius="10,10,0,0">
+            <TextBlock  Text="REGISTRATIE" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" />
+        </Border>
+     <Grid DockPanel.Dock="Bottom" Margin="50,0,50,50">
+         <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+         </Grid.RowDefinitions>
+         <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+         </Grid.ColumnDefinitions>
+         <Grid.Resources>
+             <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border BorderBrush="Transparent" BorderThickness="3" Background="{TemplateBinding Background}" CornerRadius="30">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Foreground" Value="#FCFFF7"/>
+                    <Setter Property="FontSize" Value="30"/>
+                 
+             </Style>
+             <Style TargetType="Label">
+                 <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                 <Setter Property="Foreground" Value="#FCFFF7"/>
+                 <Setter Property="FontFamily" Value="Bayon"/>
+                 <Setter Property="FontWeight" Value="Bold"/>
+                 <Setter Property="FontSize" Value="30"></Setter>
+             </Style>
+             <Style TargetType="StackPanel">
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+             </Style>
+         </Grid.Resources>
+         <Border Grid.Column="0"><Button Click="Back_OnClick" Background="#2E3532" Width="273" Height="87" > <StackPanel Orientation="Horizontal"> <Label Content="{wpf:MaterialIconExt Kind=ArrowLeft, Size=60 }"/> <Label Width="200">TERUG</Label> </StackPanel></Button></Border>
+         <Border Grid.Column="1"><Button Click="Next_OnClick" Background="#F19F2C" Width="273" Height="87"> <StackPanel Orientation="Horizontal"> <Label>VOLGENDE</Label>  <Label Content="{wpf:MaterialIconExt Kind=ArrowRight, Size=60 }"/> </StackPanel></Button></Border>
+     </Grid>
+        <DockPanel>
+            <Label HorizontalAlignment="Center" Margin="0,40,0,0" DockPanel.Dock="Top">WAT ZIJN ACTIVITEITEN DIE JE LEUK VINDT!</Label>
+            <StackPanel Margin="65,40" >
+                <Label FontSize="15" Foreground="#2E3532"  >MIN 1 - MAX 4</Label>
+                <ScrollViewer Height="290">
+                      <ListBox x:Name="ListBox"
+                               SelectionMode="Multiple"
+                               SelectionChanged="ListBox_SelectionChanged"
+                               Background="Transparent"
+                               HorizontalAlignment="Stretch"
+                               BorderBrush="Transparent">
+                          <ListBox.Resources>
+                              <Style TargetType="ListBoxItem">
+                                  <Setter Property="Foreground" Value="#2E3532" />
+                                  <Setter Property="Background" Value="#FCFFF7" />
+                                  <Setter Property="FontSize" Value="25" />
+                                  <Setter Property="Height" Value="50" />
+                                  <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                  <Setter Property="Margin" Value="0,0,0,10" />
+                                  <Setter Property="Template">
+                                      <Setter.Value>
+                                          <ControlTemplate TargetType="ListBoxItem">
+                                              <Border Name="Bd" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="1" CornerRadius="5">
+                                                  <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" />
+                                              </Border>
+                                              <ControlTemplate.Triggers>
+                                                  <Trigger Property="IsSelected" Value="True">
+                                                      <Setter TargetName="Bd" Property="Background" Value="#F19F2C" />
+                                                      <Setter TargetName="Bd" Property="BorderBrush" Value="#F19F2C" />
+                                                      <Setter Property="Foreground" Value="White" />
+                                                  </Trigger>
+                                                  <Trigger Property="IsMouseOver" Value="True">
+                                                      <Setter TargetName="Bd" Property="Background" Value="#FFC107" />
+                                                      <Setter TargetName="Bd" Property="BorderBrush" Value="#FFC107" />
+                                                      <Setter Property="Foreground" Value="Black" />
+                                                  </Trigger>
+                                              </ControlTemplate.Triggers>
+                                          </ControlTemplate>
+                                      </Setter.Value>
+                                  </Setter>
+                              </Style>
+                              <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="30" />
+                                    <Setter Property="BorderBrush" Value="#FCFFF7" />
+                                    <Setter Property="Background" Value="#FCFFF7" />
+                                    <Setter Property="BorderThickness" Value="2" />
+                              </Style>
+                          </ListBox.Resources>
+                          
+                      </ListBox>
+                </ScrollViewer>
+            </StackPanel>
+        </DockPanel>
+
+    </DockPanel>
+    </Border>
+</Window>

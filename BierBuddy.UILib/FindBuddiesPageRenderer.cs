@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Cache;
+using System.Net.NetworkInformation;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
@@ -24,40 +28,125 @@ namespace BierBuddy.UILib
     public class FindBuddiesPageRenderer : IPageRenderer
     {
         private Canvas _profilePanel;
+        private WrapPanel _FindBuddiesPanel;
         private Size _MainWindowSize;
         private double _NavBarWidth;
         private int _CurrentPhotoIndex = 0;
         private Image _ProfilePicture;
-        private Visitor _Visitor { get; set; }
+        private bool _ViewingPreferences = false;
+        private Visitor? _Visitor { get; set; }
+        private FindBuddies _FindBuddies;
 
-        public FindBuddiesPageRenderer()
-        {
+        private int BigFontSize = 28;
+        private int GeneralFontSize = 16;
+
+        private readonly int _MinFontSizeBig = 20;
+        private readonly int _MinFontSizeGeneral = 12;
+
+        public FindBuddiesPageRenderer(FindBuddies findBuddies){
             _profilePanel = new Canvas();
+            _FindBuddiesPanel = new();
             _ProfilePicture = new Image();
-            _Visitor = new(0, "temp", "temp", 0);
+            _FindBuddies = findBuddies;
+            _FindBuddies.Main.AccountSwitcher.OnClientProfileChanged += OnClientProfileChanged;
         }
-        public WrapPanel GetFindBuddiesPage(Visitor visitor)
+        public WrapPanel GetFindBuddiesPage(Visitor? visitor)
         {
-            _profilePanel = new();
             _profilePanel.Margin = new Thickness(20);
             _profilePanel.VerticalAlignment = VerticalAlignment.Center;
+            if (_Visitor == null || visitor == null || _Visitor.ID != visitor.ID)
+            {
+                _ViewingPreferences = false;
+            }
             _Visitor = visitor;
 
-            WrapPanel FindBuddiesPanel = new();
+            if (_ViewingPreferences)
+            {
+                SetFindBuddiesPanel();
+                _profilePanel.Children.Clear();
+                SetPreferencesPanel();
+            }
+            else
+            {
+                SetFindBuddiesPanel();
+            }
+            return _FindBuddiesPanel;
+        }
+        private void SetFindBuddiesPanel()
+        {
+            _profilePanel = new();
             double panelWidth = _MainWindowSize.Width - _NavBarWidth;
+            if (_Visitor != null)
+            {
+                _FindBuddiesPanel.Children.Clear();
+                _FindBuddiesPanel.Children.Add(GetDislikeButton(panelWidth / 4, _MainWindowSize.Height));
+                _FindBuddiesPanel.Children.Add(GetProfileBorder());
+                SetProfilePanel(panelWidth / 2, _MainWindowSize.Height);
+                _FindBuddiesPanel.Children.Add(GetlikeButton(panelWidth / 4, _MainWindowSize.Height));
+            }
+            else
+            {
+                _FindBuddiesPanel.Children.Clear();
+                _FindBuddiesPanel.Children.Add(GetFillerBlock(panelWidth / 4));
+                _FindBuddiesPanel.Children.Add(GetProfileNotFound(panelWidth / 2 , _MainWindowSize.Height));
+            }
 
-            FindBuddiesPanel.Children.Add(GetDislikeButton(panelWidth / 4 , _MainWindowSize.Height));
-            FindBuddiesPanel.Children.Add(GetProfileBorder());
-            SetProfilePanel(panelWidth / 2, _MainWindowSize.Height);
-            FindBuddiesPanel.Children.Add(GetlikeButton(panelWidth / 4 , _MainWindowSize.Height));
-
-            FindBuddiesPanel.VerticalAlignment = VerticalAlignment.Center;
-            FindBuddiesPanel.HorizontalAlignment = HorizontalAlignment.Center;
-
-            return FindBuddiesPanel;
+            _FindBuddiesPanel.VerticalAlignment = VerticalAlignment.Center;
+            _FindBuddiesPanel.HorizontalAlignment = HorizontalAlignment.Center;
         }
 
-        private UIElement GetDislikeButton(double width, double height) 
+        private UIElement GetProfileNotFound(double width, double windowHight)
+        {
+            Border profileNotFoundBorder = new Border();
+
+            profileNotFoundBorder.Background = UIUtils.Outer_Space;
+            profileNotFoundBorder.CornerRadius = UIUtils.UniversalCornerRadius;
+            profileNotFoundBorder.Margin = new Thickness(30);
+
+            StackPanel profileNotFoundPanel = new StackPanel();
+            profileNotFoundPanel.Width = width;
+            profileNotFoundPanel.Height = windowHight - 90;
+            profileNotFoundPanel.HorizontalAlignment = HorizontalAlignment.Center;
+
+            MaterialIcon icon = new MaterialIcon();
+            icon.Kind = MaterialIconKind.GlassMugOff;
+            icon.Foreground = UIUtils.BeerYellow;
+            icon.Width = width / 4;
+            icon.HorizontalAlignment = HorizontalAlignment.Center;
+
+            Label profileNotFoundLabel = new Label();
+            profileNotFoundLabel.Content = "GEEN BIERBUDDIES MEER IN ZICHT.";
+            profileNotFoundLabel.FontSize = BigFontSize;
+            profileNotFoundLabel.Foreground = UIUtils.BabyPoeder;
+            profileNotFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+
+            Label profileNotFoundSubText = new Label();
+            profileNotFoundSubText.Content = "ER ZIJN GEEN BIERBUDDIES MEER DIE VOLDOEN AAN JOUW FILTERS";
+            profileNotFoundSubText.FontSize = GeneralFontSize;
+            profileNotFoundSubText.Foreground = UIUtils.BabyPoeder;
+            profileNotFoundSubText.HorizontalAlignment = HorizontalAlignment.Center;
+
+            Canvas buffer = new Canvas();
+            buffer.Height = 200;
+
+            profileNotFoundPanel.Children.Add(buffer);
+            profileNotFoundPanel.Children.Add(icon);
+            profileNotFoundPanel.Children.Add(profileNotFoundLabel);
+            profileNotFoundPanel.Children.Add(profileNotFoundSubText);
+
+            profileNotFoundBorder.Child = profileNotFoundPanel;
+
+
+            return profileNotFoundBorder;
+        }
+        private UIElement GetFillerBlock(double width)
+        {
+            Canvas fillerCanvas = new Canvas();
+            fillerCanvas.Width = width;
+            return fillerCanvas;
+        }
+
+        private UIElement GetDislikeButton(double width, double height)
         {
             DockPanel dislikeButtonPanel = new();
             dislikeButtonPanel.Width = width;
@@ -83,7 +172,8 @@ namespace BierBuddy.UILib
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO dislike stuff
+            _FindBuddies.DislikeVisitor(_Visitor);
+            RefreshPage();
         }
 
         private UIElement GetlikeButton(double width, double height)
@@ -111,7 +201,8 @@ namespace BierBuddy.UILib
 
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO like stuff
+            _FindBuddies.LikeVisitor(_Visitor);
+            RefreshPage();
         }
 
         private ControlTemplate GetLikeButtonTemplate(Brush brush)
@@ -144,6 +235,7 @@ namespace BierBuddy.UILib
         }
         private void SetProfilePanel(double width, double height)
         {
+            _profilePanel.Children.Clear();
             _profilePanel.Width = width;
             _profilePanel.Height = height - 150;
             UIElement profilePicture = GetProfilePicture(width, height - 150);
@@ -153,13 +245,19 @@ namespace BierBuddy.UILib
             UIElement profileContent = GetProfileContentPanel(width);
             Canvas.SetTop(profileContent, height - UIUtils.ProfileConentHeight - 150);
             _profilePanel.Children.Add(profileContent);
+
         }
         
         private UIElement GetProfilePicture(double width, double height)
         {
             Canvas canvas = new();
+            if (_Visitor == null || _Visitor.Photos.Count == 0)
+            {
+                return canvas;
+            }
+            
             _ProfilePicture = new();
-            _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
+            _ProfilePicture.Source = UIUtils.ConvertByteArrayToImage(_Visitor.Photos[_CurrentPhotoIndex]);
             _ProfilePicture.Width = width;
             _ProfilePicture.Height = height;
             _ProfilePicture.Stretch = Stretch.UniformToFill;
@@ -239,7 +337,7 @@ namespace BierBuddy.UILib
             {
                 _CurrentPhotoIndex = _Visitor.Photos.Count - 1;
             }
-            _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
+            _ProfilePicture.Source = UIUtils.ConvertByteArrayToImage(_Visitor.Photos[_CurrentPhotoIndex]);
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -252,11 +350,12 @@ namespace BierBuddy.UILib
             {
                 _CurrentPhotoIndex = 0;
             }
-            _ProfilePicture.Source = new BitmapImage(new Uri(_Visitor.Photos[_CurrentPhotoIndex]));
+            _ProfilePicture.Source = UIUtils.ConvertByteArrayToImage(_Visitor.Photos[_CurrentPhotoIndex]);
         }
 
         private UIElement GetProfileContentPanel(double width)
         {
+            
             // Create the Grid
             Grid profileGrid = new Grid();
             profileGrid.Width = width;
@@ -323,7 +422,7 @@ namespace BierBuddy.UILib
             gradientBrush.GradientStops.Add(new GradientStop(Colors.Transparent, 0));
             gradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF7), 1));
             profileContentBorder.Background = gradientBrush;
-            profileContentBorder.CornerRadius = new CornerRadius(0, 0, 40, 40);
+            profileContentBorder.CornerRadius = new CornerRadius(0, 0, 25, 25);
 
             profileContentBorder.Child = profileGrid;
 
@@ -346,26 +445,28 @@ namespace BierBuddy.UILib
         }
         private UIElement GetNameLabel()
         {
-            ProfileContentLabel nameLabel = new ProfileContentLabel(_Visitor.Name);
+            ProfileContentLabel nameLabel = new ProfileContentLabel($"{_Visitor.Name}", BigFontSize);
+            nameLabel.FontSize = BigFontSize;
             return nameLabel;
         }
         private UIElement GetAgeLabel()
         {
-            ProfileContentLabel ageLabel = new ProfileContentLabel(_Visitor.Age.ToString());
+            ProfileContentLabel ageLabel = new ProfileContentLabel(_Visitor.Age.ToString(), BigFontSize);
+            ageLabel.FontSize = BigFontSize;
             return ageLabel;
         }
         private UIElement GetProfileBannerDot()
         {
             MaterialIcon icon = new MaterialIcon();
             icon.Kind = MaterialIconKind.Dot;
-            ProfileContentLabel nameLabel = new ProfileContentLabel();
+            ProfileContentLabel nameLabel = new ProfileContentLabel(icon.ToString(), BigFontSize);
             nameLabel.Content = icon;
-            nameLabel.FontSize = 56;
+            nameLabel.FontSize = BigFontSize;
             return nameLabel;
         }
         private UIElement GetProfileLabel(string content)
         {
-            ProfileContentBorder profileLabel = new ProfileContentBorder(content);
+            ProfileContentBorder profileLabel = new ProfileContentBorder(content, GeneralFontSize);
             return profileLabel;
         }
         private UIElement GetBioButton()
@@ -384,6 +485,7 @@ namespace BierBuddy.UILib
         }
         private void BioButton_Click(object sender, RoutedEventArgs e)
         {
+            _ViewingPreferences = true;
             _profilePanel.Children.Clear();
             SetPreferencesPanel();
             
@@ -445,19 +547,20 @@ namespace BierBuddy.UILib
             Grid.SetRow(interests, 2);
             preferencesGrid.Children.Add(interests);
 
-            ProfileContentBorder bioBorder = new ProfileContentBorder("BIO", UIUtils.Onyx);
+            ProfileContentBorder bioBorder = new ProfileContentBorder("BIO", UIUtils.Onyx, BigFontSize);
             Grid.SetColumnSpan(bioBorder, 3);
             Grid.SetRow(bioBorder, 3);
             preferencesGrid.Children.Add(bioBorder);
 
-            ProfileContentBorder bioText = new ProfileContentBorder(_Visitor.Bio, UIUtils.Onyx70);
+            ProfileContentBorder bioText = new ProfileContentBorder(_Visitor.Bio, UIUtils.Onyx70, GeneralFontSize);
+            bioText.Child = new TextBlock { TextWrapping = TextWrapping.Wrap, Text = _Visitor.Bio, FontSize = GeneralFontSize, Foreground = Brushes.White, Margin = new Thickness(10, 10, 10, 10) };
             Grid.SetColumnSpan(bioText, 3);
             Grid.SetRow(bioText, 4);
             preferencesGrid.Children.Add(bioText);
 
             Border preferencesBorder = new Border();
             preferencesBorder.Background = UIUtils.BabyPoeder;
-            preferencesBorder.CornerRadius = UIUtils.UniversalCornerRadius;
+            preferencesBorder.CornerRadius = UIUtils.SquirqilCornerRadius;
             preferencesBorder.Child = preferencesGrid;
 
             Canvas.SetTop(preferencesBorder, 0);
@@ -466,12 +569,11 @@ namespace BierBuddy.UILib
         private UIElement GetDrinkPreferenceTable()
         {
             StackPanel drinkPrefPanel = new();
-            ProfileContentBorder drinkPrefContentBorder = new ProfileContentBorder("Drank Voorkeur", UIUtils.Onyx);
-            drinkPrefContentBorder.ProfileContentLabel.FontSize = 30;
+            ProfileContentBorder drinkPrefContentBorder = new ProfileContentBorder("Drank", UIUtils.Onyx, BigFontSize);
             drinkPrefPanel.Children.Add(drinkPrefContentBorder);
             for (int i = 0; i < _Visitor.DrinkPreference.Count; i++)
             {
-                ProfileContentBorder drinkPref = new(_Visitor.DrinkPreference[i]);
+                ProfileContentBorder drinkPref = new(_Visitor.DrinkPreference[i], GeneralFontSize);
                 drinkPrefPanel.Children.Add(drinkPref);
             }
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
@@ -481,12 +583,12 @@ namespace BierBuddy.UILib
         private UIElement GetActivityPreferenceTable()
         {
             StackPanel activityPrefPanel = new();
-            ProfileContentBorder activityPrefContentBorder = new ProfileContentBorder("Activiteiten Voorkeur", UIUtils.Onyx);
-            activityPrefContentBorder.ProfileContentLabel.FontSize = 30;
+            ProfileContentBorder activityPrefContentBorder = new ProfileContentBorder("Activiteiten", UIUtils.Onyx, GeneralFontSize);
+            activityPrefContentBorder.ProfileContentLabel.FontSize = BigFontSize;
             activityPrefPanel.Children.Add(activityPrefContentBorder);
             for (int i = 0; i < _Visitor.ActivityPreference.Count; i++)
             {
-                ProfileContentBorder drinkPref = new(_Visitor.ActivityPreference[i]);
+                ProfileContentBorder drinkPref = new(_Visitor.ActivityPreference[i], GeneralFontSize);
                 activityPrefPanel.Children.Add(drinkPref);
             }
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
@@ -496,10 +598,12 @@ namespace BierBuddy.UILib
         private UIElement GetinterestsTable()
         {
             StackPanel interestsPanel = new();
-            interestsPanel.Children.Add(new ProfileContentBorder("interesses", UIUtils.Onyx));
+            ProfileContentBorder interestsContentBorder = new ProfileContentBorder("Interesses", UIUtils.Onyx, GeneralFontSize);
+            interestsContentBorder.ProfileContentLabel.FontSize = BigFontSize;
+            interestsPanel.Children.Add(interestsContentBorder);
             for (int i = 0; i < _Visitor.Interests.Count; i++)
             {
-                ProfileContentBorder drinkPref = new(_Visitor.Interests[i]);
+                ProfileContentBorder drinkPref = new(_Visitor.Interests[i], GeneralFontSize);
                 interestsPanel.Children.Add(drinkPref);
             }
             ProfileContentBorder profileContentBorder = new ProfileContentBorder(UIUtils.Onyx70);
@@ -544,37 +648,60 @@ namespace BierBuddy.UILib
         }
         private void BioBackButton_Click(object sender, RoutedEventArgs e)
         {
+            _ViewingPreferences = false;
             _profilePanel.Children.Clear();
             SetProfilePanel((_MainWindowSize.Width - _NavBarWidth)/2, _MainWindowSize.Height);
         }
 
-        
-        private UIElement GetBio()
-        {
-            TextBlock bio = new();
-            bio.Text = _Visitor.Bio;
-            return bio;
+        public void RefreshPage()
+        { 
+            long oldID = _Visitor?.ID ?? -1;
+            _Visitor = _FindBuddies.GetPotentialMatch();
+            if (_Visitor == null || _Visitor.ID != oldID)
+            {
+                _ViewingPreferences = false;
+            }
+            GetFindBuddiesPage(_Visitor);
         }
         public void UpdatePageSize(double newNavBarWidth, Size newScreenSize)
         {
             _NavBarWidth = newNavBarWidth;
             _MainWindowSize = newScreenSize;
+
+            // Fontsize aanpassen
+            if (_MainWindowSize.Width < 1500)
+            {
+                BigFontSize = _MinFontSizeBig;
+                GeneralFontSize = _MinFontSizeGeneral;
+            }
+            else
+            {
+                BigFontSize = 28;
+                GeneralFontSize = 16;
+            }
+        }
+        public void OnClientProfileChanged(object sender, ClientProfileChangedEventArgs args)
+        {
+            RefreshPage();
         }
     }
+    
 
-    internal class ProfileContentBorder : Border
+    public class ProfileContentBorder : Border
     {
+        public int FatherFont;
         public Label ProfileContentLabel { get; set; }
-        public ProfileContentBorder(string content) : this(content, UIUtils.Onyx70) { }
-        public ProfileContentBorder(string content, Brush backgroundColor)
+        public ProfileContentBorder(string content, int fatherfont) : this(content, UIUtils.Onyx70, fatherfont) { }
+        public ProfileContentBorder(string content, Brush backgroundColor, int fatherfont)
         {
-            ProfileContentLabel = new ProfileContentLabel(content);
+            this.FatherFont = fatherfont;
+            ProfileContentLabel = new ProfileContentLabel(content, FatherFont);
             this.Child = ProfileContentLabel;
             this.Background = backgroundColor;
             this.CornerRadius = UIUtils.UniversalCornerRadius;
             this.Margin = new Thickness(10);
         }
-        public ProfileContentBorder() : this(UIUtils.Onyx70) { }
+        public ProfileContentBorder(int fatherfont) : this(UIUtils.Onyx70) { }
         public ProfileContentBorder(Brush backgroundColor)
         {
             ProfileContentLabel = new Label();
@@ -582,20 +709,33 @@ namespace BierBuddy.UILib
             this.CornerRadius = UIUtils.UniversalCornerRadius;
             this.Margin = new Thickness(10);
         }
+
     }
-    internal class ProfileContentLabel : Label
+    public class ProfileContentLabel : Label
     {
-        public ProfileContentLabel(string content) : this()
+
+
+        public ProfileContentLabel(string content, int fontsize) : this(fontsize)
         {
             this.Content = content;
+            this.FontSize = fontsize;
         }
-        public ProfileContentLabel()
+
+        public TextAlignment TextAlignment { get; internal set; }
+
+
+        public ProfileContentLabel(int fontsize)
         {
             this.Foreground = UIUtils.BabyPoeder;
             this.VerticalAlignment = VerticalAlignment.Center;
             this.HorizontalAlignment = HorizontalAlignment.Center;
             this.FontFamily = UIUtils.UniversalFontFamily;
-            this.FontSize = 30;
+            this.FontSize = fontsize;
+        }
+
+        public ProfileContentLabel(string name)
+        {
+            Name = name;
         }
     }
 }

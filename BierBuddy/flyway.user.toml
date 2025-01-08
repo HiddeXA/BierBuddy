@@ -1,0 +1,9 @@
+[environments.BB]
+url = "jdbc:mysql://localhost"
+user = "root"
+schemas = [ "BierBuddy" ]
+displayName = "BierBuddyDB"
+
+[environments.BierBuddyLive]
+user = "avnadmin"
+password = "${localSecret.Flyway Desktop 447f8687-d3ce-45a9-b7b1-85982e8e64a8}"

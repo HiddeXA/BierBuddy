@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,23 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BierBuddy.Core\BierBuddy.Core.csproj" />
+    <ProjectReference Include="..\BierBuddy.DataAccess\BierBuddy.DataAccess.csproj" />
     <ProjectReference Include="..\BierBuddy.UILib\BierBuddy.UILib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Registration\RegistrationMain.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Registration\Resources\placeholder.jpg" />
+    <Resource Include="Registration\Resources\placeholder.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

@@ -13,15 +13,17 @@ namespace BierBuddy.Core
     {
         public Visitor GetVisitor()
         {
-            Visitor rick = new Visitor(1, "Rick", "oikos for life <3", 19);
-            rick.AddToDrinkPreference("sambuca");
-            rick.AddToDrinkPreference("speciaal bier");
-            rick.AddToInterests("oikos");
-            rick.AddToActivityPreference("oikos");
-            rick.Photos.Add("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDpFS-Zk2p0R8q579sthM7-zf2HfFaLnkq5A&s");
-            rick.Photos.Add("https://i.imgur.com/ZySsvEN.jpeg");
-            rick.Photos.Add("https://i.scdn.co/image/ab67616d00001e022abc26e73c19483eb6d50230");
-            return rick;
+            Visitor Dummy = new Visitor(1, "BierBuddyBram", "De trotse mascotte van BierBuddy. Hij is zo cool, hij kan zelfs 500 bier opdrinken in een uur. Niemand is beter dan deze makker.", 21);
+            Dummy.AddToDrinkPreference("Jägermeister");
+            Dummy.AddToDrinkPreference("Hertog Jan");
+            Dummy.AddToDrinkPreference("Speciaal bier");
+            Dummy.AddToDrinkPreference("Dikke Vette Drank");
+            Dummy.AddToInterests("Bierbrouwen");
+            Dummy.AddToInterests("Jagen");
+            Dummy.AddToInterests("Skiën");
+            Dummy.AddToActivityPreference("Gezellig kletsen");
+            Dummy.AddToActivityPreference("Darten");
+            return Dummy;
         }
     }
 }

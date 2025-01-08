@@ -15,6 +15,12 @@ namespace BierBuddy.Core
         /// <param name="ID"></param>
         /// <returns></returns>
         public Visitor? GetAccount(long ID);
+
+        /// <summary>
+        /// haalt een account op op basis van een mail en een wachtwoord
+        /// </summary>
+     
+        public Visitor? GetAccount(string mail, string passkey);
         /// <summary>
         /// geeft een lijst van accounts terug
         /// </summary>
@@ -45,7 +51,23 @@ namespace BierBuddy.Core
         /// <param name="photos">de foto's van de bezoeker, minimaal 1, maximaal 4</param>
         /// <returns>het aangemaakte account</returns>
         /// <exception cref="ArgumentException">als er minder dan 1 of meer dan 4 activiteiten, drankjes, interesses of foto's worden meegegeven</exception>"
-        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<string> photos);
+        public Visitor? AddAccount(string name, string bio, int age, List<long> activities, List<long> drinks, List<long> interests, List<byte[]> photos, string mail, string passkey);
+
+        /// <summary>
+        /// geeft een lijst van willekeurige accountIDs terug die de bezoeker nog niet heeft gezien
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        public List<long> GetNotSeenAccountIDs(long clientID);
+
+
+        /// <summary>
+        /// geeft een lijst van accounts terug op basis van een lijst van ID's
+        /// </summary>
+        /// <param name="accountIDs"></param>
+        /// <returns></returns>
+        public List<Visitor> GetAccountsFromList(List<long> accountIDs);
+    
         /// <summary>
         /// zet een like op een bezoeker
         /// </summary>
@@ -92,5 +114,56 @@ namespace BierBuddy.Core
         /// </summary>
         /// <returns>een Dictionary met alle mogelijke interesses met hun bijbehorende index</returns>
         public Dictionary<long, String> GetPossibleInterests();
+        /// <summary>
+        /// voeg een afspraak toe aan de database, deze is dan nog niet ge
+        /// epteerd
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="visitorID"></param>
+        /// <param name="from"></param>
+        /// <param name="till"></param>
+        public void AddAppointment(long clientID, long visitorID, DateTime from, DateTime to);
+        /// <summary>
+        /// zet een afspraak op geaccepteerd
+        /// </summary>
+        public void ApproveAppointment(long appointmentID);
+        /// <summary>
+        /// verwijderd de afspraak uit de database
+        /// </summary>
+        public void DeclineAppointment(long appointmentID);
+        /// <summary>
+        /// haal alle afspraken op van de bezoeker
+        /// </summary>
+        public List<Appointment> GetAppointmentsFromUser(long clientID);
+        /// <summary>
+        /// haal alle afspraken op van de bezoeker met een andere bezoeker
+        /// </summary>
+        public List<Appointment> GetAppointmentsWithUser(long clientID, long visitorID);
+        /// <summary>
+        /// Haalt alle Buddies van een persoon op op basis van de huidige ClientID
+        /// </summary>
+        public List<Visitor> GetBuddies(long clientID);
+        /// <summary>
+        /// werkt een gebruiker bij met de gegeven gegevens, de lists zijn de ids van de activiteiten, drankjes en interesses
+        /// </summary>
+        public void UpdateAccount(Visitor visitor, List<long> activities, List<long> drinks, List<long> interests);
+        /// <summary>
+        /// Haalt naam op van een visitor op basis van ID, voor de appointments
+        /// </summary>
+        public string GetVisitorNameByID(long visitorID);
+        
+        /// <summary>
+        /// Haalt de ID op van een activiteit
+        /// </summary>
+        public long GetActivityID(string activity);
+        /// <summary>
+        /// Haalt de ID op van een drankje
+        /// </summary>
+        public long GetDrinkID(string drink);
+        /// <summary>
+        /// Haalt de ID op van een interesse
+        /// </summary>
+        public long GetInterestID(string interest);
+
     }
 }

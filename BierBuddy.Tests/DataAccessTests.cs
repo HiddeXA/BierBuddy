@@ -63,7 +63,7 @@ namespace BierBuddy.Tests
             MySQLDatabase database = new MySQLDatabase(_conn);
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => database.AddAccount("Test", "Bio", 30, new List<long>(), new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" }));
+            Assert.Throws<ArgumentException>(() => database.AddAccount("Test", "Bio", 30, new List<long>(), new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<byte[]> {new byte[] { },new byte[] { },new byte[] { },new byte[] { },  }, "Test@mail", "768f966ef3f73b7703903e0bf4222dabdc8e5cc910255af2bd10adc5d3032a164aeedb9ba252fe48c028e11cec2d73bf411d90aa88e92af9297d155caebafa28"));
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace BierBuddy.Tests
             MySQLDatabase database = new MySQLDatabase(_conn);
 
             // Act
-            Visitor? account = database.AddAccount("Test", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" });
+            Visitor? account = database.AddAccount("Test", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<byte[]> {new byte[] { },new byte[] { },new byte[] { },new byte[] { },  }, "Test@mail", "768f966ef3f73b7703903e0bf4222dabdc8e5cc910255af2bd10adc5d3032a164aeedb9ba252fe48c028e11cec2d73bf411d90aa88e92af9297d155caebafa28");
 
             // Assert
             Assert.IsNotNull(account);
@@ -112,7 +112,7 @@ namespace BierBuddy.Tests
             MySQLDatabase database = new MySQLDatabase(_conn);
 
             // Act
-            Visitor? account = database.AddAccount("Test", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<string> { "a", "b", "c", "d" });
+            Visitor? account = database.AddAccount("Test", "Bio", 30, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<long> { 1, 2, 3, 4 }, new List<byte[]> {new byte[] { },new byte[] { },new byte[] { },new byte[] { },  }, "Test@mail", "768f966ef3f73b7703903e0bf4222dabdc8e5cc910255af2bd10adc5d3032a164aeedb9ba252fe48c028e11cec2d73bf411d90aa88e92af9297d155caebafa28");
 
             // Assert
             Assert.IsNotNull(account);
@@ -234,6 +234,50 @@ namespace BierBuddy.Tests
 
             // Assert
             Assert.Greater(interests.Count, 0);
+        }
+
+        [Test]
+        [Order(14)]
+        public void AddAppointment_ShouldAddAppointment_WhenValid()
+        {
+            MySQLDatabase database = new MySQLDatabase(_conn);
+
+            // Act
+            database.AddAppointment(1, 2, DateTime.Now, DateTime.Now);
+
+            // Assert
+            List<Appointment> appointments = database.GetAppointmentsWithUser(1, 2);
+            Assert.Greater(appointments.Count, 0);
+        }
+
+        [Test]
+        [Order(15)]
+        public void ApproveAppointment_ShouldApproveAppointment_WhenValid()
+        {
+            MySQLDatabase database = new MySQLDatabase(_conn);
+
+            // Act
+            List<Appointment> appointments = database.GetAppointmentsWithUser(1, 2);
+            database.ApproveAppointment(appointments.First().AppointmentID);
+
+            // Assert
+            appointments = database.GetAppointmentsWithUser(1, 2);
+            Assert.IsTrue(appointments.First().Accepted);
+        }
+
+        [Test]
+        [Order(16)]
+        public void DeclineAppointment_ShouldDeclineAppointment_WhenValid()
+        {
+            MySQLDatabase database = new MySQLDatabase(_conn);
+
+            // Act
+            List<Appointment> appointments = database.GetAppointmentsWithUser(1, 2);
+            database.DeclineAppointment(appointments.First().AppointmentID);
+
+            // Assert
+            appointments = database.GetAppointmentsFromUser(1);
+            Assert.IsFalse(appointments.Any());
         }
 
         [OneTimeTearDown]
